@@ -1,33 +1,30 @@
 import SmoothScroll from "@/components/SmoothScroll";
-import Loader from "@/components/Loader";
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
-import TechMarquee from "@/components/TechMarquee";
+import Statement from "@/components/Statement";
 import About from "@/components/About";
 import Services from "@/components/Services";
-import WhyUs from "@/components/WhyUs";
+import Work from "@/components/Work";
 import Process from "@/components/Process";
-import Manifesto from "@/components/Manifesto";
+import WhyUs from "@/components/WhyUs";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Reveals from "@/components/Reveals";
 
-// Page rhythm: white hero → black ink → statement → white ink (all one pinned
-// hero sequence) → white body → Process fades to black → dark contact/footer.
+// Design 2: calm and minimal, in the manner of abatable.com.
 export default function Home() {
   return (
     <>
       <SmoothScroll />
-      <Loader />
       <Nav />
       <main>
         <Hero />
+        <Statement />
         <About />
         <Services />
-        <TechMarquee />
-        <WhyUs />
+        <Work />
         <Process />
-        <Manifesto />
+        <WhyUs />
         <Contact />
       </main>
       <Footer />

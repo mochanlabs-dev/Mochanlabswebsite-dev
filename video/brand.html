@@ -1,0 +1,394 @@
+<!doctype html>
+<!--
+  Mochan Labs — 16 s brand film (1920×1080 or ?format=portrait 1080×1200, 30 fps).
+
+  Script: logo intro → "We build websites. / Mobile apps. / ERP & CRM. /
+  Automation." → "Let's build yours." One white panel morphs between a browser,
+  a phone, a dashboard and a WhatsApp chat while each is built.
+
+  One paused GSAP timeline; render.js seeks it frame by frame.
+  Preview: `npm run preview`, then open /video/brand.html (add ?format=portrait).
+  All names and numbers on screen are demo data.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Mochan Labs — brand film</title>
+<style>
+  @font-face { font-family: Figtree; font-weight: 400; src: url(node_modules/@fontsource/figtree/files/figtree-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family: Figtree; font-weight: 500; src: url(node_modules/@fontsource/figtree/files/figtree-latin-500-normal.woff2) format("woff2"); }
+  @font-face { font-family: Figtree; font-weight: 600; src: url(node_modules/@fontsource/figtree/files/figtree-latin-600-normal.woff2) format("woff2"); }
+  :root { --paper: #f5f6f3; --card: #fff; --ink: #0a0a0a; --accent: #2b59ff; --accent-soft: #dce4ff; --line: rgb(10 10 10 / 0.1); --k: 1; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--paper); }
+  body { font-family: Figtree, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  .stage { position: relative; width: 100%; height: 100%; overflow: hidden; }
+  .portrait, .portrait body { width: 1080px; height: 1200px; }
+  .portrait { --k: 0.92; }
+  .muted { color: rgb(10 10 10 / 0.5); }
+
+  /* Intro traces */
+  svg.traces { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  svg.traces path { fill: none; }
+
+  /* Logo lockup (final, small position; the intro scales it up from here) */
+  #lockup { position: absolute; display: flex; align-items: center; gap: 14px; transform-origin: 0 0; white-space: nowrap; }
+  #lockup .mark { position: relative; width: 52px; height: 57px; }
+  #lockup .mark img { position: absolute; inset: 0; width: 100%; height: 100%; }
+  #lockup .mark svg { position: absolute; inset: -2px; width: calc(100% + 4px); height: calc(100% + 4px); overflow: visible; }
+  #lockup .mark svg path { fill: none; stroke-linejoin: round; }
+  #lockup .name { font-size: 30px; font-weight: 500; letter-spacing: -0.02em; }
+
+  /* Caption: "We build" + a rotating word */
+  #cap { position: absolute; }
+  #cap .lead, #cap .slot { font-size: 104px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.05; }
+  #cap .slot { position: relative; width: 16ch; height: 1.15em; overflow: hidden; color: var(--accent); }
+  #cap .slot span { position: absolute; left: 0; top: 0; white-space: nowrap; }
+  .portrait #cap .lead, .portrait #cap .slot { font-size: 76px; }
+
+  /* Morphing panel */
+  #panel { position: absolute; background: var(--card); border: 1px solid var(--line); overflow: hidden;
+    box-shadow: 0 50px 120px -40px rgb(0 0 0 / 0.35); }
+  .layer { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(var(--k)); opacity: 0; }
+
+  /* Web */
+  #L-web { width: 1000px; height: 640px; }
+  .chrome { height: 46px; display: flex; align-items: center; gap: 8px; padding: 0 18px; border-bottom: 1px solid rgb(10 10 10 / 0.07); }
+  .chrome i { width: 12px; height: 12px; border-radius: 50%; background: rgb(10 10 10 / 0.12); }
+  .chrome .url { margin-left: 18px; flex: 1; max-width: 460px; height: 26px; border-radius: 6px; background: var(--paper); font-size: 14px; display: flex; align-items: center; padding: 0 12px; color: rgb(10 10 10 / 0.5); }
+  .site-nav { display: flex; align-items: center; justify-content: space-between; padding: 22px 44px; font-size: 17px; }
+  .site-nav b { font-weight: 600; font-size: 20px; }
+  .site-nav span { display: flex; gap: 28px; color: rgb(10 10 10 / 0.6); }
+  .site-nav em { font-style: normal; }
+  .site-hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; padding: 10px 44px 0; }
+  .site-hero h3 { font-size: 46px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; }
+  .site-hero p { margin-top: 16px; font-size: 18px; line-height: 1.5; color: rgb(10 10 10 / 0.55); }
+  .site-btn { display: inline-block; margin-top: 24px; padding: 12px 22px; border-radius: 8px; background: var(--ink); color: #fff; font-size: 16px; font-weight: 500; }
+  .site-img { height: 250px; border-radius: 12px; background: linear-gradient(160deg, #e9e3d8, #d6cbb8); position: relative; overflow: hidden; }
+  .site-img .sofa { position: absolute; left: 50px; right: 50px; bottom: 50px; height: 80px; border-radius: 18px 18px 8px 8px; background: #8a6f52; }
+  .site-img .sofa::before { content: ""; position: absolute; left: 20px; right: 20px; top: -46px; height: 60px; border-radius: 16px; background: #a3876a; }
+  .site-img .lamp { position: absolute; right: 26px; top: 30px; width: 40px; height: 34px; border-radius: 20px 20px 4px 4px; background: #f3c56b; }
+  .products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; padding: 26px 44px 0; }
+  .products div { height: 92px; border-radius: 10px; background: var(--paper); padding: 14px 16px; font-size: 15px; }
+  .products div b { display: block; font-weight: 500; }
+
+  /* Phone */
+  #L-phone { width: 360px; height: 740px; }
+  .notch { position: absolute; left: 50%; top: 14px; width: 110px; height: 28px; border-radius: 14px; background: var(--ink); transform: translateX(-50%); }
+  .status { display: flex; justify-content: space-between; padding: 18px 28px 0; font-size: 14px; font-weight: 600; }
+  .app-h { padding: 40px 24px 14px; }
+  .app-h small { font-size: 14px; }
+  .app-h h3 { font-size: 30px; font-weight: 500; letter-spacing: -0.02em; margin-top: 2px; }
+  .ocard { margin: 0 18px 12px; border-radius: 16px; background: var(--paper); padding: 16px 18px; font-size: 15px; }
+  .ocard .top { display: flex; justify-content: space-between; }
+  .ocard b { font-weight: 600; }
+  .track { margin-top: 12px; height: 6px; border-radius: 3px; background: rgb(10 10 10 / 0.08); overflow: hidden; }
+  .track i { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0.33); }
+  .steps { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: rgb(10 10 10 / 0.5); }
+  .pill { padding: 2px 9px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+  .p-acc { background: var(--accent-soft); color: var(--accent); } .p-ink { background: var(--ink); color: #fff; }
+  .tabbar { position: absolute; left: 0; right: 0; bottom: 0; height: 70px; border-top: 1px solid rgb(10 10 10 / 0.07); display: flex; justify-content: space-around; align-items: center; font-size: 13px; color: rgb(10 10 10 / 0.45); }
+  .tabbar span:first-child { color: var(--accent); font-weight: 600; }
+  .notif { position: absolute; left: 14px; right: 14px; top: 52px; border-radius: 18px; background: rgb(255 255 255 / 0.96); border: 1px solid var(--line);
+    box-shadow: 0 16px 40px -14px rgb(0 0 0 / 0.35); padding: 14px 16px; font-size: 14px; display: flex; gap: 12px; align-items: center; }
+  .notif i { width: 34px; height: 34px; border-radius: 9px; background: var(--accent); flex: none; }
+
+  /* Dashboard */
+  #L-dash { width: 1040px; height: 640px; padding: 26px 30px; }
+  .dhead { display: flex; justify-content: space-between; align-items: center; }
+  .dhead b { font-size: 24px; font-weight: 500; }
+  .live { display: inline-flex; align-items: center; gap: 7px; padding: 4px 11px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); font-size: 14px; font-weight: 600; }
+  .live i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 22px; }
+  .tile { border: 1px solid rgb(10 10 10 / 0.08); border-radius: 12px; padding: 18px 20px; }
+  .tile .k { font-size: 15px; color: rgb(10 10 10 / 0.5); }
+  .tile .v { font-size: 40px; font-weight: 500; letter-spacing: -0.02em; margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .chart { margin-top: 16px; border: 1px solid rgb(10 10 10 / 0.08); border-radius: 12px; height: 168px; position: relative; padding: 16px 20px; }
+  .chart .k { font-size: 15px; color: rgb(10 10 10 / 0.5); }
+  .rows { margin-top: 14px; }
+  .row { display: grid; grid-template-columns: 90px 1fr 110px 110px; align-items: center; height: 46px; font-size: 16px; border-top: 1px solid rgb(10 10 10 / 0.07); font-variant-numeric: tabular-nums; }
+  .row .pill { justify-self: end; }
+
+  /* Chat */
+  #L-chat { width: 560px; height: 700px; background: #efeae2; }
+  .chat-h { height: 76px; background: #fff; display: flex; align-items: center; gap: 14px; padding: 0 22px; border-bottom: 1px solid rgb(10 10 10 / 0.07); }
+  .chat-h i { width: 44px; height: 44px; border-radius: 50%; background: var(--ink); display: grid; place-items: center; color: #fff; font-style: normal; font-weight: 600; }
+  .chat-h b { display: block; font-size: 18px; font-weight: 600; }
+  .chat-h small { font-size: 13px; color: rgb(10 10 10 / 0.5); }
+  .msgs { padding: 26px 22px; display: flex; flex-direction: column; gap: 14px; }
+  .msg { max-width: 78%; padding: 12px 16px 22px; border-radius: 14px; font-size: 18px; line-height: 1.4; position: relative; box-shadow: 0 1px 1px rgb(0 0 0 / 0.08); }
+  .msg time { position: absolute; right: 10px; bottom: 4px; font-size: 11px; color: rgb(10 10 10 / 0.45); }
+  .in { background: #fff; align-self: flex-start; border-top-left-radius: 4px; }
+  .out { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 4px; }
+  .typing { align-self: flex-end; background: #d9fdd3; padding: 14px 18px; border-radius: 14px; display: flex; gap: 6px; }
+  .typing i { width: 8px; height: 8px; border-radius: 50%; background: rgb(10 10 10 / 0.35); }
+  .auto { align-self: flex-end; font-size: 13px; color: rgb(10 10 10 / 0.5); display: flex; align-items: center; gap: 6px; }
+  .auto b { width: 16px; height: 16px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  .track-btn { align-self: flex-end; padding: 10px 16px; border-radius: 10px; background: #fff; color: #0a7c66; font-size: 16px; font-weight: 600; box-shadow: 0 1px 1px rgb(0 0 0 / 0.08); }
+
+  /* End line */
+  #endline { position: absolute; left: 0; right: 0; text-align: center; }
+  #endline h2 { font-size: 92px; font-weight: 500; letter-spacing: -0.03em; }
+  #endline h2 em { font-style: normal; color: var(--accent); }
+  #endline p { margin-top: 20px; font-size: 26px; color: rgb(10 10 10 / 0.5); }
+  .portrait #endline h2 { font-size: 76px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <svg class="traces" id="traces">
+    <path id="tr-l" stroke="rgba(10,10,10,0.22)" stroke-width="2" />
+    <path id="tr-r" stroke="rgba(10,10,10,0.22)" stroke-width="2" />
+    <path id="tr-l2" stroke="rgba(10,10,10,0.12)" stroke-width="2" />
+    <path id="tr-r2" stroke="rgba(10,10,10,0.12)" stroke-width="2" />
+    <path id="sig-l" stroke="#2b59ff" stroke-width="4" stroke-linecap="round" />
+    <path id="sig-r" stroke="#2b59ff" stroke-width="4" stroke-linecap="round" />
+  </svg>
+
+  <div id="cap">
+    <div class="lead" id="cap-lead">We build</div>
+    <div class="slot" id="slot">
+      <span>websites.</span><span>mobile apps.</span><span>ERP &amp; CRM.</span><span>automation.</span>
+    </div>
+  </div>
+
+  <div id="panel">
+    <!-- Website -->
+    <div class="layer" id="L-web">
+      <div class="chrome"><i></i><i></i><i></i><span class="url">sharmafurnishings.in</span></div>
+      <div class="site-nav w-in"><b>Sharma Furnishings</b><span><em>Collections</em><em>Stores</em><em>About</em></span></div>
+      <div class="site-hero">
+        <div>
+          <h3 class="w-in">Handcrafted furniture, delivered across India.</h3>
+          <p class="w-in">Solid wood, made to order in Jaipur. Free delivery and installation.</p>
+          <span class="site-btn w-in">Shop the collection</span>
+        </div>
+        <div class="site-img w-in"><div class="lamp"></div><div class="sofa"></div></div>
+      </div>
+      <div class="products">
+        <div class="w-card"><b>Teak sofa</b><span class="muted">₹48,900</span></div>
+        <div class="w-card"><b>Dining set</b><span class="muted">₹62,500</span></div>
+        <div class="w-card"><b>Bookshelf</b><span class="muted">₹18,200</span></div>
+      </div>
+    </div>
+
+    <!-- Phone app -->
+    <div class="layer" id="L-phone">
+      <div class="notch"></div>
+      <div class="status"><span>9:41</span><span>5G</span></div>
+      <div class="app-h p-in"><small class="muted">Good morning, Rohan</small><h3>My orders</h3></div>
+      <div class="ocard p-card">
+        <div class="top"><b>#1044 · 16 MT</b><span class="pill p-acc" id="ph-status">Accepted</span></div>
+        <div class="track"><i id="ph-track"></i></div>
+        <div class="steps"><span>Placed</span><span>Accepted</span><span>On the way</span></div>
+      </div>
+      <div class="ocard p-card"><div class="top"><b>#1038 · 20 MT</b><span class="pill p-ink">Delivered</span></div><div class="steps"><span>12 Oct · Rake</span></div></div>
+      <div class="ocard p-card"><div class="top"><b>#1031 · 8 MT</b><span class="pill p-ink">Delivered</span></div><div class="steps"><span>9 Oct · Warehouse</span></div></div>
+      <div class="tabbar"><span>Orders</span><span>Track</span><span>Account</span></div>
+      <div class="notif" id="notif"><i></i><div><b>Order #1044 is on the way</b><br /><span class="muted">Vehicle UK07 CA 4412 · ETA 2 h</span></div></div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="layer" id="L-dash">
+      <div class="dhead d-in"><b>Operations</b><span class="live"><i></i>Live</span></div>
+      <div class="tiles">
+        <div class="tile d-card"><div class="k">Orders this month</div><div class="v" id="n-ord">0</div></div>
+        <div class="tile d-card"><div class="k">Revenue</div><div class="v">₹<span id="n-rev">0.0</span>L</div></div>
+        <div class="tile d-card"><div class="k">On-time delivery</div><div class="v"><span id="n-ot">0</span>%</div></div>
+      </div>
+      <div class="chart d-card">
+        <div class="k">Dispatch volume</div>
+        <svg width="940" height="110" viewBox="0 0 940 110" style="position:absolute;left:20px;bottom:14px;overflow:visible">
+          <path id="d-area" d="M0 96 C80 90 120 70 200 74 S330 52 400 58 S540 30 620 40 S760 18 840 22 L940 10 L940 110 L0 110Z" fill="rgba(43,89,255,0.08)" />
+          <path id="d-line" d="M0 96 C80 90 120 70 200 74 S330 52 400 58 S540 30 620 40 S760 18 840 22 L940 10" fill="none" stroke="#2b59ff" stroke-width="3" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+        </svg>
+      </div>
+      <div class="rows">
+        <div class="row d-row"><span class="muted">#1044</span><span>Sharma Traders</span><span class="muted">16 MT</span><span class="pill p-ink">Dispatched</span></div>
+        <div class="row d-row"><span class="muted">#1045</span><span>Gupta Agencies</span><span class="muted">8 MT</span><span class="pill p-acc">Accepted</span></div>
+      </div>
+    </div>
+
+    <!-- WhatsApp automation -->
+    <div class="layer" id="L-chat">
+      <div class="chat-h"><i>ST</i><div><b>Sharma Traders</b><small>WhatsApp Business · automated</small></div></div>
+      <div class="msgs">
+        <div class="msg in" id="m1">Hi, has order 1044 left the rake?<time>10:43</time></div>
+        <div class="typing" id="typing"><i></i><i></i><i></i></div>
+        <div class="msg out" id="m2">Yes ✓ Vehicle UK07 CA 4412 left at 10:42. Driver: 98•• •• 4521, ETA 2 hours.<time>10:43</time></div>
+        <div class="track-btn" id="m3">Track live ↗</div>
+        <div class="auto" id="m4"><b></b>Replied automatically in 2 seconds</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="lockup">
+    <div class="mark">
+      <svg viewBox="0 0 100 110" id="hex">
+        <path id="hex-o" d="M50 3 96 29.5v51L50 107 4 80.5v-51Z" stroke="#0a0a0a" stroke-width="3" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+        <path id="hex-i" d="M50 15 85.5 35.5v39L50 95 14.5 74.5v-39Z" stroke="#2b59ff" stroke-width="3" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+      </svg>
+      <img id="mark-img" src="../web/public/brand/mark.png" alt="" />
+    </div>
+    <span class="name" id="lockup-name">Mochan Labs</span>
+  </div>
+
+  <div id="endline">
+    <h2>Let's build <em>yours.</em></h2>
+    <p>mochanlabs.com</p>
+  </div>
+</div>
+
+<script src="../web/node_modules/gsap/dist/gsap.min.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const render = params.has("render");
+  const portrait = params.get("format") === "portrait";
+  if (portrait) document.documentElement.classList.add("portrait");
+  const $ = (s) => document.querySelector(s);
+  const DUR = 16;
+
+  // Layout per format
+  const W = portrait ? 1080 : 1920;
+  const K = portrait ? 0.92 : 1;
+  const L = portrait
+    ? { lock: [48, 54], cap: [48, 140], panel: [540, 760], end: 560 }
+    : { lock: [120, 312], cap: [120, 400], panel: [1255, 545], end: 600 };
+  const sizes = { web: [1000, 640, 14], phone: [360, 740, 46], dash: [1040, 640, 14], chat: [560, 700, 22] };
+  const rect = (name) => {
+    const [w, h, r] = sizes[name];
+    return { width: w * K, height: h * K, left: L.panel[0] - (w * K) / 2, top: L.panel[1] - (h * K) / 2, borderRadius: r };
+  };
+
+  function build() {
+    const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+    const lock = $("#lockup"), cap = $("#cap"), panel = $("#panel"), slot = [...$("#slot").children];
+
+    gsap.set(lock, { left: L.lock[0], top: L.lock[1] });
+    gsap.set(cap, { left: L.cap[0], top: L.cap[1] });
+    gsap.set("#endline", { top: L.end });
+
+    // Intro: the lockup starts large and centred, then settles into place.
+    const lw = lock.offsetWidth, lh = lock.offsetHeight;
+    const S0 = portrait ? 2.4 : 2.9;
+    const cx = W / 2, cy = portrait ? 560 : 500;
+    gsap.set(lock, { x: cx - (lw * S0) / 2 - L.lock[0], y: cy - (lh * S0) / 2 - L.lock[1], scale: S0 });
+    // Circuit traces run in from both edges to the lockup.
+    const lx = cx - (lw * S0) / 2 - 30, rx = cx + (lw * S0) / 2 + 30;
+    const tr = (id, d) => $(id).setAttribute("d", d);
+    tr("#tr-l", `M-10 ${cy - 60} H${lx - 120} L${lx - 60} ${cy} H${lx}`);
+    tr("#tr-l2", `M-10 ${cy - 30} H${lx - 150} L${lx - 90} ${cy + 30} H${lx}`);
+    tr("#tr-r", `M${W + 10} ${cy + 60} H${rx + 120} L${rx + 60} ${cy} H${rx}`);
+    tr("#tr-r2", `M${W + 10} ${cy + 30} H${rx + 150} L${rx + 90} ${cy - 30} H${rx}`);
+    tr("#sig-l", $("#tr-l").getAttribute("d"));
+    tr("#sig-r", $("#tr-r").getAttribute("d"));
+    gsap.set("#traces path", { attr: { pathLength: 1 }, strokeDasharray: 1, strokeDashoffset: 1 });
+    gsap.set(["#sig-l", "#sig-r"], { strokeDasharray: "0.08 0.92", strokeDashoffset: 0.08, opacity: 0 });
+    gsap.set(["#mark-img", "#lockup-name"], { opacity: 0 });
+    gsap.set("#mark-img", { scale: 0.85 });
+    gsap.set(cap, { opacity: 0 });
+    gsap.set(slot, { yPercent: 110 });
+    gsap.set(panel, { ...rect("web"), opacity: 0, y: 40 });
+    gsap.set(".w-in, .w-card, .p-in, .p-card, .d-in, .d-card, .d-row", { opacity: 0, y: 16 });
+    gsap.set(["#m1", "#m2", "#m3", "#m4", "#typing"], { opacity: 0, y: 12 });
+    gsap.set("#notif", { yPercent: -160, opacity: 0 });
+    gsap.set("#endline > *", { opacity: 0, y: 24 });
+
+    // ---- 0 – 2.9s: logo
+    tl.to(["#tr-l", "#tr-l2", "#tr-r", "#tr-r2"], { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut", stagger: 0.08 }, 0.1)
+      .set(["#sig-l", "#sig-r"], { opacity: 1 }, 0.25)
+      .to(["#sig-l", "#sig-r"], { strokeDashoffset: -0.92, duration: 0.9, ease: "power2.in" }, 0.25)
+      .set(["#sig-l", "#sig-r"], { opacity: 0 }, 1.15)
+      .to("#hex-o", { strokeDashoffset: 0, duration: 0.7, ease: "power2.inOut" }, 0.7)
+      .to("#hex-i", { strokeDashoffset: 0, duration: 0.7, ease: "power2.inOut" }, 0.85)
+      .to("#mark-img", { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, 1.4)
+      .to("#hex", { opacity: 0, duration: 0.3 }, 1.6)
+      .fromTo("#lockup-name", { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.5 }, 1.55)
+      .to("#traces", { opacity: 0, duration: 0.4 }, 2.0)
+      .to(lock, { x: 0, y: 0, scale: 1, duration: 0.8, ease: "power3.inOut" }, 2.15)
+      .to(cap, { opacity: 1, duration: 0.5 }, 2.55)
+      .from("#cap-lead", { yPercent: 40, duration: 0.6 }, 2.55);
+
+    const swap = (i, t) => {
+      if (i > 0) tl.to(slot[i - 1], { yPercent: -110, duration: 0.5, ease: "power3.inOut" }, t);
+      tl.to(slot[i], { yPercent: 0, duration: 0.5, ease: "power3.inOut" }, t);
+    };
+    const morph = (to, t) => tl.to(panel, { ...rect(to), duration: 0.65, ease: "power3.inOut" }, t);
+    const fadeLayer = (from, to, t) => tl.to(from, { opacity: 0, duration: 0.25 }, t).to(to, { opacity: 1, duration: 0.3 }, t + 0.3);
+
+    // ---- 2.75 – 5.4s: website
+    swap(0, 2.85);
+    tl.to(panel, { opacity: 1, y: 0, duration: 0.7 }, 2.75)
+      .set("#L-web", { opacity: 1 }, 2.75)
+      .to("#L-web .w-in", { opacity: 1, y: 0, duration: 0.55, stagger: 0.12 }, 3.1)
+      .to("#L-web .w-card", { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 }, 3.9);
+
+    // ---- 5.4 – 8.2s: mobile app
+    swap(1, 5.45);
+    morph("phone", 5.4);
+    fadeLayer("#L-web", "#L-phone", 5.4);
+    tl.to("#L-phone .p-in, #L-phone .p-card", { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 }, 5.95)
+      .to("#ph-track", { scaleX: 0.66, duration: 0.6, ease: "power2.inOut" }, 6.5)
+      .to("#ph-track", { scaleX: 1, duration: 0.5, ease: "power2.inOut" }, 7.1)
+      .set("#ph-status", { textContent: "On the way" }, 7.4)
+      .to("#notif", { yPercent: 0, opacity: 1, duration: 0.5 }, 7.35);
+
+    // ---- 8.2 – 11s: ERP & CRM dashboard
+    swap(2, 8.25);
+    morph("dash", 8.2);
+    fadeLayer("#L-phone", "#L-dash", 8.2);
+    tl.to("#L-dash .d-in, #L-dash .d-card", { opacity: 1, y: 0, duration: 0.5, stagger: 0.08 }, 8.75)
+      .to("#d-line", { strokeDashoffset: 0, duration: 1.3, ease: "power2.inOut" }, 9.1)
+      .from("#d-area", { opacity: 0, duration: 1 }, 9.4)
+      .to("#L-dash .d-row", { opacity: 1, y: 0, duration: 0.45, stagger: 0.12 }, 9.6);
+    const count = (el, to, t, fmt = (v) => Math.round(v).toLocaleString("en-IN")) => {
+      const o = { v: 0 };
+      tl.to(o, { v: to, duration: 1.4, ease: "power2.out", onUpdate: () => ($(el).textContent = fmt(o.v)) }, t);
+    };
+    count("#n-ord", 1284, 8.95);
+    count("#n-rev", 4.2, 9.0, (v) => v.toFixed(1));
+    count("#n-ot", 96, 9.05);
+
+    // ---- 11 – 13.4s: WhatsApp automation
+    swap(3, 11.05);
+    morph("chat", 11.0);
+    fadeLayer("#L-dash", "#L-chat", 11.0);
+    tl.to("#m1", { opacity: 1, y: 0, duration: 0.4 }, 11.55)
+      .to("#typing", { opacity: 1, y: 0, duration: 0.25 }, 11.95)
+      .to("#typing i", { y: -5, duration: 0.18, stagger: 0.09, yoyo: true, repeat: 1, ease: "sine.inOut" }, 12.0)
+      .set("#typing", { display: "none" }, 12.4)
+      .to("#m2", { opacity: 1, y: 0, duration: 0.4 }, 12.4)
+      .to("#m3", { opacity: 1, y: 0, duration: 0.35 }, 12.7)
+      .to("#m4", { opacity: 1, y: 0, duration: 0.35 }, 12.9);
+
+    // ---- 13.5 – 16s: "Let's build yours." (fully faded before the loop point)
+    tl.to(panel, { opacity: 0, scale: 0.94, duration: 0.5, ease: "power2.in" }, 13.5)
+      .to(cap, { opacity: 0, duration: 0.4 }, 13.5);
+    const S1 = portrait ? 1.7 : 1.9;
+    const endY = L.end - 40 - lh * S1;
+    tl.to(lock, { x: cx - (lw * S1) / 2 - L.lock[0], y: endY - L.lock[1], scale: S1, duration: 0.8, ease: "power3.inOut" }, 13.6)
+      .to("#endline h2", { opacity: 1, y: 0, duration: 0.7 }, 14.0)
+      .to("#endline p", { opacity: 1, y: 0, duration: 0.7 }, 14.25)
+      .to([lock, "#endline"], { opacity: 0, duration: 0.45, ease: "power2.in" }, 15.4)
+      .set({}, {}, DUR);
+    return tl;
+  }
+
+  Promise.all([
+    ...["400", "500", "600"].map((w) => document.fonts.load(`${w} 20px Figtree`)),
+    document.fonts.ready,
+    ...[...document.images].map((i) => (i.complete ? 0 : new Promise((r) => (i.onload = i.onerror = r)))),
+  ]).then(() => {
+    const tl = build();
+    // Returns nothing: handing GSAP's timeline back to the renderer would make
+    // it try (and fail) to serialise it.
+    window.__seek = (t) => {
+      tl.seek(t, false);
+    };
+    window.__duration = DUR;
+    window.__ready = true;
+    if (!render) tl.repeat(-1).play();
+  });
+</script>
+</body>
+</html>

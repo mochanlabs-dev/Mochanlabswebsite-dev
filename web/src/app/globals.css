@@ -1,13 +1,15 @@
 @import "tailwindcss";
 @import "lenis/dist/lenis.css";
 
-/* Brand: paper white + one accent (sapphire, from the logo's "M") + ink black. */
+/* Design 2 — calm and minimal. Warm off-white paper, near-black ink, and one
+   accent (sapphire, from the logo's "M"), used sparingly. */
 @theme {
-  --color-paper: #ffffff;
+  --color-paper: #f5f6f3;
+  --color-card: #ffffff;
   --color-ink: #0a0a0a;
   --color-accent: #2b59ff;
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --color-accent-soft: #dce4ff;
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -25,7 +27,7 @@ body {
 
 ::selection {
   background: var(--color-accent);
-  color: var(--color-paper);
+  color: var(--color-card);
 }
 
 :focus-visible {
@@ -33,78 +35,61 @@ body {
   outline-offset: 3px;
 }
 
-/* Headings use tight mono for the "built by engineers" voice. */
-.display {
-  font-family: var(--font-mono);
-  font-weight: 600;
-  letter-spacing: -0.055em;
-  line-height: 0.95;
+/* Headlines: one sans at medium weight, lightly tightened. */
+.heading {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-wrap: balance;
 }
 
-/* "[ LABEL ]" section tags. */
-.tag {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+/* Small section labels. */
+.label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, currentColor 55%, transparent);
 }
 
 /* Masked lines produced by SplitText ({ mask: "lines" }). */
 .split-line {
-  padding-bottom: 0.08em;
-  margin-bottom: -0.08em;
-}
-
-/* Infinite marquee: the track holds two copies of its content. */
-@keyframes marquee {
-  to {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-.marquee {
-  animation: marquee var(--marquee-duration, 40s) linear infinite;
-}
-.marquee-reverse {
-  animation-direction: reverse;
-}
-
-/* Contact headline: words swap colour on hover — white words light up in
-   the accent, the accent word turns white. Text only, no fill. */
-.hl-word {
-  transition: color 0.35s var(--ease-out-expo);
-}
-.hl-word:hover {
-  color: var(--color-accent);
-}
-.hl-word.text-accent:hover {
-  color: var(--color-paper);
-}
-
-/* Intro loader: hidden when already seen this session (set before paint by
-   the inline script in layout.tsx), with a failsafe in case JS never runs. */
-.intro-seen [data-loader] {
-  display: none;
-}
-@keyframes loader-failsafe {
-  to {
-    visibility: hidden;
-    opacity: 0;
-  }
-}
-[data-loader] {
-  animation: loader-failsafe 0s 6s forwards;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee {
-    animation: none;
-  }
-  [data-loader] {
-    display: none;
+  html {
+    scroll-behavior: auto;
   }
 }
 
-/* Process step titles end in "."; colour it once the title is split. */
-.step-title .word:last-child .char:last-child {
-  color: var(--color-accent);
+/* Services: an endless row drifting left to right. The track holds two
+   copies of the cards and slides by one copy's width (50%). */
+@keyframes services-drift {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+.services-marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.services-track {
+  animation: services-drift 110s linear infinite;
+}
+.services-marquee:hover .services-track,
+.services-marquee:focus-within .services-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .services-marquee {
+    overflow-x: auto;
+    mask-image: none;
+  }
+  .services-track {
+    animation: none;
+  }
 }

@@ -1,42 +1,133 @@
-import { whyUs } from "@/content/site";
-import { Tag } from "./ui";
+"use client";
 
+import { useRef, type ReactNode } from "react";
+import { whyUs } from "@/content/site";
+import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
+import CircuitLines from "./CircuitLines";
+import { Label, Plus } from "./ui";
+
+// Card colours, in the order the cards are dealt (the last one ends on top).
+const tones = [
+  "bg-ink text-card",
+  "bg-accent-soft text-ink",
+  "bg-card text-ink border border-ink/10",
+  "bg-accent text-card",
+  "bg-[#0e1f5b] text-card",
+  "bg-ink text-card",
+];
+
+const stroke = { fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+
+// One outline icon per item, in whyUs.items order.
+const icons: ReactNode[] = [
+  // Expert team
+  <g key="team" {...stroke}>
+    <circle cx="9" cy="8" r="3" />
+    <path d="M3.5 19a5.5 5.5 0 0 1 11 0" />
+    <circle cx="16.5" cy="9" r="2.5" />
+    <path d="M15.5 14.2A4.5 4.5 0 0 1 21 18.5" />
+  </g>,
+  // Cost effective (rupee)
+  <g key="rupee" {...stroke}>
+    <path d="M7 5h10M7 9h10M7 5c5 0 6 2.5 6 4s-1.5 4-6 4l7 6" />
+  </g>,
+  // Fast delivery (bolt)
+  <g key="bolt" {...stroke}>
+    <path d="M13 3 5 14h6l-1 7 8-11h-6l1-7Z" />
+  </g>,
+  // Ongoing support (loop)
+  <g key="loop" {...stroke}>
+    <path d="M8 8.5c-2.5-2.5-6-1-6 3.5s3.5 6 6 3.5L16 8.5c2.5-2.5 6-1 6 3.5s-3.5 6-6 3.5L8 8.5Z" />
+  </g>,
+  // Scalable solutions (expand)
+  <g key="expand" {...stroke}>
+    <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" />
+  </g>,
+  // Trusted partner (shield)
+  <g key="shield" {...stroke}>
+    <path d="M12 3 4.5 6v6c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6L12 3Z" />
+    <path d="m8.8 12 2.2 2.2 4.2-4.4" />
+  </g>,
+];
+
+// As on Abatable: the section pins, the cards rise from below one at a time,
+// tilting as they come, and settle into a fan from left to right so the last
+// card reads in full. On small screens the cards simply stack.
 export default function WhyUs() {
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      if (prefersReducedMotion()) return;
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 1024px)", () => {
+        const cards = gsap.utils.toArray<HTMLElement>("[data-why-card]");
+        const n = cards.length;
+        // Cards are sized from the viewport height (see --why-h); space them
+        // by ~40% of a card's width so the fan stays compact.
+        const spread = () => cards[0].offsetWidth * 0.4;
+        gsap.set(cards, { xPercent: -50, yPercent: -50 });
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: root.current, start: "top top", end: `+=${n * 55}%`, pin: true, scrub: 0.8, invalidateOnRefresh: true },
+        });
+        cards.forEach((card, i) => {
+          const t = i - (n - 1) / 2; // centred index
+          const rot = gsap.utils.interpolate(-9, 11, i / (n - 1)); // left tilt → right tilt
+          tl.fromTo(
+            card,
+            { y: () => window.innerHeight, x: () => t * spread() + 60, rotate: rot + 12 },
+            { y: Math.abs(t) * 8, x: () => t * spread(), rotate: rot, ease: "power2.out", duration: 1 },
+            i * 0.7,
+          );
+        });
+        tl.to({}, { duration: 0.5 });
+      });
+      return () => mm.revert();
+    },
+    { scope: root },
+  );
+
   return (
-    <section id="why-us" className="bg-paper pb-24 sm:pb-36">
-      <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
-        <div className="grid gap-8 pt-24 sm:pt-36 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <Tag index="03" className="text-ink/50">
-              {whyUs.tag}
-            </Tag>
-          </div>
-          <div className="lg:col-span-8">
-            <h2 data-reveal="lines" className="display text-[clamp(2.4rem,6vw,5.5rem)]">
-              {whyUs.titleLead} <span className="text-accent">{whyUs.titleAccent}</span> {`${whyUs.titleTrail}.`}
-            </h2>
-          </div>
+    <section
+      ref={root}
+      id="why-us"
+      className="relative overflow-hidden lg:h-svh"
+      // Card height follows the screen height so the fan always fits.
+      style={{ ["--why-h" as string]: "clamp(17rem, 48svh, 27rem)" }}
+    >
+      {/* Faint line work and blueprint markers behind the cards */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 hidden text-ink opacity-[0.07] lg:block">
+        <CircuitLines className="h-full w-full [&_[data-trace]]:[stroke-dashoffset:0]" />
+      </div>
+      <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block">
+        {["16%", "50%", "84%"].map((top) =>
+          ["4%", "50%", "96%"].map((left) => <Plus key={top + left} style={{ top, left }} />),
+        )}
+      </div>
+
+      <div className="relative mx-auto flex h-full max-w-[1400px] flex-col px-5 py-24 sm:px-8 lg:py-0 lg:pt-24 lg:pb-6">
+        <div className="mx-auto max-w-3xl text-center">
+          <Label className="mb-5">{whyUs.tag}</Label>
+          <h2 className="heading text-[clamp(2.2rem,min(4.4vw,7svh),4rem)]">
+            {whyUs.titleLead} <span className="text-accent">{whyUs.titleAccent}</span> {whyUs.titleTrail}
+          </h2>
         </div>
 
-        <ul className="mt-16 grid grid-cols-1 border-t border-l border-ink/10 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="relative mt-12 grid gap-4 sm:grid-cols-2 lg:mt-0 lg:block lg:flex-1">
           {whyUs.items.map((item, i) => (
             <li
               key={item.title}
-              data-reveal="fade"
-              data-delay={(i % 3) * 0.08}
-              className="group relative flex min-h-[19rem] flex-col justify-between overflow-hidden border-r border-b border-ink/10 p-8 sm:p-10"
+              data-why-card
+              className={`flex min-h-[19rem] flex-col justify-between rounded-xl p-7 shadow-[0_24px_60px_-24px_rgb(0_0_0/0.35)] lg:absolute lg:top-1/2 lg:left-1/2 lg:h-[var(--why-h)] lg:min-h-0 lg:w-[calc(var(--why-h)*0.72)] lg:p-[calc(var(--why-h)*0.07)] ${tones[i % tones.length]}`}
             >
-              {/* Hover: ink panel rises from the bottom */}
-              <span
-                aria-hidden
-                className="absolute inset-0 origin-bottom scale-y-0 bg-ink transition-transform duration-700 ease-out-expo group-hover:scale-y-100"
-              />
-              <span className="relative font-mono text-sm text-accent">{String(i + 1).padStart(2, "0")}</span>
-              <div className="relative transition-colors duration-500 group-hover:text-paper">
-                <h3 className="display mb-4 text-3xl">{item.title}</h3>
-                <p className="text-[0.95rem] leading-relaxed text-ink/60 transition-colors duration-500 group-hover:text-paper/65">
-                  {item.body}
-                </p>
+              <span className="grid size-14 place-items-center rounded-2xl border border-current/40 lg:size-[calc(var(--why-h)*0.15)]">
+                <svg viewBox="0 0 24 24" className="size-6 lg:size-[45%]" aria-hidden>
+                  {icons[i]}
+                </svg>
+              </span>
+              <div>
+                <h3 className="heading text-[1.6rem] lg:text-[calc(var(--why-h)*0.068)]">{item.title}</h3>
+                <p className="mt-3 text-[0.95rem] leading-relaxed opacity-80 lg:text-[calc(var(--why-h)*0.037)]">{item.body}</p>
               </div>
             </li>
           ))}

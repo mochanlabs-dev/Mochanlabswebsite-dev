@@ -1,66 +1,56 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { ArrowIcon } from "./icons";
 
-/** "[ 02 — OUR SERVICES ]" section tag. */
-export function Tag({ index, children, className = "" }: { index?: string; children: ReactNode; className?: string }) {
+/** Small "+" crosshair marking a hairline intersection (blueprint detail). */
+export function Plus({ className = "", style }: { className?: string; style?: CSSProperties }) {
   return (
-    <p className={`tag ${className}`}>
-      [ {index && <span className="text-accent">{index} — </span>}
-      {children} ]
-    </p>
+    <svg
+      aria-hidden
+      style={style}
+      viewBox="0 0 11 11"
+      className={`pointer-events-none absolute size-[11px] -translate-x-1/2 -translate-y-1/2 text-accent ${className}`}
+    >
+      <path d="M5.5 0v11M0 5.5h11" stroke="currentColor" strokeWidth="1" />
+    </svg>
   );
 }
 
-/**
- * Button whose label rolls up letter by letter on hover. Each letter is
- * rendered twice (stacked); hover slides the column up by one line.
- */
-export function RollButton({
+/** Section label, e.g. "About Us". */
+export function Label({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return <p className={`label ${className}`}>{children}</p>;
+}
+
+/** Small rectangular button. */
+export function Button({
   href,
   children,
   variant = "accent",
   className = "",
   external = false,
+  tabIndex,
 }: {
   href: string;
-  children: string;
-  variant?: "accent" | "light" | "dark";
+  children: ReactNode;
+  variant?: "accent" | "outline" | "ink" | "light";
   className?: string;
   external?: boolean;
+  tabIndex?: number;
 }) {
   const styles = {
-    accent: "bg-accent text-paper",
-    light: "bg-paper text-ink",
-    dark: "bg-ink text-paper",
+    accent: "bg-accent text-card hover:bg-ink",
+    ink: "bg-ink text-card hover:bg-accent",
+    light: "bg-card text-ink hover:bg-accent hover:text-card",
+    outline: "border border-ink/15 text-ink hover:border-ink",
   }[variant];
-
   return (
     <a
       href={href}
+      tabIndex={tabIndex}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className={`group inline-flex items-center gap-3 rounded-full py-3 pr-3 pl-6 font-mono text-[0.8rem] font-medium tracking-wide uppercase transition-transform duration-300 active:scale-[0.97] ${styles} ${className}`}
+      className={`group inline-flex items-center gap-2 rounded-[4px] px-4 py-2.5 text-sm font-medium transition-colors duration-300 ${styles} ${className}`}
     >
-      <span className="sr-only">{children}</span>
-      <span className="relative inline-flex overflow-hidden" aria-hidden>
-        {children.split("").map((ch, i) => (
-          <span
-            key={i}
-            aria-hidden
-            className="relative inline-block transition-transform duration-500 ease-out-expo group-hover:-translate-y-full"
-            style={{ transitionDelay: `${i * 18}ms` }}
-          >
-            {ch === " " ? " " : ch}
-            <span className="absolute top-full left-0">{ch === " " ? " " : ch}</span>
-          </span>
-        ))}
-      </span>
-      <span
-        className={`grid size-8 place-items-center rounded-full transition-transform duration-500 ease-out-expo group-hover:rotate-[-45deg] ${
-          variant === "accent" ? "bg-paper text-accent" : variant === "light" ? "bg-ink text-paper" : "bg-paper text-ink"
-        }`}
-      >
-        <ArrowIcon className="size-3.5" />
-      </span>
+      {children}
+      <ArrowIcon className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
     </a>
   );
 }

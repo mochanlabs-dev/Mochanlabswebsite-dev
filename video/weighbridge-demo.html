@@ -1,0 +1,359 @@
+<!doctype html>
+<!--
+  Weighbridge — 15 s product demo (1920×1080, 30 fps).
+  One paused GSAP timeline; render.js seeks it frame by frame and screenshots.
+  Preview: `npm run preview`, then open the printed URL. It plays on its own
+  unless ?render is set.
+  Screenshots are the Weighbridge docs' demo-data screens; ODTS uses demo data.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Weighbridge demo</title>
+<style>
+  /* Figtree, self-hosted (@fontsource/figtree) so rendering never waits on the network. */
+  @font-face { font-family: Figtree; font-weight: 400; src: url(node_modules/@fontsource/figtree/files/figtree-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family: Figtree; font-weight: 500; src: url(node_modules/@fontsource/figtree/files/figtree-latin-500-normal.woff2) format("woff2"); }
+  @font-face { font-family: Figtree; font-weight: 600; src: url(node_modules/@fontsource/figtree/files/figtree-latin-600-normal.woff2) format("woff2"); }
+
+  :root {
+    --paper: #f5f6f3; --card: #fff; --ink: #0a0a0a; --accent: #2b59ff; --accent-soft: #dce4ff;
+    --line: rgb(10 10 10 / 0.1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--paper); }
+  body { font-family: Figtree, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  .stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
+
+  /* Blueprint frame */
+  .rule-h, .rule-v { position: absolute; background: var(--line); }
+  .rule-h { left: 0; right: 0; height: 1px; }
+  .rule-v { top: 0; bottom: 0; width: 1px; }
+  .plus { position: absolute; width: 15px; height: 15px; transform: translate(-50%, -50%); }
+  .plus::before, .plus::after { content: ""; position: absolute; background: var(--accent); }
+  .plus::before { left: 7px; top: 0; width: 1px; height: 15px; }
+  .plus::after { top: 7px; left: 0; height: 1px; width: 15px; }
+
+  /* Captions (left column) */
+  .caption { position: absolute; left: 120px; top: 250px; width: 520px; }
+  .label { font-size: 22px; font-weight: 500; color: rgb(10 10 10 / 0.5); margin-bottom: 28px; }
+  .words { list-style: none; }
+  .words li { font-size: 104px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.04; color: rgb(10 10 10 / 0.14); }
+  .words li .dot { color: var(--accent); }
+  .sub { margin-top: 34px; font-size: 24px; line-height: 1.4; color: rgb(10 10 10 / 0.55); max-width: 470px; }
+
+  /* App window */
+  .window { position: absolute; left: 700px; top: 170px; width: 1100px; height: 740px; border-radius: 14px;
+    background: var(--card); border: 1px solid var(--line); overflow: hidden;
+    box-shadow: 0 40px 120px -40px rgb(0 0 0 / 0.35); }
+  .bar { height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 22px;
+    border-bottom: 1px solid rgb(10 10 10 / 0.07); font-size: 17px; color: rgb(10 10 10 / 0.45); }
+  .shots { position: relative; height: 688px; overflow: hidden; }
+  .shots img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left; opacity: 0; }
+
+  /* Floating cards */
+  .float { position: absolute; background: var(--card); border-radius: 12px; border: 1px solid var(--line);
+    box-shadow: 0 30px 80px -30px rgb(0 0 0 / 0.4); }
+  .weight { left: 620px; top: 650px; width: 430px; padding: 26px 30px; }
+  .weight .k { font-size: 18px; color: rgb(10 10 10 / 0.5); display: flex; justify-content: space-between; }
+  .weight .v { margin-top: 8px; font-size: 76px; font-weight: 500; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .weight .v small { font-size: 30px; color: rgb(10 10 10 / 0.45); margin-left: 8px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 6px; font-size: 16px; font-weight: 500; }
+  .chip .d { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .wait { background: rgb(10 10 10 / 0.06); color: rgb(10 10 10 / 0.55); }
+  .stable { background: var(--accent); color: #fff; }
+
+  .bill { left: 1430px; top: 690px; width: 420px; padding: 24px 28px; }
+  .bill .row { display: flex; justify-content: space-between; font-size: 20px; padding: 7px 0; color: rgb(10 10 10 / 0.6); font-variant-numeric: tabular-nums; }
+  .bill .row b { color: var(--ink); font-weight: 500; }
+  .bill .total { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 12px; font-size: 26px; color: var(--ink); }
+
+  .toasts { position: absolute; left: 1380px; top: 760px; display: flex; flex-direction: column; gap: 12px; }
+  .toast { padding: 16px 22px; font-size: 20px; display: flex; align-items: center; gap: 12px; position: relative; }
+  .tick { width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font-size: 15px; }
+
+  /* ODTS board */
+  .board { left: 760px; top: 200px; width: 940px; }
+  .board-head { display: flex; justify-content: space-between; align-items: center; padding: 22px 30px; border-bottom: 1px solid rgb(10 10 10 / 0.07); }
+  .board-head b { font-size: 24px; font-weight: 500; }
+  .filters { display: flex; gap: 8px; font-size: 15px; }
+  .filters span { padding: 4px 10px; border-radius: 5px; background: var(--ink); color: #fff; }
+  .filters span.off { background: rgb(10 10 10 / 0.06); color: rgb(10 10 10 / 0.55); }
+  .group { padding: 18px 30px; border-bottom: 1px solid rgb(10 10 10 / 0.07); }
+  .group:last-child { border-bottom: 0; }
+  .gname { font-size: 17px; color: rgb(10 10 10 / 0.5); margin-bottom: 8px; }
+  .gname b { color: var(--ink); font-weight: 500; }
+  .order { display: grid; grid-template-columns: 90px 1fr 110px 170px; align-items: center; gap: 12px; padding: 10px 12px; margin: 0 -12px;
+    font-size: 19px; border-radius: 8px; font-variant-numeric: tabular-nums; }
+  .order .id { color: rgb(10 10 10 / 0.45); }
+  .order .muted { color: rgb(10 10 10 / 0.4); }
+  .order .qty { text-align: right; color: rgb(10 10 10 / 0.75); }
+  .badge { justify-self: end; position: relative; height: 30px; width: 150px; }
+  .badge span { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 6px; font-size: 15px; font-weight: 500; }
+  .b-placed { border: 1px solid rgb(10 10 10 / 0.18); color: rgb(10 10 10 / 0.7); background: #fff; }
+  .b-acc { background: var(--accent-soft); color: var(--accent); }
+  .b-dis { background: var(--ink); color: #fff; }
+  .b-hold { border: 1px dashed rgb(10 10 10 / 0.35); color: rgb(10 10 10 / 0.6); }
+
+  .dispatch { left: 1340px; top: 600px; width: 470px; padding: 26px 28px; }
+  .dispatch .t { font-size: 22px; font-weight: 500; }
+  .dispatch .t span { color: rgb(10 10 10 / 0.45); font-weight: 400; }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; margin-top: 18px; }
+  .fields dt { font-size: 14px; color: rgb(10 10 10 / 0.5); margin-bottom: 5px; }
+  .fields dd { height: 40px; border: 1px solid rgb(10 10 10 / 0.12); border-radius: 6px; background: var(--paper);
+    padding: 0 12px; display: flex; align-items: center; font-size: 18px; font-variant-numeric: tabular-nums; white-space: pre; }
+  .caret { display: inline-block; width: 2px; height: 20px; background: var(--accent); margin-left: 2px; opacity: 0; }
+  .dfoot { margin-top: 18px; display: flex; justify-content: space-between; align-items: center; font-size: 15px; color: rgb(10 10 10 / 0.5); }
+  .btn { padding: 9px 18px; border-radius: 6px; background: var(--accent); color: #fff; font-size: 17px; font-weight: 500; }
+
+  /* End card */
+  .end { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
+  .end svg.lines { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--ink); }
+  .brand { display: inline-flex; align-items: center; gap: 18px; }
+  .brand img { height: 78px; }
+  .brand span { font-size: 54px; font-weight: 500; letter-spacing: -0.02em; }
+  .tag { margin-top: 30px; font-size: 64px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; }
+  .tag em { font-style: normal; color: var(--accent); }
+  .url { margin-top: 28px; font-size: 24px; color: rgb(10 10 10 / 0.5); }
+  .end-inner { position: relative; }
+
+  .scene { position: absolute; inset: 0; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <!-- Blueprint frame -->
+  <div class="rule-h" style="top:80px"></div>
+  <div class="rule-h" style="top:1000px"></div>
+  <div class="rule-v" style="left:80px"></div>
+  <div class="rule-v" style="left:1840px"></div>
+  <div class="plus" style="left:80px;top:80px"></div>
+  <div class="plus" style="left:1840px;top:80px"></div>
+  <div class="plus" style="left:80px;top:1000px"></div>
+  <div class="plus" style="left:1840px;top:1000px"></div>
+
+  <!-- Scene 1: Weighbridge -->
+  <div class="scene" id="s1">
+    <div class="caption">
+      <p class="label">Weighbridge</p>
+      <ul class="words" id="wb-words">
+        <li>Weigh<span class="dot">.</span></li>
+        <li>Bill<span class="dot">.</span></li>
+        <li>Print<span class="dot">.</span></li>
+        <li>Sync<span class="dot">.</span></li>
+      </ul>
+    </div>
+    <div class="window" id="win">
+      <div class="bar"><span>Weighbridge</span><span id="bar-step">Token — Gate Entry</span></div>
+      <div class="shots">
+        <!-- Each shot is zoomed into the part that matters (transform-origin). -->
+        <img id="i-token" src="../web/public/work/weighbridge/token-entry.webp" alt="" style="transform-origin: 10% 22%" />
+        <img id="i-bill" src="../web/public/work/weighbridge/sale-billing.webp" alt="" style="transform-origin: 30% 40%" />
+        <img id="i-slip" src="../web/public/work/weighbridge/slip-sale.webp" alt="" style="transform-origin: 50% 0%" />
+      </div>
+    </div>
+    <div class="float weight" id="weight">
+      <div class="k"><span>Live weight · UK07CA7790</span><span class="chip wait" id="w-wait"><span class="d"></span>Waiting</span></div>
+      <div class="v"><span id="w-num">0</span><small>kg</small></div>
+      <span class="chip stable" id="w-stable" style="position:absolute;right:30px;top:24px;opacity:0"><span class="d"></span>Stable</span>
+    </div>
+    <div class="float bill" id="bill">
+      <div class="row"><span>Net weight</span><b>314 Qtl</b></div>
+      <div class="row"><span>Rate</span><b>₹50 / Qtl</b></div>
+      <div class="row"><span>GST 5%</span><b>₹785</b></div>
+      <div class="row total"><span>Amount</span><b>₹15,700</b></div>
+    </div>
+    <div class="toasts">
+      <div class="float toast" id="t1"><span class="tick">✓</span>Posted to Tally</div>
+      <div class="float toast" id="t2"><span class="tick">✓</span>Reported to MDTSS portal</div>
+    </div>
+  </div>
+
+  <!-- Scene 2: ODTS -->
+  <div class="scene" id="s2">
+    <div class="caption">
+      <p class="label">ODTS — Order Dispatch &amp; Tracking</p>
+      <ul class="words" id="od-words">
+        <li>Order<span class="dot">.</span></li>
+        <li>Accept<span class="dot">.</span></li>
+        <li>Dispatch<span class="dot">.</span></li>
+      </ul>
+    </div>
+    <div class="float board" id="board">
+      <div class="board-head"><b>Dispatch board</b>
+        <div class="filters"><span>Placed</span><span>Accepted</span><span class="off">Dispatched</span></div></div>
+      <div class="group">
+        <p class="gname"><b>Sharma Traders</b> · <span id="g1-count">2</span> orders</p>
+        <div class="order"><span class="id">#1042</span><span>Product A <span class="muted">· Rake</span></span><span class="qty">12 MT</span>
+          <span class="badge"><span class="b-placed">Order Placed</span></span></div>
+        <div class="order"><span class="id">#1043</span><span>Product B <span class="muted">· Warehouse</span></span><span class="qty">8 MT</span>
+          <span class="badge"><span class="b-acc">Accepted</span></span></div>
+        <div id="new-wrap" style="overflow:hidden;height:0">
+          <div class="order" id="new-row"><span class="id">#1044</span><span>Product A <span class="muted">· Rake</span></span><span class="qty">16 MT</span>
+            <span class="badge"><span class="b-placed" id="nb-placed">Order Placed</span><span class="b-acc" id="nb-acc" style="opacity:0">Accepted</span><span class="b-dis" id="nb-dis" style="opacity:0">Dispatched</span></span></div>
+        </div>
+      </div>
+      <div class="group">
+        <p class="gname"><b>Gupta Agencies</b> · 2 orders</p>
+        <div class="order"><span class="id">#1038</span><span>Product A <span class="muted">· Rake</span></span><span class="qty">20 MT</span>
+          <span class="badge"><span class="b-dis">Dispatched</span></span></div>
+        <div class="order"><span class="id">#1040</span><span>Product C <span class="muted">· Warehouse</span></span><span class="qty">6 MT</span>
+          <span class="badge"><span class="b-hold">On Hold</span></span></div>
+      </div>
+    </div>
+    <div class="float dispatch" id="dispatch">
+      <p class="t">Dispatch order <span>#1044</span></p>
+      <dl class="fields">
+        <div><dt>Vehicle no.</dt><dd><span id="f1"></span><span class="caret" id="c1"></span></dd></div>
+        <div><dt>Driver phone</dt><dd><span id="f2"></span><span class="caret" id="c2"></span></dd></div>
+        <div><dt>Bilty no.</dt><dd><span id="f3"></span><span class="caret" id="c3"></span></dd></div>
+        <div><dt>Loading from</dt><dd><span id="f4"></span></dd></div>
+      </dl>
+      <div class="dfoot"><span id="rcpt" style="opacity:0">Receipt uploaded ✓</span><span class="btn" id="dbtn">Dispatched</span></div>
+    </div>
+  </div>
+
+  <!-- Scene 3: end card -->
+  <div class="scene end" id="s3">
+    <svg class="lines" viewBox="0 0 1920 1080" fill="none" id="end-lines">
+      <path d="M-20 300 H300 L380 220 H760 L840 300 H980" />
+      <path d="M-20 336 H285 L365 256 H745 L825 336 H960" />
+      <path d="M1940 780 H1640 L1560 860 H1180 L1100 780 H940" />
+      <path d="M1940 744 H1655 L1575 824 H1195 L1115 744 H960" />
+      <path d="M1500 -20 V170 L1580 250 V420" />
+      <path d="M420 1100 V900 L340 820 V660" />
+      <path id="sig" d="M-20 336 H285 L365 256 H745 L825 336 H960" />
+    </svg>
+    <div class="end-inner">
+      <div class="brand" id="brand"><img src="../web/public/brand/mark.png" alt="" /><span>Mochan Labs</span></div>
+      <p class="tag" id="tagline">Software that runs <em>real operations.</em></p>
+      <p class="url" id="url">mochanlabs.com</p>
+    </div>
+  </div>
+</div>
+
+<script src="../web/node_modules/gsap/dist/gsap.min.js"></script>
+<script>
+  const render = new URLSearchParams(location.search).has("render");
+  const $ = (s) => document.querySelector(s);
+  const DUR = 15;
+
+  // Typewriter helper: reveals `text` in element `el` over [t, t+d].
+  const type = (tl, el, caret, text, t, d) => {
+    const o = { n: 0 };
+    tl.set(caret, { opacity: 1 }, t);
+    tl.to(o, { n: text.length, duration: d, ease: "none", onUpdate: () => (el.textContent = text.slice(0, Math.round(o.n))) }, t);
+    tl.set(caret, { opacity: 0 }, t + d + 0.15);
+  };
+  // Progressive caption: word i lights up at time t.
+  const word = (tl, list, i, t) => {
+    const items = [...list.children];
+    tl.to(items[i], { color: "#0a0a0a", duration: 0.35, ease: "power2.out" }, t);
+    if (i > 0) tl.to(items[i - 1], { color: "rgba(10,10,10,0.22)", duration: 0.35 }, t);
+  };
+
+  function build() {
+    const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+    const wb = $("#wb-words"), od = $("#od-words");
+
+    // Initial state
+    gsap.set(["#s2", "#s3"], { autoAlpha: 0 });
+    gsap.set("#win", { opacity: 0, y: 40, scale: 0.97 });
+    gsap.set(["#weight", "#bill", "#t1", "#t2", "#board", "#dispatch"], { opacity: 0, y: 30 });
+    gsap.set("#s1 .caption", { opacity: 0, y: 20 });
+    gsap.set("#end-lines path", { strokeDasharray: 1, strokeDashoffset: 1, attr: { pathLength: 1 }, stroke: "rgba(10,10,10,0.18)", strokeWidth: 1.5 });
+    gsap.set("#sig", { stroke: "#2b59ff", strokeWidth: 3, strokeDasharray: "0.05 0.95", strokeDashoffset: 0.05, opacity: 0 });
+    gsap.set(["#brand", "#tagline", "#url"], { opacity: 0, y: 24 });
+
+    // ---- Scene 1: Weighbridge (0 – 6.4s)
+    tl.to("#s1 .caption", { opacity: 1, y: 0, duration: 0.8 }, 0.15)
+      .to("#win", { opacity: 1, y: 0, scale: 1, duration: 1 }, 0.1)
+      .set("#i-token", { opacity: 1 }, 0)
+      .fromTo("#i-token", { scale: 1.42 }, { scale: 1.32, duration: 3, ease: "power1.out" }, 0.1);
+    word(tl, wb, 0, 0.5);
+
+    tl.to("#weight", { opacity: 1, y: 0, duration: 0.7 }, 0.7);
+    const w = { v: 0 };
+    tl.to(w, { v: 41800, duration: 1.4, ease: "power2.out", onUpdate: () => ($("#w-num").textContent = Math.round(w.v / 10) * 10 >= 0 ? (Math.round(w.v / 10) * 10).toLocaleString("en-IN") : "0") }, 0.9)
+      .to("#w-wait", { opacity: 0, duration: 0.2 }, 2.3)
+      .to("#w-stable", { opacity: 1, duration: 0.25 }, 2.35);
+
+    // Bill
+    tl.to("#weight", { opacity: 0, y: -20, duration: 0.4, ease: "power2.in" }, 2.95);
+    word(tl, wb, 1, 3.0);
+    tl.set("#bar-step", { textContent: "Complete Sale — Token 9" }, 3.1)
+      .to("#i-bill", { opacity: 1, duration: 0.45 }, 3.0)
+      .fromTo("#i-bill", { scale: 1.36 }, { scale: 1.28, duration: 1.6, ease: "power1.out" }, 3.0)
+      .to("#bill", { opacity: 1, y: 0, duration: 0.6 }, 3.25);
+
+    // Print
+    word(tl, wb, 2, 4.35);
+    tl.to("#bill", { opacity: 0, y: -20, duration: 0.35, ease: "power2.in" }, 4.3)
+      .set("#bar-step", { textContent: "Weight slip" }, 4.45)
+      .to("#i-slip", { opacity: 1, duration: 0.45 }, 4.35)
+      .fromTo("#i-slip", { yPercent: 8, scale: 1.42 }, { yPercent: 0, scale: 1.36, duration: 1.6, ease: "power3.out" }, 4.35);
+
+    // Sync
+    word(tl, wb, 3, 5.3);
+    tl.to("#t1", { opacity: 1, y: 0, duration: 0.5 }, 5.3)
+      .to("#t2", { opacity: 1, y: 0, duration: 0.5 }, 5.55);
+
+    // Out
+    tl.to("#s1", { autoAlpha: 0, x: -60, duration: 0.55, ease: "power2.in" }, 6.4);
+
+    // ---- Scene 2: ODTS (6.8 – 12.2s)
+    tl.set("#s2", { autoAlpha: 1 }, 6.8)
+      .from("#s2 .caption", { opacity: 0, y: 20, duration: 0.7 }, 6.85)
+      .to("#board", { opacity: 1, y: 0, duration: 0.8 }, 6.9);
+    word(tl, od, 0, 7.2);
+    // New order arrives
+    tl.to("#new-wrap", { height: 52, duration: 0.55, ease: "power3.inOut" }, 7.5)
+      .fromTo("#new-row", { backgroundColor: "rgba(43,89,255,0.14)" }, { backgroundColor: "rgba(43,89,255,0)", duration: 1.6, ease: "none" }, 7.6)
+      .set("#g1-count", { textContent: "3" }, 7.6);
+    // Accepted
+    word(tl, od, 1, 8.5);
+    tl.to("#nb-acc", { opacity: 1, duration: 0.3 }, 8.65).to("#nb-placed", { opacity: 0, duration: 0.3 }, 8.65);
+    // Dispatch form
+    word(tl, od, 2, 9.3);
+    tl.to("#dispatch", { opacity: 1, y: 0, duration: 0.6 }, 9.3);
+    type(tl, $("#f1"), "#c1", "UK07 CA 4412", 9.75, 0.55);
+    type(tl, $("#f2"), "#c2", "98•• •• 4521", 10.3, 0.45);
+    type(tl, $("#f3"), "#c3", "BL-2291", 10.8, 0.35);
+    tl.set("#f4", { textContent: "Rake" }, 11.15)
+      .to("#rcpt", { opacity: 1, duration: 0.3 }, 11.25)
+      .to("#dbtn", { scale: 0.94, duration: 0.1, ease: "power2.in", yoyo: true, repeat: 1 }, 11.45)
+      .to("#nb-dis", { opacity: 1, duration: 0.3 }, 11.6).to("#nb-acc", { opacity: 0, duration: 0.3 }, 11.6);
+    tl.to("#s2", { autoAlpha: 0, x: -60, duration: 0.5, ease: "power2.in" }, 12.2);
+
+    // ---- Scene 3: end card (12.4 – 15s), fades to paper for a clean loop
+    tl.set("#s3", { autoAlpha: 1 }, 12.4)
+      .to("#end-lines path:not(#sig)", { strokeDashoffset: 0, duration: 1.4, stagger: 0.08, ease: "power2.inOut" }, 12.4)
+      .to("#brand", { opacity: 1, y: 0, duration: 0.7 }, 12.7)
+      .to("#tagline", { opacity: 1, y: 0, duration: 0.7 }, 12.9)
+      .to("#url", { opacity: 1, y: 0, duration: 0.7 }, 13.1)
+      .set("#sig", { opacity: 1 }, 13.3)
+      .fromTo("#sig", { strokeDashoffset: 0.05 }, { strokeDashoffset: -0.95, duration: 1.3, ease: "power1.inOut" }, 13.3)
+      .to("#s3", { autoAlpha: 0, duration: 0.45, ease: "power2.in" }, 14.4) // fully faded before the loop point
+      .set({}, {}, DUR);
+    return tl;
+  }
+
+  // Wait for fonts and images, then expose seek() for the renderer.
+  Promise.all([
+    ...["400", "500", "600"].map((w) => document.fonts.load(`${w} 20px Figtree`)),
+    document.fonts.ready,
+    ...[...document.images].map((i) => (i.complete ? 0 : new Promise((r) => (i.onload = i.onerror = r)))),
+  ]).then(() => {
+    const tl = build();
+    // Returns nothing: handing GSAP's timeline object back to the renderer
+    // would make it try (and fail) to serialise it.
+    window.__seek = (t) => {
+      tl.seek(t, false);
+    };
+    window.__duration = DUR;
+    window.__ready = true;
+    if (!render) tl.repeat(-1).play();
+  });
+</script>
+</body>
+</html>

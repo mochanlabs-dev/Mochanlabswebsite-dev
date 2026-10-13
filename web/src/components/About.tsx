@@ -1,52 +1,46 @@
 import { about } from "@/content/site";
-import { RollButton, Tag } from "./ui";
+import { Button, Label } from "./ui";
 
 export default function About() {
   return (
-    // Pulled up by one hero height (h-svh, min 640px) so it rises during the
-    // end of the hero's pinned sequence. No background on purpose: its text
-    // is revealed by the hero's white ink flood rather than after it.
-    <section id="about" className="relative z-10 -mt-[max(100svh,640px)] pt-12 pb-24 sm:pt-16 sm:pb-36">
-      <div className="mx-auto grid max-w-[1400px] gap-12 px-5 sm:px-8 lg:grid-cols-12">
-        <div className="lg:col-span-4">
-          <Tag index="01" className="text-ink/50 lg:sticky lg:top-28">
-            {about.tag}
-          </Tag>
+    <section id="about" className="scroll-mt-20">
+      <div className="mx-auto grid max-w-[1400px] gap-10 px-5 py-24 sm:px-8 sm:py-32 lg:grid-cols-3 lg:gap-0">
+        <div className="lg:pr-12">
+          <Label className="mb-6">{about.tag}</Label>
+          <h2 data-reveal="lines" className="heading text-[clamp(2.2rem,4.4vw,4rem)]">
+            {about.titleLead} <span className="text-accent">{about.titleAccent}</span>
+          </h2>
         </div>
 
-        <div className="lg:col-span-8">
-          <h2 data-reveal="lines" className="display text-[clamp(2.4rem,6vw,5.5rem)]">
-            {about.titleLead} <span className="text-accent">{`${about.titleAccent}.`}</span>
-          </h2>
-
-          <p data-reveal="words" className="mt-12 text-[clamp(1.25rem,2.2vw,1.9rem)] leading-snug tracking-tight">
+        <div className="lg:col-span-2 lg:border-l lg:border-ink/10 lg:pl-12">
+          <p data-reveal="fade" className="max-w-3xl text-[clamp(1.15rem,1.7vw,1.45rem)] leading-snug">
             {about.paragraphs[0]}
           </p>
-          <p data-reveal="fade" className="mt-8 max-w-2xl text-base leading-relaxed text-ink/60 sm:text-lg">
+          <p data-reveal="fade" className="mt-6 max-w-2xl text-base leading-relaxed text-ink/60">
             {about.paragraphs[1]}
           </p>
 
-          <ul className="mt-14 grid grid-cols-1 border-t border-ink/10 sm:grid-cols-2">
-            {about.features.map((f, i) => (
+          <ul className="mt-12 grid border-t border-ink/10 sm:grid-cols-2">
+            {about.features.map((f) => (
               <li
                 key={f}
                 data-reveal="fade"
-                data-delay={i * 0.06}
-                className="flex items-center justify-between border-b border-ink/10 py-5 sm:odd:pr-8 sm:even:pl-8"
+                className="flex items-center gap-3 border-b border-ink/10 py-4 sm:odd:pr-6 sm:even:border-l sm:even:pl-6"
               >
-                <span className="text-lg tracking-tight">{f}</span>
-                <span className="font-mono text-xs text-accent">0{i + 1}</span>
+                <span aria-hidden className="size-1.5 rounded-full bg-accent" />
+                {f}
               </li>
             ))}
           </ul>
 
-          <div data-reveal="fade" className="mt-12">
-            <RollButton href="#contact" variant="dark">
+          <div data-reveal="fade" className="mt-10">
+            <Button href="#contact" variant="ink">
               {about.cta}
-            </RollButton>
+            </Button>
           </div>
         </div>
       </div>
+      <div aria-hidden className="h-px bg-ink/10" />
     </section>
   );
 }

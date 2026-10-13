@@ -1,0 +1,13 @@
+{
+  "name": "mochanlabs-reel",
+  "private": true,
+  "description": "Website videos (brand film, product demos), rendered frame by frame from HTML",
+  "scripts": {
+    "render": "node render.js",
+    "preview": "node serve.js"
+  },
+  "devDependencies": {
+    "@fontsource/figtree": "^5.2.10",
+    "playwright-core": "1.48.2"
+  }
+}

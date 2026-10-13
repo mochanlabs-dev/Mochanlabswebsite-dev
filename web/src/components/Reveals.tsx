@@ -3,7 +3,7 @@
 import { gsap, SplitText, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 
 // Attribute-driven scroll animations shared across sections. Mounted after
-// all sections so its triggers are created after the pinned sections.
+// all sections so its triggers are created after any pinned sections.
 //   data-reveal="lines"  heading lines slide up from a mask
 //   data-reveal="words"  paragraph words brighten as you scroll (scrubbed)
 //   data-reveal="fade"   element fades up
@@ -22,10 +22,10 @@ export default function Reveals() {
           autoSplit: true,
           onSplit: (self) =>
             gsap.from(self.lines, {
-              yPercent: 110,
-              duration: 1.2,
-              ease: "expo.out",
-              stagger: 0.08,
+              yPercent: 105,
+              duration: 1,
+              ease: "power3.out",
+              stagger: 0.07,
               scrollTrigger: { trigger: el, start: "top 88%", once: true },
             }),
         }),
@@ -40,7 +40,7 @@ export default function Reveals() {
           onSplit: (self) =>
             gsap.fromTo(
               self.words,
-              { opacity: 0.12 },
+              { opacity: 0.18 },
               {
                 opacity: 1,
                 ease: "none",
@@ -55,9 +55,9 @@ export default function Reveals() {
     gsap.utils.toArray<HTMLElement>('[data-reveal="fade"]').forEach((el) => {
       gsap.from(el, {
         autoAlpha: 0,
-        y: 32,
-        duration: 1.1,
-        ease: "expo.out",
+        y: 18,
+        duration: 0.9,
+        ease: "power3.out",
         delay: Number(el.dataset.delay ?? 0),
         scrollTrigger: { trigger: el, start: "top 90%", once: true },
       });

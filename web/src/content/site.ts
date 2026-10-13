@@ -14,6 +14,7 @@ export const nav = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
   { label: "Services", href: "#services" },
+  { label: "Work", href: "#work" },
   { label: "Why Us", href: "#why-us" },
   { label: "Process", href: "#process" },
   { label: "Contact", href: "#contact" },
@@ -25,18 +26,7 @@ export const hero = {
   titleAccent: "Digital Reality",
   body: "Mochan Labs delivers cutting-edge IT solutions — web development, cloud services, cybersecurity, and custom software. We turn your vision into powerful digital experiences.",
   cta: "Get Free Consultation",
-  stats: [
-    { value: 15, suffix: "+", label: "Projects Delivered" },
-    { value: 10, suffix: "+", label: "Happy Clients" },
-    { value: 5, suffix: "+", label: "Years Experience" },
-  ],
 };
-
-// Points shown on the hero globe. Add entries here as Mochan Labs expands
-// to new markets — [latitude, longitude].
-export const globeMarkers: { location: [number, number]; size: number }[] = [
-  { location: [22.5, 79], size: 0.09 },
-];
 
 export const about = {
   tag: "About Us",
@@ -119,6 +109,64 @@ export const services = {
   ],
 };
 
+// Case studies. Facts come from the products' own documentation; screenshots
+// use demo data. Steps are shown as sticky steps with a screenshot each.
+export const work = {
+  tag: "Our Work",
+  titleLead: "Software that runs",
+  titleAccent: "real operations",
+  intro: "Two products we designed, built and support end to end.",
+  weighbridge: {
+    name: "Weighbridge",
+    kicker: "Weighbridge management software",
+    summary:
+      "Weigh vehicles, bill sales and purchases, print receipts, and keep Tally and the government portal in step — from one app on the weighbridge computer.",
+    tags: ["Windows desktop app", "SQL Server", "Tally integration", "MDTSS govt portal", "RFID & IP cameras", "Multi-computer"],
+    docsUrl: "https://mochanlabs-dev.github.io/app-docs/weighbridge/",
+    steps: [
+      {
+        title: "Weigh",
+        body: "Live weight straight from the scale. Vehicles are recognised by RFID and photographed by IP cameras — first weight on entry, second on exit.",
+        image: "/work/weighbridge/token-entry.webp",
+        alt: "Weighbridge token page recording a vehicle's first weight",
+      },
+      {
+        title: "Bill",
+        body: "The weights decide whether it's a sale or a purchase. Party rates, GST, freight and round-off fill in by themselves.",
+        image: "/work/weighbridge/sale-billing.webp",
+        alt: "Completing a sale with line items, GST and charges",
+      },
+      {
+        title: "Print",
+        body: "Weight slips, inward tokens and GST tax invoices — on A4 or straight to a thermal receipt printer.",
+        image: "/work/weighbridge/slip-sale.webp",
+        alt: "Weight slip with two copies on one sheet",
+      },
+      {
+        title: "Sync",
+        body: "Every sale and purchase posts to Tally, and every weighment is reported to the Uttarakhand MDTSS portal — retried automatically if either is offline.",
+        image: "/work/weighbridge/tally.webp",
+        alt: "Tally connection setup",
+      },
+    ],
+  },
+  odts: {
+    name: "ODTS",
+    fullName: "Order Dispatch & Tracking System",
+    kicker: "Dealer order and dispatch platform",
+    summary:
+      "Dealers place orders, dispatchers accept and dispatch them, and the office sees every order's status as it changes — one web app for the whole dealer network.",
+    roles: ["Dealer", "Dispatcher", "Office", "Admin", "Sales Officer"],
+    features: [
+      "Orders checked against each dealer's credit limit, with alerts as limits run low",
+      "Dispatch with vehicle, driver contact, bilty number and receipt upload",
+      "Orders put on hold with a reason that every role can see",
+      "Role-based access, live status updates and Excel exports",
+    ],
+    tags: ["React", "Node.js", "PostgreSQL", "Supabase"],
+  },
+};
+
 export const whyUs = {
   tag: "Why Choose Us",
   titleLead: "What Makes",
@@ -132,19 +180,6 @@ export const whyUs = {
     { title: "Ongoing Support", body: "We're with you beyond launch. Continuous maintenance, updates, and 24/7 technical support." },
     { title: "Scalable Solutions", body: "Future-proof architecture that grows with your business. No limits, no compromises." },
     { title: "Trusted Partner", body: "NDA-compliant, transparent processes, and a proven track record of client satisfaction." },
-  ],
-};
-
-export const tech = {
-  tag: "Technologies",
-  titleLead: "Our",
-  titleAccent: "Tech Stack",
-  intro: "We work with the latest and most reliable technologies to deliver cutting-edge solutions.",
-  items: [
-    "React", "Node.js", "Python", "AWS", "Docker", "Angular", "Vue.js", "PHP",
-    "MongoDB", "PostgreSQL", "Java", "Android", "Azure", "Cloud Computing",
-    "Flutter", "React Native", "Express.js", "FastAPI", "Spring Boot", "Terraform",
-    "CI/CD Pipelines", "Generative AI", "AI Chatbots", "AI Automation",
   ],
 };
 
@@ -178,13 +213,12 @@ export const contactSection = {
   ],
 };
 
-export const manifesto = "Transforming businesses through innovative technology solutions.";
-
 export const footer = {
   blurb: "Transforming businesses through innovative technology solutions. Your trusted IT partner for digital success and growth.",
   services: ["Web Development", "Mobile Apps", "Cloud Solutions", "Cybersecurity", "Custom Software", "IT Consulting"],
   company: [
     { label: "About Us", href: "#about" },
+    { label: "Our Work", href: "#work" },
     { label: "Why Choose Us", href: "#why-us" },
     { label: "Our Process", href: "#process" },
     { label: "Contact", href: "#contact" },

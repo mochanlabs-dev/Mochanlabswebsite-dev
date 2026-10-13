@@ -1,14 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Figtree } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Figtree: a plain, friendly sans (the face vinskyn.com uses).
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
 });
 
@@ -19,18 +15,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#f5f6f3",
 };
-
-// Runs before paint: skips the intro loader if it already played this session.
-const introScript = `try{if(sessionStorage.getItem('ml-intro'))document.documentElement.classList.add('intro-seen')}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: introScript }} />
-      </head>
+    <html lang="en" className={figtree.variable}>
       <body>{children}</body>
     </html>
   );

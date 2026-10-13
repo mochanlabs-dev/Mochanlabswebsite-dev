@@ -1,8 +1,8 @@
 import { contact, contactSection } from "@/content/site";
+import CircuitLines from "./CircuitLines";
 import ContactForm from "./ContactForm";
-import Particles from "./Particles";
 import { ArrowUpRightIcon, InstagramIcon, MailIcon, WhatsAppIcon } from "./icons";
-import { Tag } from "./ui";
+import { Label } from "./ui";
 
 const channels = [
   { label: "Email Us", value: contact.email, href: `mailto:${contact.email}`, Icon: MailIcon },
@@ -11,69 +11,59 @@ const channels = [
 ];
 
 export default function Contact() {
-  const words = `${contactSection.titleLead} ${contactSection.titleAccent}`.split(" ");
   return (
-    <section id="contact" className="relative overflow-hidden bg-ink text-paper">
-      {/* Dust field spans the whole section; it gathers behind the headline. */}
-      <Particles className="absolute inset-0 h-full w-full" />
-      <div>
-        <div data-particles-anchor className="relative mx-auto max-w-[1400px] px-5 pt-24 pb-20 sm:px-8 sm:pt-32 sm:pb-28">
-          <Tag index="05" className="mb-8 text-paper/50">
-            {contactSection.tag}
-          </Tag>
-          <h2 data-reveal="lines" className="display max-w-5xl text-[clamp(2.8rem,8vw,8rem)]">
-            {words.map((w, i) => (
-              <span key={i}>
-                {i > 0 && " "}
-                <span className={`hl-word ${i === words.length - 1 ? "text-accent" : ""}`}>
-                  {i === words.length - 1 ? `${w}.` : w}
-                </span>
-              </span>
-            ))}
-          </h2>
-          <p data-reveal="fade" className="mt-8 max-w-md text-base text-paper/60 sm:text-lg">
-            {contactSection.intro}
-          </p>
+    <section id="contact" className="scroll-mt-20">
+      {/* Call-to-action band */}
+      <div className="px-3 sm:px-5">
+        <div className="relative mx-auto max-w-[1400px] overflow-hidden rounded-lg bg-ink px-6 py-24 text-center text-card sm:py-32">
+          <CircuitLines className="pointer-events-none absolute inset-0 h-full w-full text-card opacity-20 [&_[data-trace]]:[stroke-dashoffset:0]" />
+          <div className="relative">
+            <Label className="mb-6">{contactSection.tag}</Label>
+            <h2 data-reveal="lines" className="heading mx-auto max-w-4xl text-[clamp(2.4rem,5.6vw,5rem)]">
+              {contactSection.titleLead} <span className="text-accent">{contactSection.titleAccent}</span>
+            </h2>
+            <p data-reveal="fade" className="mx-auto mt-6 max-w-md text-base text-card/60">
+              {contactSection.intro}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="relative mx-auto grid max-w-[1400px] gap-16 px-5 pb-28 sm:px-8 lg:grid-cols-12">
-        {/* Channels */}
-        <div className="flex flex-col gap-3 lg:col-span-5">
-          <p className="tag mb-3 text-paper/50">[ Talk to us ]</p>
-          {channels.map(({ label, value, href, Icon }) => (
-            <a
-              key={label}
-              href={href}
-              target={href.startsWith("http") ? "_blank" : undefined}
-              rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-              data-reveal="fade"
-              className="group flex items-center gap-4 rounded-2xl border border-paper/10 bg-paper/[0.03] p-5 transition-colors hover:border-accent hover:bg-accent"
-            >
-              <span className="grid size-10 shrink-0 place-items-center rounded-full border border-paper/15 group-hover:border-paper/40">
-                <Icon className="size-4" />
-              </span>
-              <span className="flex flex-col">
-                <span className="font-mono text-xs tracking-[0.14em] uppercase">{label}</span>
-                <span className="text-sm text-paper/55 group-hover:text-paper/85">{value}</span>
-              </span>
-              <ArrowUpRightIcon className="ml-auto size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
-          ))}
-          <dl data-reveal="fade" className="mt-4 grid grid-cols-2 gap-4 border-t border-paper/10 pt-6">
+      {/* Channels + form */}
+      <div className="mx-auto grid max-w-[1400px] gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-3 lg:gap-0">
+        <div className="lg:pr-12">
+          <ul className="border-t border-ink/10">
+            {channels.map(({ label, value, href, Icon }) => (
+              <li key={label} data-reveal="fade">
+                <a
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className="group flex items-center gap-4 border-b border-ink/10 py-5"
+                >
+                  <Icon className="size-4 text-ink/50 transition-colors group-hover:text-accent" />
+                  <span className="flex flex-col">
+                    <span className="text-sm font-medium">{label}</span>
+                    <span className="text-sm text-ink/55">{value}</span>
+                  </span>
+                  <ArrowUpRightIcon className="ml-auto size-4 text-ink/40 transition-[color,transform] duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-ink" />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <dl data-reveal="fade" className="mt-8 grid grid-cols-2 gap-4">
             <div>
-              <dt className="tag mb-1 text-paper/45">Location</dt>
+              <dt className="label mb-1">Location</dt>
               <dd className="text-sm">{contact.location}</dd>
             </div>
             <div>
-              <dt className="tag mb-1 text-paper/45">Business Hours</dt>
+              <dt className="label mb-1">Business Hours</dt>
               <dd className="text-sm">{contact.hours}</dd>
             </div>
           </dl>
         </div>
 
-        {/* Form */}
-        <div data-reveal="fade" className="lg:col-span-7">
+        <div data-reveal="fade" className="rounded-lg bg-card p-6 shadow-[0_1px_2px_rgb(0_0_0/0.04)] sm:p-10 lg:col-span-2">
           <ContactForm />
         </div>
       </div>
