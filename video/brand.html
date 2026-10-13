@@ -8,7 +8,7 @@
 
   One paused GSAP timeline; render.js seeks it frame by frame.
   Preview: `npm run preview`, then open /video/brand.html (add ?format=portrait).
-  All names and numbers on screen are demo data.
+  All names and numbers on screen are demo data (Northline Logistics is fictional).
 -->
 <html lang="en">
 <head>
@@ -64,10 +64,12 @@
   .site-hero h3 { font-size: 46px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; }
   .site-hero p { margin-top: 16px; font-size: 18px; line-height: 1.5; color: rgb(10 10 10 / 0.55); }
   .site-btn { display: inline-block; margin-top: 24px; padding: 12px 22px; border-radius: 8px; background: var(--ink); color: #fff; font-size: 16px; font-weight: 500; }
-  .site-img { height: 250px; border-radius: 12px; background: linear-gradient(160deg, #e9e3d8, #d6cbb8); position: relative; overflow: hidden; }
-  .site-img .sofa { position: absolute; left: 50px; right: 50px; bottom: 50px; height: 80px; border-radius: 18px 18px 8px 8px; background: #8a6f52; }
-  .site-img .sofa::before { content: ""; position: absolute; left: 20px; right: 20px; top: -46px; height: 60px; border-radius: 16px; background: #a3876a; }
-  .site-img .lamp { position: absolute; right: 26px; top: 30px; width: 40px; height: 34px; border-radius: 20px 20px 4px 4px; background: #f3c56b; }
+  /* Route map (the logistics site's hero image) */
+  .site-img { height: 250px; border-radius: 12px; background: #0f1a3d; position: relative; overflow: hidden; }
+  .site-img svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .site-img .city { font: 600 13px Figtree, sans-serif; fill: rgb(255 255 255 / 0.85); }
+  .site-img .eta { position: absolute; right: 14px; bottom: 14px; padding: 7px 11px; border-radius: 8px; background: #fff; font-size: 13px; font-weight: 500; }
+  .site-img .eta b { color: var(--accent); font-weight: 600; }
   .products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; padding: 26px 44px 0; }
   .products div { height: 92px; border-radius: 10px; background: var(--paper); padding: 14px 16px; font-size: 15px; }
   .products div b { display: block; font-weight: 500; }
@@ -155,20 +157,33 @@
   <div id="panel">
     <!-- Website -->
     <div class="layer" id="L-web">
-      <div class="chrome"><i></i><i></i><i></i><span class="url">sharmafurnishings.in</span></div>
-      <div class="site-nav w-in"><b>Sharma Furnishings</b><span><em>Collections</em><em>Stores</em><em>About</em></span></div>
+      <div class="chrome"><i></i><i></i><i></i><span class="url">northlinelogistics.in</span></div>
+      <div class="site-nav w-in"><b>Northline Logistics</b><span><em>Services</em><em>Track shipment</em><em>Contact</em></span></div>
       <div class="site-hero">
         <div>
-          <h3 class="w-in">Handcrafted furniture, delivered across India.</h3>
-          <p class="w-in">Solid wood, made to order in Jaipur. Free delivery and installation.</p>
-          <span class="site-btn w-in">Shop the collection</span>
+          <h3 class="w-in">Freight across North India, tracked in real time.</h3>
+          <p class="w-in">Full and part loads from Delhi to the hills, with live tracking on every truck.</p>
+          <span class="site-btn w-in">Get a quote</span>
         </div>
-        <div class="site-img w-in"><div class="lamp"></div><div class="sofa"></div></div>
+        <div class="site-img w-in">
+          <svg viewBox="0 0 400 250">
+            <g stroke="rgba(255,255,255,0.08)" stroke-width="1">
+              <path d="M0 50H400M0 100H400M0 150H400M0 200H400M80 0V250M160 0V250M240 0V250M320 0V250" />
+            </g>
+            <path d="M120 150 L210 75 M120 150 L95 215" stroke="rgba(255,255,255,0.22)" stroke-width="2" stroke-dasharray="4 6" fill="none" />
+            <path id="route" d="M120 150 C150 130 170 105 210 75" stroke="#2b59ff" stroke-width="4" stroke-linecap="round" fill="none" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+            <circle cx="120" cy="150" r="6" fill="#fff" /><text class="city" x="70" y="140">Delhi</text>
+            <circle cx="210" cy="75" r="6" fill="#2b59ff" stroke="#fff" stroke-width="2" /><text class="city" x="222" y="72">Dehradun</text>
+            <circle cx="95" cy="215" r="5" fill="rgba(255,255,255,0.6)" /><text class="city" x="108" y="219">Jaipur</text>
+            <circle id="truck" r="7" fill="#fff" stroke="#2b59ff" stroke-width="3" cx="120" cy="150" />
+          </svg>
+          <span class="eta">Truck UK07 · <b>ETA 2 h</b></span>
+        </div>
       </div>
       <div class="products">
-        <div class="w-card"><b>Teak sofa</b><span class="muted">₹48,900</span></div>
-        <div class="w-card"><b>Dining set</b><span class="muted">₹62,500</span></div>
-        <div class="w-card"><b>Bookshelf</b><span class="muted">₹18,200</span></div>
+        <div class="w-card"><b>Full truckload</b><span class="muted">Dedicated vehicle, door to door</span></div>
+        <div class="w-card"><b>Part load</b><span class="muted">Pay only for the space you use</span></div>
+        <div class="w-card"><b>Warehousing</b><span class="muted">Storage hubs in Delhi &amp; Dehradun</span></div>
       </div>
     </div>
 
@@ -321,7 +336,19 @@
     tl.to(panel, { opacity: 1, y: 0, duration: 0.7 }, 2.75)
       .set("#L-web", { opacity: 1 }, 2.75)
       .to("#L-web .w-in", { opacity: 1, y: 0, duration: 0.55, stagger: 0.12 }, 3.1)
-      .to("#L-web .w-card", { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 }, 3.9);
+      .to("#L-web .w-card", { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 }, 3.9)
+      .to("#route", { strokeDashoffset: 0, duration: 1.4, ease: "power2.inOut" }, 3.5);
+    const truck = { p: 0 }, route = $("#route"), len = route.getTotalLength();
+    tl.to(truck, {
+      p: 1,
+      duration: 1.4,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        const pt = route.getPointAtLength(truck.p * len);
+        $("#truck").setAttribute("cx", pt.x);
+        $("#truck").setAttribute("cy", pt.y);
+      },
+    }, 3.5);
 
     // ---- 5.4 – 8.2s: mobile app
     swap(1, 5.45);
