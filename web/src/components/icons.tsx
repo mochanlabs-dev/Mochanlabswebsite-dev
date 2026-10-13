@@ -1,0 +1,44 @@
+import { siInstagram, siWhatsapp } from "simple-icons";
+
+type IconProps = { className?: string };
+
+export function WhatsAppIcon({ className = "size-4" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
+      <path d={siWhatsapp.path} />
+    </svg>
+  );
+}
+
+export function InstagramIcon({ className = "size-4" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
+      <path d={siInstagram.path} />
+    </svg>
+  );
+}
+
+export function ArrowIcon({ className = "size-4" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} aria-hidden className={className}>
+      <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="square" />
+    </svg>
+  );
+}
+
+export function ArrowUpRightIcon({ className = "size-4" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} aria-hidden className={className}>
+      <path d="M7 17 17 7M8 7h9v9" strokeLinecap="square" />
+    </svg>
+  );
+}
+
+export function MailIcon({ className = "size-4" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden className={className}>
+      <rect x="3" y="5" width="18" height="14" rx="1" />
+      <path d="m3 7 9 6 9-6" />
+    </svg>
+  );
+}

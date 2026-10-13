@@ -1,0 +1,110 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/* Brand: paper white + one accent (sapphire, from the logo's "M") + ink black. */
+@theme {
+  --color-paper: #ffffff;
+  --color-ink: #0a0a0a;
+  --color-accent: #2b59ff;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Headings use tight mono for the "built by engineers" voice. */
+.display {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
+}
+
+/* "[ LABEL ]" section tags. */
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Masked lines produced by SplitText ({ mask: "lines" }). */
+.split-line {
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+/* Infinite marquee: the track holds two copies of its content. */
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.marquee {
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+.marquee-reverse {
+  animation-direction: reverse;
+}
+
+/* Contact headline: words swap colour on hover — white words light up in
+   the accent, the accent word turns white. Text only, no fill. */
+.hl-word {
+  transition: color 0.35s var(--ease-out-expo);
+}
+.hl-word:hover {
+  color: var(--color-accent);
+}
+.hl-word.text-accent:hover {
+  color: var(--color-paper);
+}
+
+/* Intro loader: hidden when already seen this session (set before paint by
+   the inline script in layout.tsx), with a failsafe in case JS never runs. */
+.intro-seen [data-loader] {
+  display: none;
+}
+@keyframes loader-failsafe {
+  to {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+[data-loader] {
+  animation: loader-failsafe 0s 6s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    animation: none;
+  }
+  [data-loader] {
+    display: none;
+  }
+}
+
+/* Process step titles end in "."; colour it once the title is split. */
+.step-title .word:last-child .char:last-child {
+  color: var(--color-accent);
+}

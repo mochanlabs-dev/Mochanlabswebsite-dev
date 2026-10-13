@@ -3,7 +3,7 @@ services:
     name: mochan-labs-admin
     runtime: node
     plan: standard
-    buildCommand: cd server && npm install
+    buildCommand: cd web && npm ci && npm run build && cd ../server && npm install
     startCommand: cd server && npm start
     envVars:
       - key: NODE_ENV

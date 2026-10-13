@@ -30,8 +30,10 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Visit tracking middleware (before static files)
 app.use((req, res, next) => {
-  const excludePaths = ['/api/', '/admin/'];
-  const isExcluded = excludePaths.some(p => req.path.startsWith(p));
+  const excludePaths = ['/api/', '/admin/', '/_next/'];
+  const ext = path.extname(req.path);
+  // Count page views only, not the scripts, styles and images they load.
+  const isExcluded = excludePaths.some(p => req.path.startsWith(p)) || (ext && ext !== '.html');
 
   if (!isExcluded && req.method === 'GET') {
     const ip = getClientIP(req);
@@ -42,8 +44,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Serve the static website files from the project root
-app.use(express.static(path.join(__dirname, '..')));
+// Public website: the Next.js static export (built into web/out).
+// Only these directories are served — never the project root, which would
+// expose server code, logs and documents.
+const WEB_DIR = path.join(__dirname, '..', 'web', 'out');
+app.use(express.static(WEB_DIR));
+app.use('/admin', express.static(path.join(__dirname, '..', 'admin')));
+app.use('/images', express.static(path.join(__dirname, '..', 'images')));
 
 // API routes
 app.use('/api/auth', require('./routes/auth'));
@@ -52,14 +59,12 @@ app.use('/api/invoices', require('./routes/invoices'));
 app.use('/api/employees', require('./routes/employees'));
 app.use('/api/analytics', require('./routes/analytics'));
 
-// Serve protected admin pages
-app.get('/admin/transactions.html', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'admin', 'transactions.html'));
+// Unknown API routes return JSON; anything else gets the site's 404 page.
+app.use('/api', (req, res) => {
+  res.status(404).json({ success: false, message: 'Not found' });
 });
-
-// Fallback: serve index.html for any non-API, non-static route
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(WEB_DIR, '404.html'));
 });
 
 const PORT       = process.env.PORT || 3000;
