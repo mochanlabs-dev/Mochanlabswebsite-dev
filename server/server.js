@@ -51,9 +51,8 @@ app.use((req, res, next) => {
 // Only these directories are served — never the project root, which would
 // expose server code, logs and documents.
 const WEB_DIR = path.join(__dirname, '..', 'web', 'out');
+// The build includes /admin (front-end demo for now) and /images.
 app.use(express.static(WEB_DIR));
-app.use('/admin', express.static(path.join(__dirname, '..', 'admin')));
-app.use('/images', express.static(path.join(__dirname, '..', 'images')));
 
 // API routes
 app.use('/api/auth', require('./routes/auth'));

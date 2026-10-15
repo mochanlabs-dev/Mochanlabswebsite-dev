@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="auth.js"></script>
+  <script src="demo-backend.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Login | Mochan Labs</title>
@@ -142,6 +142,8 @@
       margin-top: 22px; color: var(--muted); font-size: 0.82rem;
     }
     .back-link a { color: var(--accent); }
+    .demo-note { margin-top: 16px; padding: 10px 12px; border: 1px dashed var(--border); border-radius: 10px; font-size: 0.8rem; color: var(--muted); text-align: center; }
+    .demo-note b { color: var(--text); font-weight: 600; }
     .back-link a:hover { text-decoration: underline; }
 
     /* Hint (remove in production) */
@@ -192,9 +194,11 @@
         <span id="loginBtnText">Login to Dashboard</span>
       </button>
       <div class="error-msg" id="errorMsg">Invalid username or password. Please try again.</div>
+      <!-- Front-end-only phase: the demo back end (demo-backend.js) accepts these. -->
+      <p class="demo-note">Demo login — username <b>admin</b>, password <b>mochan@demo</b></p>
     </form>
 
-    <p class="back-link"><a href="../index.html"><i class="fas fa-arrow-left"></i> Back to website</a></p>
+    <p class="back-link"><a href="/"><i class="fas fa-arrow-left"></i> Back to website</a></p>
   </div>
 
   <script src="login.js"></script>
