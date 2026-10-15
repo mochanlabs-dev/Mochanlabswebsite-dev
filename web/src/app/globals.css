@@ -70,33 +70,53 @@ body {
   }
 }
 
-/* Services: an endless row drifting left to right. The track holds two
-   copies of the cards and slides by one copy's width (50%). */
-@keyframes services-drift {
+/* Services tabs: cards rise in when a category is chosen. */
+@keyframes svc-in {
   from {
-    transform: translate3d(-50%, 0, 0);
-  }
-  to {
-    transform: translate3d(0, 0, 0);
+    opacity: 0;
+    transform: translateY(14px);
   }
 }
-.services-marquee {
-  overflow: hidden;
-  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-}
-.services-track {
-  animation: services-drift 110s linear infinite;
-}
-.services-marquee:hover .services-track,
-.services-marquee:focus-within .services-track {
-  animation-play-state: paused;
+.svc-card {
+  animation: svc-in 0.5s var(--ease-out-expo) both;
 }
 @media (prefers-reduced-motion: reduce) {
-  .services-marquee {
-    overflow-x: auto;
-    mask-image: none;
-  }
-  .services-track {
+  .svc-card {
     animation: none;
+  }
+}
+
+/* Sideways-scrolling rows without a visible scrollbar. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* Why Us fan (desktop): hovering, tapping or focusing a card brings it to the
+   front, straightens it and lifts it; the rest of the deck dims and eases
+   back. --rot is each card's resting tilt. */
+@media (min-width: 1024px) {
+  .why-inner {
+    transition:
+      transform 0.45s var(--ease-out-expo),
+      box-shadow 0.45s var(--ease-out-expo),
+      filter 0.45s var(--ease-out-expo);
+  }
+  .why-card:hover,
+  .why-card:focus-visible {
+    z-index: 50;
+  }
+  .why-card:hover .why-inner,
+  .why-card:focus-visible .why-inner {
+    transform: rotate(calc(var(--rot) * -1)) translateY(-28px) scale(1.06);
+    box-shadow: 0 40px 80px -24px rgb(0 0 0 / 0.4);
+  }
+  ul:has(.why-card:hover) .why-card:not(:hover) .why-inner,
+  ul:has(.why-card:focus-visible) .why-card:not(:focus-visible) .why-inner {
+    filter: brightness(0.92) saturate(0.85);
+    transform: scale(0.97);
   }
 }

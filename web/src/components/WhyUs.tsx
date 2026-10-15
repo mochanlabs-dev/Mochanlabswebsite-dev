@@ -64,6 +64,8 @@ export default function WhyUs() {
       mm.add("(min-width: 1024px)", () => {
         const cards = gsap.utils.toArray<HTMLElement>("[data-why-card]");
         const n = cards.length;
+        // Hovered/tapped/focused card: straighten, lift, bring to front (CSS
+        // in globals.css). The mm context below handles the dealing.
         // Cards are sized from the viewport height (see --why-h); space them
         // by ~40% of a card's width so the fan stays compact.
         const spread = () => cards[0].offsetWidth * 0.4;
@@ -130,12 +132,19 @@ export default function WhyUs() {
 
         <ul className="relative mt-12 flex flex-col gap-6 lg:mt-0 lg:block lg:flex-1">
           {whyUs.items.map((item, i) => (
+            // The <li> is placed and dealt by the scroll animation; the inner
+            // card handles hover/tap: it straightens, lifts and comes to the
+            // front so its text can be read in full.
             <li
               key={item.title}
               data-why-card
-              style={{ ["--i" as string]: i }}
-              className={`flex min-h-[19rem] origin-top flex-col max-lg:sticky max-lg:top-[calc(84px+var(--i)*12px)] sm:mx-auto sm:w-full sm:max-w-lg justify-between rounded-xl p-7 shadow-[0_24px_60px_-24px_rgb(0_0_0/0.35)] lg:absolute lg:top-1/2 lg:left-1/2 lg:h-[var(--why-h)] lg:min-h-0 lg:w-[calc(var(--why-h)*0.72)] lg:p-[calc(var(--why-h)*0.07)] ${tones[i % tones.length]}`}
+              tabIndex={0}
+              style={{ ["--i" as string]: i, ["--rot" as string]: `${gsap.utils.interpolate(-9, 11, i / (whyUs.items.length - 1))}deg` }}
+              className="why-card group/card origin-top outline-none max-lg:sticky max-lg:top-[calc(84px+var(--i)*12px)] sm:mx-auto sm:w-full sm:max-w-lg lg:absolute lg:top-1/2 lg:left-1/2 lg:h-[var(--why-h)] lg:w-[calc(var(--why-h)*0.72)] lg:cursor-pointer"
             >
+              <div
+                className={`why-inner flex h-full min-h-[19rem] flex-col justify-between rounded-xl p-7 shadow-[0_24px_60px_-24px_rgb(0_0_0/0.35)] lg:min-h-0 lg:p-[calc(var(--why-h)*0.07)] ${tones[i % tones.length]}`}
+              >
               <span className="grid size-14 place-items-center rounded-2xl border border-current/40 lg:size-[calc(var(--why-h)*0.15)]">
                 <svg viewBox="0 0 24 24" className="size-6 lg:size-[45%]" aria-hidden>
                   {icons[i]}
@@ -144,6 +153,7 @@ export default function WhyUs() {
               <div>
                 <h3 className="heading text-[1.6rem] lg:text-[calc(var(--why-h)*0.068)]">{item.title}</h3>
                 <p className="mt-3 text-[0.95rem] leading-relaxed opacity-80 lg:text-[calc(var(--why-h)*0.037)]">{item.body}</p>
+              </div>
               </div>
             </li>
           ))}
