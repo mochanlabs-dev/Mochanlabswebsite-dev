@@ -1,10 +1,11 @@
 <!doctype html>
 <!--
-  Mochan Labs — 16 s brand film (1920×1080 or ?format=portrait 1080×1200, 30 fps).
+  Mochan Labs — 19.3 s brand film (1920×1080 or ?format=portrait 1080×1200, 30 fps).
 
-  Script: logo intro → "We build websites. / Mobile apps. / ERP & CRM. /
-  Automation." → "Let's build yours." One white panel morphs between a browser,
-  a phone, a dashboard and a WhatsApp chat while each is built.
+  Script: logo intro → "We build websites. / mobile apps. / ERP & CRM. /
+  AI employees. / faster processes." → "Let's build yours." One white panel
+  morphs between a browser, a phone, a dashboard, a WhatsApp chat answered by
+  an AI agent, and a before/after process view while each is built.
 
   One paused GSAP timeline; render.js seeks it frame by frame.
   Preview: `npm run preview`, then open /video/brand.html (add ?format=portrait).
@@ -41,7 +42,7 @@
 
   /* Caption: "We build" + a rotating word */
   #cap { position: absolute; }
-  #cap .lead, #cap .slot { font-size: 104px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.05; }
+  #cap .lead, #cap .slot { font-size: 94px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.05; }
   #cap .slot { position: relative; width: 16ch; height: 1.15em; overflow: hidden; color: var(--accent); }
   #cap .slot span { position: absolute; left: 0; top: 0; white-space: nowrap; }
   .portrait #cap .lead, .portrait #cap .slot { font-size: 76px; }
@@ -112,7 +113,7 @@
   .row .pill { justify-self: end; }
 
   /* Chat */
-  #L-chat { width: 560px; height: 700px; background: #efeae2; }
+  #L-chat { width: 560px; height: 760px; background: #efeae2; }
   .chat-h { height: 76px; background: #fff; display: flex; align-items: center; gap: 14px; padding: 0 22px; border-bottom: 1px solid rgb(10 10 10 / 0.07); }
   .chat-h i { width: 44px; height: 44px; border-radius: 50%; background: var(--ink); display: grid; place-items: center; color: #fff; font-style: normal; font-weight: 600; }
   .chat-h b { display: block; font-size: 18px; font-weight: 600; }
@@ -127,6 +128,27 @@
   .auto { align-self: flex-end; font-size: 13px; color: rgb(10 10 10 / 0.5); display: flex; align-items: center; gap: 6px; }
   .auto b { width: 16px; height: 16px; border-radius: 50%; background: var(--accent); display: inline-block; }
   .track-btn { align-self: flex-end; padding: 10px 16px; border-radius: 10px; background: #fff; color: #0a7c66; font-size: 16px; font-weight: 600; box-shadow: 0 1px 1px rgb(0 0 0 / 0.08); }
+
+  .ai-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 22px; background: var(--accent-soft); color: var(--accent); font-size: 14px; font-weight: 600; }
+  .ai-bar span { display: flex; align-items: center; gap: 8px; }
+  .ai-bar i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+  /* Process optimisation */
+  #L-proc { width: 700px; height: 500px; padding: 28px 30px; }
+  .proc-h small { font-size: 14px; color: rgb(10 10 10 / 0.5); }
+  .proc-h b { display: block; font-size: 26px; font-weight: 500; letter-spacing: -0.02em; margin-top: 2px; }
+  .steps-l { margin-top: 18px; }
+  .pstep { display: grid; grid-template-columns: 1fr 150px 170px; align-items: center; gap: 12px; height: 54px; border-top: 1px solid rgb(10 10 10 / 0.07); font-size: 16px; }
+  .pstep .old { position: relative; color: rgb(10 10 10 / 0.45); justify-self: start; }
+  .pstep .old::after { content: ""; position: absolute; left: -2px; right: -2px; top: 50%; height: 2px; background: rgb(10 10 10 / 0.45); transform: scaleX(var(--s, 0)); transform-origin: left; }
+  .pstep .new { justify-self: end; padding: 4px 10px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); font-size: 14px; font-weight: 600; }
+  .bars { margin-top: 22px; }
+  .bars .k { font-size: 14px; color: rgb(10 10 10 / 0.5); margin-bottom: 8px; }
+  .bar-row { display: grid; grid-template-columns: 70px 1fr; align-items: center; gap: 12px; height: 34px; font-size: 14px; }
+  .bar-row .track2 { position: relative; height: 22px; }
+  .bar-row .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding: 0 10px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .fill.before { width: 100%; background: rgb(10 10 10 / 0.08); color: rgb(10 10 10 / 0.6); }
+  .fill.after { width: 100%; min-width: 92px; background: var(--accent); color: #fff; }
 
   /* End line */
   #endline { position: absolute; left: 0; right: 0; text-align: center; }
@@ -150,7 +172,7 @@
   <div id="cap">
     <div class="lead" id="cap-lead">We build</div>
     <div class="slot" id="slot">
-      <span>websites.</span><span>mobile apps.</span><span>ERP &amp; CRM.</span><span>automation.</span>
+      <span>websites.</span><span>mobile apps.</span><span>ERP &amp; CRM.</span><span>AI employees.</span><span>faster processes.</span>
     </div>
   </div>
 
@@ -226,13 +248,31 @@
 
     <!-- WhatsApp automation -->
     <div class="layer" id="L-chat">
-      <div class="chat-h"><i>ST</i><div><b>Sharma Traders</b><small>WhatsApp Business · automated</small></div></div>
+      <div class="chat-h"><i>ST</i><div><b>Sharma Traders</b><small>WhatsApp Business</small></div></div>
+      <div class="ai-bar"><span><i></i>AI agent · on duty 24/7</span><span><b id="n-chats">0</b>&nbsp;chats today · 0 needed staff</span></div>
       <div class="msgs">
         <div class="msg in" id="m1">Hi, has order 1044 left the rake?<time>10:43</time></div>
         <div class="typing" id="typing"><i></i><i></i><i></i></div>
         <div class="msg out" id="m2">Yes ✓ Vehicle UK07 CA 4412 left at 10:42. Driver: 98•• •• 4521, ETA 2 hours.<time>10:43</time></div>
         <div class="track-btn" id="m3">Track live ↗</div>
-        <div class="auto" id="m4"><b></b>Replied automatically in 2 seconds</div>
+        <div class="auto" id="m4"><b></b>Answered by your AI agent in 2 seconds</div>
+      </div>
+    </div>
+
+    <!-- Process optimisation -->
+    <div class="layer" id="L-proc">
+      <div class="proc-h q-in"><small>Process optimisation · Northline Logistics</small><b>Order → dispatch, redesigned</b></div>
+      <div class="steps-l">
+        <div class="pstep q-row"><span>Order received</span><span class="old">Typed by hand</span><span class="new">Captured by AI</span></div>
+        <div class="pstep q-row"><span>Credit-limit check</span><span class="old">Phone call</span><span class="new">Instant</span></div>
+        <div class="pstep q-row"><span>Vehicle assigned</span><span class="old">Spreadsheet</span><span class="new">Auto-assigned</span></div>
+        <div class="pstep q-row"><span>Invoice &amp; e-way bill</span><span class="old">Manual entry</span><span class="new">Generated</span></div>
+        <div class="pstep q-row"><span>Customer updates</span><span class="old">Phone calls</span><span class="new">WhatsApp, automatic</span></div>
+      </div>
+      <div class="bars q-in">
+        <div class="k">Time from order to dispatch</div>
+        <div class="bar-row"><span class="muted">Before</span><div class="track2"><div class="fill before">2 days</div></div></div>
+        <div class="bar-row"><span class="muted">After</span><div class="track2"><div class="fill after" id="after-bar"><span id="after-t">2 days</span></div></div></div>
       </div>
     </div>
   </div>
@@ -261,7 +301,7 @@
   const portrait = params.get("format") === "portrait";
   if (portrait) document.documentElement.classList.add("portrait");
   const $ = (s) => document.querySelector(s);
-  const DUR = 16;
+  const DUR = 19.3;
 
   // Layout per format
   const W = portrait ? 1080 : 1920;
@@ -269,10 +309,11 @@
   const L = portrait
     ? { lock: [48, 54], cap: [48, 140], panel: [540, 760], end: 560 }
     : { lock: [120, 312], cap: [120, 400], panel: [1255, 545], end: 600 };
-  const sizes = { web: [1000, 640, 14], phone: [360, 740, 46], dash: [1040, 640, 14], chat: [560, 700, 22] };
+  // [width, height, radius, horizontal shift] per scene
+  const sizes = { web: [1000, 640, 14], phone: [360, 740, 46], dash: [1040, 640, 14], chat: [560, 760, 22], proc: [700, 500, 14, portrait ? 0 : 70] };
   const rect = (name) => {
-    const [w, h, r] = sizes[name];
-    return { width: w * K, height: h * K, left: L.panel[0] - (w * K) / 2, top: L.panel[1] - (h * K) / 2, borderRadius: r };
+    const [w, h, r, dx = 0] = sizes[name];
+    return { width: w * K, height: h * K, left: L.panel[0] + dx - (w * K) / 2, top: L.panel[1] - (h * K) / 2, borderRadius: r };
   };
 
   function build() {
@@ -306,6 +347,8 @@
     gsap.set(panel, { ...rect("web"), opacity: 0, y: 40 });
     gsap.set(".w-in, .w-card, .p-in, .p-card, .d-in, .d-card, .d-row", { opacity: 0, y: 16 });
     gsap.set(["#m1", "#m2", "#m3", "#m4", "#typing"], { opacity: 0, y: 12 });
+    gsap.set(".q-in, .q-row", { opacity: 0, y: 14 });
+    gsap.set("#L-proc .new", { opacity: 0, scale: 0.8 });
     gsap.set("#notif", { yPercent: -160, opacity: 0 });
     gsap.set("#endline > *", { opacity: 0, y: 24 });
 
@@ -376,7 +419,7 @@
     count("#n-rev", 4.2, 9.0, (v) => v.toFixed(1));
     count("#n-ot", 96, 9.05);
 
-    // ---- 11 – 13.4s: WhatsApp automation
+    // ---- 11 – 13.7s: WhatsApp, answered by an AI agent
     swap(3, 11.05);
     morph("chat", 11.0);
     fadeLayer("#L-dash", "#L-chat", 11.0);
@@ -388,15 +431,37 @@
       .to("#m3", { opacity: 1, y: 0, duration: 0.35 }, 12.7)
       .to("#m4", { opacity: 1, y: 0, duration: 0.35 }, 12.9);
 
-    // ---- 13.5 – 16s: "Let's build yours." (fully faded before the loop point)
-    tl.to(panel, { opacity: 0, scale: 0.94, duration: 0.5, ease: "power2.in" }, 13.5)
-      .to(cap, { opacity: 0, duration: 0.4 }, 13.5);
+    const chats = { v: 0 };
+    tl.to(chats, { v: 214, duration: 1.6, ease: "power2.out", onUpdate: () => ($("#n-chats").textContent = Math.round(chats.v)) }, 11.6);
+
+    // ---- 13.75 – 16.7s: process optimisation (before → after)
+    swap(4, 13.8);
+    morph("proc", 13.75);
+    fadeLayer("#L-chat", "#L-proc", 13.75);
+    tl.to("#L-proc .q-in", { opacity: 1, y: 0, duration: 0.45, stagger: 0.5 }, 14.25)
+      .to("#L-proc .q-row", { opacity: 1, y: 0, duration: 0.35, stagger: 0.09 }, 14.35);
+    gsap.utils.toArray("#L-proc .q-row").forEach((row, i) => {
+      const t = 14.95 + i * 0.22;
+      tl.to(row.querySelector(".old"), { "--s": 1, duration: 0.3, ease: "power2.inOut" }, t)
+        .to(row.querySelector(".new"), { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, t + 0.15);
+    });
+    // The "after" bar collapses from 2 days (48 h) to 3 hours.
+    const hrs = { v: 48 };
+    tl.to("#after-bar", { width: "8%", duration: 1.1, ease: "power3.inOut" }, 15.65)
+      .to(hrs, { v: 3, duration: 1.1, ease: "power3.inOut", onUpdate: () => {
+        const h = Math.round(hrs.v);
+        $("#after-t").textContent = h >= 24 ? `${(h / 24).toFixed(1)} days` : `${h} hours`;
+      } }, 15.65);
+
+    // ---- 16.8 – 19.3s: "Let's build yours." (fully faded before the loop point)
+    tl.to(panel, { opacity: 0, scale: 0.94, duration: 0.5, ease: "power2.in" }, 16.8)
+      .to(cap, { opacity: 0, duration: 0.4 }, 16.8);
     const S1 = portrait ? 1.7 : 1.9;
     const endY = L.end - 40 - lh * S1;
-    tl.to(lock, { x: cx - (lw * S1) / 2 - L.lock[0], y: endY - L.lock[1], scale: S1, duration: 0.8, ease: "power3.inOut" }, 13.6)
-      .to("#endline h2", { opacity: 1, y: 0, duration: 0.7 }, 14.0)
-      .to("#endline p", { opacity: 1, y: 0, duration: 0.7 }, 14.25)
-      .to([lock, "#endline"], { opacity: 0, duration: 0.45, ease: "power2.in" }, 15.4)
+    tl.to(lock, { x: cx - (lw * S1) / 2 - L.lock[0], y: endY - L.lock[1], scale: S1, duration: 0.8, ease: "power3.inOut" }, 16.9)
+      .to("#endline h2", { opacity: 1, y: 0, duration: 0.7 }, 17.3)
+      .to("#endline p", { opacity: 1, y: 0, duration: 0.7 }, 17.55)
+      .to([lock, "#endline"], { opacity: 0, duration: 0.45, ease: "power2.in" }, 18.7)
       .set({}, {}, DUR);
     return tl;
   }
