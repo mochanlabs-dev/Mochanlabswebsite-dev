@@ -20,7 +20,7 @@ function Cards({ hidden = false }: { hidden?: boolean }) {
         </li>
       ))}
       {/* Closing card: a call to action */}
-      <li aria-hidden={hidden || undefined} className={`${card} justify-between gap-10 bg-ink p-7 text-card`}>
+      <li aria-hidden={hidden || undefined} className={`${card} justify-between gap-10 bg-accent p-7 text-card`}>
         <p className="heading text-[1.5rem]">{footer.blurb}</p>
         <Button href="#contact" variant="light" className="self-start" tabIndex={hidden ? -1 : undefined}>
           {footer.cta}
@@ -35,7 +35,7 @@ function Cards({ hidden = false }: { hidden?: boolean }) {
 // a still row that scrolls sideways.
 export default function Services() {
   return (
-    <section id="services" className="scroll-mt-20">
+    <section id="services" className="scroll-mt-20 bg-tint">
       <div className="mx-auto max-w-[1400px] px-5 pt-24 sm:px-8 sm:pt-32">
         <div className="mb-12 max-w-2xl">
           <Label className="mb-6">{services.tag}</Label>

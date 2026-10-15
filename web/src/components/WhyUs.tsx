@@ -8,12 +8,12 @@ import { Label, Plus } from "./ui";
 
 // Card colours, in the order the cards are dealt (the last one ends on top).
 const tones = [
-  "bg-ink text-card",
+  "bg-accent text-card",
   "bg-accent-soft text-ink",
   "bg-card text-ink border border-ink/10",
+  "bg-accent-deep text-card",
+  "bg-accent-soft text-ink",
   "bg-accent text-card",
-  "bg-[#0e1f5b] text-card",
-  "bg-ink text-card",
 ];
 
 const stroke = { fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round" } as const;
@@ -52,7 +52,8 @@ const icons: ReactNode[] = [
 
 // As on Abatable: the section pins, the cards rise from below one at a time,
 // tilting as they come, and settle into a fan from left to right so the last
-// card reads in full. On small screens the cards simply stack.
+// card reads in full. On small screens each card pins below the heading
+// while the next slides over it, and the one beneath eases back.
 export default function WhyUs() {
   const root = useRef<HTMLElement>(null);
 
@@ -82,6 +83,19 @@ export default function WhyUs() {
         });
         tl.to({}, { duration: 0.5 });
       });
+      mm.add("(max-width: 1023px)", () => {
+        const cards = gsap.utils.toArray<HTMLElement>("[data-why-card]");
+        cards.slice(0, -1).forEach((card, i) => {
+          gsap.to(card, {
+            // Scale and darken rather than fade: a faded card would show the
+            // one beneath it through.
+            scale: 0.92,
+            filter: "brightness(0.9)",
+            ease: "none",
+            scrollTrigger: { trigger: cards[i + 1], start: "top bottom", end: "top 30%", scrub: true },
+          });
+        });
+      });
       return () => mm.revert();
     },
     { scope: root },
@@ -91,7 +105,8 @@ export default function WhyUs() {
     <section
       ref={root}
       id="why-us"
-      className="relative overflow-hidden lg:h-svh"
+      // overflow-x-clip (not hidden) so the cards can stick on small screens.
+      className="relative overflow-x-clip bg-tint lg:h-svh lg:overflow-hidden"
       // Card height follows the screen height so the fan always fits.
       style={{ ["--why-h" as string]: "clamp(17rem, 48svh, 27rem)" }}
     >
@@ -113,12 +128,13 @@ export default function WhyUs() {
           </h2>
         </div>
 
-        <ul className="relative mt-12 grid gap-4 sm:grid-cols-2 lg:mt-0 lg:block lg:flex-1">
+        <ul className="relative mt-12 flex flex-col gap-6 lg:mt-0 lg:block lg:flex-1">
           {whyUs.items.map((item, i) => (
             <li
               key={item.title}
               data-why-card
-              className={`flex min-h-[19rem] flex-col justify-between rounded-xl p-7 shadow-[0_24px_60px_-24px_rgb(0_0_0/0.35)] lg:absolute lg:top-1/2 lg:left-1/2 lg:h-[var(--why-h)] lg:min-h-0 lg:w-[calc(var(--why-h)*0.72)] lg:p-[calc(var(--why-h)*0.07)] ${tones[i % tones.length]}`}
+              style={{ ["--i" as string]: i }}
+              className={`flex min-h-[19rem] origin-top flex-col max-lg:sticky max-lg:top-[calc(84px+var(--i)*12px)] sm:mx-auto sm:w-full sm:max-w-lg justify-between rounded-xl p-7 shadow-[0_24px_60px_-24px_rgb(0_0_0/0.35)] lg:absolute lg:top-1/2 lg:left-1/2 lg:h-[var(--why-h)] lg:min-h-0 lg:w-[calc(var(--why-h)*0.72)] lg:p-[calc(var(--why-h)*0.07)] ${tones[i % tones.length]}`}
             >
               <span className="grid size-14 place-items-center rounded-2xl border border-current/40 lg:size-[calc(var(--why-h)*0.15)]">
                 <svg viewBox="0 0 24 24" className="size-6 lg:size-[45%]" aria-hidden>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { contact, footer, nav } from "@/content/site";
 import { InstagramIcon, WhatsAppIcon } from "./icons";
 import { Button } from "./ui";
@@ -8,13 +9,13 @@ import { Button } from "./ui";
 export default function Footer() {
   return (
     <footer className="mt-20 px-3 pb-3 sm:px-5 sm:pb-5">
-      <div className="mx-auto max-w-[1400px] rounded-lg bg-ink px-6 pt-14 pb-8 text-card sm:px-10">
+      <div className="mx-auto max-w-[1400px] rounded-lg border border-ink/10 bg-card px-6 pt-14 pb-8 text-ink sm:px-10">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <a href="#home" className="inline-flex items-center gap-2.5">
+            <Link href="/" className="inline-flex items-center gap-2.5">
               <Image src="/brand/mark.png" alt="" width={292} height={321} className="h-9 w-auto" />
               <span className="text-lg font-medium tracking-tight">Mochan Labs</span>
-            </a>
+            </Link>
             <p className="heading mt-8 max-w-sm text-2xl">{footer.blurb}</p>
             <Button href="#contact" className="mt-8">
               {footer.cta}
@@ -27,9 +28,9 @@ export default function Footer() {
               <ul className="flex flex-col gap-2 text-sm">
                 {footer.services.map((s) => (
                   <li key={s}>
-                    <a href="#services" className="text-card/75 transition-colors hover:text-card">
+                    <Link href="/#services" className="text-ink/70 transition-colors hover:text-accent">
                       {s}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -39,14 +40,14 @@ export default function Footer() {
               <ul className="flex flex-col gap-2 text-sm">
                 {footer.company.map((c) => (
                   <li key={c.href}>
-                    <a href={c.href} className="text-card/75 transition-colors hover:text-card">
+                    <a href={c.href.startsWith("#") ? `/${c.href}` : c.href} className="text-ink/70 transition-colors hover:text-accent">
                       {c.label}
                     </a>
                   </li>
                 ))}
                 <li>
                   {/* Served by the Express app, outside the Next.js export */}
-                  <a href="/admin/login.html" className="text-card/75 transition-colors hover:text-card">
+                  <a href="/admin/login.html" className="text-ink/70 transition-colors hover:text-accent">
                     Admin Login
                   </a>
                 </li>
@@ -54,14 +55,14 @@ export default function Footer() {
             </div>
             <div>
               <h4 className="label mb-4">Get In Touch</h4>
-              <ul className="flex flex-col gap-2 text-sm text-card/75">
+              <ul className="flex flex-col gap-2 text-sm text-ink/70">
                 <li>
-                  <a href={`mailto:${contact.email}`} className="transition-colors hover:text-card">
+                  <a href={`mailto:${contact.email}`} className="transition-colors hover:text-accent">
                     {contact.email}
                   </a>
                 </li>
                 <li>
-                  <a href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer" className="hover:text-card">
+                  <a href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer" className="hover:text-accent">
                     WhatsApp Us
                   </a>
                 </li>
@@ -73,7 +74,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
-                  className="grid size-9 place-items-center rounded-[4px] border border-card/15 transition-colors hover:border-card"
+                  className="grid size-9 place-items-center rounded-[4px] border border-ink/15 transition-colors hover:border-accent hover:text-accent"
                 >
                   <InstagramIcon />
                 </a>
@@ -82,7 +83,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="WhatsApp"
-                  className="grid size-9 place-items-center rounded-[4px] border border-card/15 transition-colors hover:border-card"
+                  className="grid size-9 place-items-center rounded-[4px] border border-ink/15 transition-colors hover:border-accent hover:text-accent"
                 >
                   <WhatsAppIcon />
                 </a>
@@ -91,23 +92,23 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-wrap gap-6 border-t border-card/10 pt-8">
+        <div className="mt-14 flex flex-wrap gap-6 border-t border-ink/10 pt-8">
           {[
             { src: "/brand/qr-whatsapp.png", label: "Scan to WhatsApp" },
             { src: "/brand/qr-instagram.png", label: "Follow on Instagram" },
           ].map((q) => (
             <figure key={q.src} className="flex items-center gap-3">
-              <Image src={q.src} alt={`${q.label} QR code`} width={64} height={64} className="rounded-[4px] bg-card p-1" />
-              <figcaption className="text-xs text-card/55">{q.label}</figcaption>
+              <Image src={q.src} alt={`${q.label} QR code`} width={64} height={64} className="rounded-[4px] border border-ink/10 bg-card p-1" />
+              <figcaption className="text-xs text-ink/55">{q.label}</figcaption>
             </figure>
           ))}
         </div>
 
-        <div className="mt-8 flex flex-col gap-2 border-t border-card/10 pt-6 text-xs text-card/45 sm:flex-row sm:justify-between">
+        <div className="mt-8 flex flex-col gap-2 border-t border-ink/10 pt-6 text-xs text-ink/45 sm:flex-row sm:justify-between">
           <span>{footer.copyright}</span>
           <nav aria-label="Footer" className="flex flex-wrap gap-4">
             {nav.slice(1).map((n) => (
-              <a key={n.href} href={n.href} className="hover:text-card">
+              <a key={n.href} href={n.href.startsWith("#") ? `/${n.href}` : n.href} className="hover:text-accent">
                 {n.label}
               </a>
             ))}

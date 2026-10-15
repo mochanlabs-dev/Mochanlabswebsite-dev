@@ -89,7 +89,7 @@ export default function WorkWeighbridge() {
               </p>
               <p className="mt-2 text-[0.95rem] leading-relaxed text-ink/60">{s.body}</p>
             </div>
-            <div className="overflow-hidden rounded-lg border border-ink/10 bg-card shadow-[0_20px_60px_-20px_rgb(0_0_0/0.18)]">
+            <div data-reveal="clip" className="overflow-hidden rounded-lg border border-ink/10 bg-card shadow-[0_20px_60px_-20px_rgb(0_0_0/0.18)]">
               <div className="flex items-center justify-between border-b border-ink/8 px-4 py-2.5 text-xs text-ink/45">
                 <span>{wb.name}</span>
                 <span className="tabular-nums">0{i + 1} / {s.title}</span>

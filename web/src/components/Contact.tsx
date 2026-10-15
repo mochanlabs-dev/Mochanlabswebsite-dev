@@ -15,14 +15,14 @@ export default function Contact() {
     <section id="contact" className="scroll-mt-20">
       {/* Call-to-action band */}
       <div className="px-3 sm:px-5">
-        <div className="relative mx-auto max-w-[1400px] overflow-hidden rounded-lg bg-ink px-6 py-24 text-center text-card sm:py-32">
-          <CircuitLines className="pointer-events-none absolute inset-0 h-full w-full text-card opacity-20 [&_[data-trace]]:[stroke-dashoffset:0]" />
+        <div className="relative mx-auto max-w-[1400px] overflow-hidden rounded-lg bg-accent-soft px-6 py-24 text-center text-ink sm:py-32">
+          <CircuitLines className="pointer-events-none absolute inset-0 h-full w-full text-accent opacity-25 [&_[data-trace]]:[stroke-dashoffset:0]" />
           <div className="relative">
             <Label className="mb-6">{contactSection.tag}</Label>
             <h2 data-reveal="lines" className="heading mx-auto max-w-4xl text-[clamp(2.4rem,5.6vw,5rem)]">
               {contactSection.titleLead} <span className="text-accent">{contactSection.titleAccent}</span>
             </h2>
-            <p data-reveal="fade" className="mx-auto mt-6 max-w-md text-base text-card/60">
+            <p data-reveal="fade" className="mx-auto mt-6 max-w-md text-base text-ink/60">
               {contactSection.intro}
             </p>
           </div>

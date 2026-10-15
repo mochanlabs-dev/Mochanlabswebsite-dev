@@ -48,6 +48,11 @@ export default function Hero() {
 
   return (
     <section ref={root} id="home" className="relative overflow-hidden pt-[72px]">
+      {/* Soft blue glow so the hero isn't flat white (strongest on phones) */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_45%_at_85%_30%,rgb(43_89_255/0.16),transparent_70%),radial-gradient(50%_35%_at_0%_90%,rgb(43_89_255/0.08),transparent_70%)] lg:bg-[radial-gradient(40%_50%_at_80%_45%,rgb(43_89_255/0.10),transparent_70%)]"
+      />
       {/* Background line work: faint on desktop, off on small screens where it
           would run through the text. Faded out behind the copy column. */}
       <div

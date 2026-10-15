@@ -28,8 +28,8 @@ export default function Work() {
 
         {/* ODTS */}
         <div className="mt-24 grid items-center gap-12 border-t border-ink/10 pt-24 sm:mt-32 sm:pt-32 lg:grid-cols-2 lg:gap-16">
-          <div data-reveal="fade" className="relative overflow-hidden rounded-lg bg-ink px-5 py-10 sm:px-12 sm:py-14">
-            <CircuitLines className="pointer-events-none absolute inset-0 h-full w-full text-card opacity-20 [&_[data-trace]]:[stroke-dashoffset:0]" />
+          <div data-reveal="clip" className="relative overflow-hidden rounded-lg bg-accent-soft px-5 py-10 sm:px-12 sm:py-14">
+            <CircuitLines className="pointer-events-none absolute inset-0 h-full w-full text-accent opacity-30 [&_[data-trace]]:[stroke-dashoffset:0]" />
             <div className="relative">
               <OdtsBoard />
             </div>

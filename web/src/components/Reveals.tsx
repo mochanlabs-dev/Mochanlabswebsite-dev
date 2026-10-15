@@ -7,6 +7,8 @@ import { gsap, SplitText, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 //   data-reveal="lines"  heading lines slide up from a mask
 //   data-reveal="words"  paragraph words brighten as you scroll (scrubbed)
 //   data-reveal="fade"   element fades up
+//   data-reveal="clip"   element opens up from an inset frame
+//   data-reveal="draw"   element scales in vertically, scrubbed
 export default function Reveals() {
   useGSAP(() => {
     if (prefersReducedMotion()) return;
@@ -61,6 +63,30 @@ export default function Reveals() {
         delay: Number(el.dataset.delay ?? 0),
         scrollTrigger: { trigger: el, start: "top 90%", once: true },
       });
+    });
+
+    // Screenshots and panels open up from an inset frame.
+    gsap.utils.toArray<HTMLElement>('[data-reveal="clip"]').forEach((el) => {
+      gsap.fromTo(
+        el,
+        { clipPath: "inset(10% 8% 10% 8% round 14px)", scale: 0.96 },
+        {
+          clipPath: "inset(0% 0% 0% 0% round 8px)",
+          scale: 1,
+          duration: 1.1,
+          ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 88%", once: true },
+        },
+      );
+    });
+
+    // Lines that draw as their parent scrolls through (e.g. Process timeline).
+    gsap.utils.toArray<HTMLElement>('[data-reveal="draw"]').forEach((el) => {
+      gsap.fromTo(
+        el,
+        { scaleY: 0 },
+        { scaleY: 1, ease: "none", scrollTrigger: { trigger: el.parentElement, start: "top 75%", end: "bottom 55%", scrub: true } },
+      );
     });
 
     return () => splits.forEach((s) => s.revert());

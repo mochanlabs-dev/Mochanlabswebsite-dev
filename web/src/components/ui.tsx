@@ -37,8 +37,8 @@ export function Button({
   tabIndex?: number;
 }) {
   const styles = {
-    accent: "bg-accent text-card hover:bg-ink",
-    ink: "bg-ink text-card hover:bg-accent",
+    accent: "bg-accent text-card hover:bg-accent-deep",
+    ink: "bg-accent-deep text-card hover:bg-accent",
     light: "bg-card text-ink hover:bg-accent hover:text-card",
     outline: "border border-ink/15 text-ink hover:border-ink",
   }[variant];
