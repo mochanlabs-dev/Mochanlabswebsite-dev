@@ -8,6 +8,9 @@ const logger    = require('./services/logger');
 const { getClientIP, trackVisit } = require('./services/visitTracker');
 
 const app = express();
+// Behind one proxy in production (Render), so req.ip is the visitor's IP —
+// the login rate limit depends on it.
+app.set('trust proxy', 1);
 
 app.use(helmet({
   contentSecurityPolicy: {

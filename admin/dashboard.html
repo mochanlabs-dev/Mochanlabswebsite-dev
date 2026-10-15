@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="auth.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | Mochan Labs Admin</title>
@@ -890,7 +891,7 @@ if (sessionStorage.getItem('ml_admin') !== 'true') {
 
 /* ===== Logout ===== */
 document.getElementById('logoutBtn').addEventListener('click', () => {
-  sessionStorage.removeItem('ml_admin');
+  sessionStorage.clear();
   window.location.href = 'login.html';
 });
 

@@ -1,38 +1,17 @@
-const logger = require('../services/logger');
+const { verify } = require('../services/adminToken');
 
+// Requires a valid admin session token: "Authorization: Bearer <token>".
 const authMiddleware = (req, res, next) => {
-  try {
-    const authHeader = req.headers['authorization'];
-    const token = req.cookies?.adminToken || authHeader?.replace('Bearer ', '');
+  const header = req.headers['authorization'] || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  const username = verify(token);
 
-    if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized: No token provided'
-      });
-    }
-
-    // Decode token to get username (token is base64 encoded username)
-    const username = Buffer.from(token, 'base64').toString();
-    const expectedUsername = process.env.ADMIN_USERNAME;
-
-    if (username !== expectedUsername) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized: Invalid token'
-      });
-    }
-
-    // Token is valid, attach to request
-    req.adminUser = username;
-    next();
-  } catch (error) {
-    logger.error('Auth middleware error', { error: error.message });
-    res.status(401).json({
-      success: false,
-      message: 'Unauthorized'
-    });
+  if (!username) {
+    return res.status(401).json({ success: false, message: 'Unauthorized' });
   }
+
+  req.adminUser = username;
+  next();
 };
 
 module.exports = authMiddleware;

@@ -1,6 +1,10 @@
 const express  = require('express');
 const router   = express.Router();
 const Invoice  = require('../models/Invoice');
+const authMiddleware = require('../middleware/authMiddleware');
+
+// All invoice routes require an admin session.
+router.use(authMiddleware);
 
 // GET /api/invoices — all invoices, newest first
 router.get('/', async (req, res) => {
