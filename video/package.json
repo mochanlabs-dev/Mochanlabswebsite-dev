@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@fontsource/figtree": "^5.2.10",
+    "@fontsource/sora": "^5.2.6",
     "playwright-core": "1.48.2"
   }
 }

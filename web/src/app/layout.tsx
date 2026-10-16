@@ -11,7 +11,7 @@ const figtree = Figtree({
 export const metadata: Metadata = {
   title: "Mochan Labs | IT Solutions & Services",
   description:
-    "Mochan Labs — Premier IT Solutions & Services. Web Development, Mobile Apps, Cloud, Cybersecurity and more.",
+    "Mochan Labs - Premier IT Solutions & Services. Web Development, Mobile Apps, Cloud, Cybersecurity and more.",
 };
 
 export const viewport: Viewport = {

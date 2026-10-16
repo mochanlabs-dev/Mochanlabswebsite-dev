@@ -1,0 +1,49 @@
+/*
+  Mochan Labs brand tokens — derived from the logo (assets/logo-mark.png).
+  Drop into a Tailwind v4 stylesheet (the @theme block) or use the plain
+  :root custom properties anywhere else.
+*/
+
+@theme {
+  /* Navy — the logo's dark field. Primary brand colour; use for large
+     surfaces (hero, section bands, footer) and for text on light. */
+  --color-navy-950: #050f24;
+  --color-navy-900: #0a1a3d;
+  --color-navy-800: #102654;
+  --color-navy-700: #173a72;
+
+  /* Sapphire — the logo's "M". Links, focus rings, secondary accents. */
+  --color-sapphire: #215e97;
+  --color-sapphire-light: #3d7fc0;
+
+  /* Cyan — the logo's inner hexagon trace. Highlights in headings, icons,
+     active states, thin lines. Not for body text on white (low contrast). */
+  --color-cyan: #2bb7c9;
+  --color-cyan-light: #4eccdc;
+  --color-cyan-50: #e6f8fa;
+
+  /* Gold — the logo's outer trace. The call-to-action colour: primary
+     buttons and small emphasis. Use sparingly; dark text on gold. */
+  --color-gold: #e0a83c;
+  --color-gold-light: #f1c46a;
+
+  /* Neutrals */
+  --color-ink: #0b1630; /* body text on light */
+  --color-mist: #f3f6fa; /* light section background */
+  --color-line: #dbe3ee; /* borders on light */
+  --color-white: #ffffff;
+
+  /* Type */
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+
+  /* Motion */
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Signature gradient (navy → sapphire with a cyan glow), for heroes and bands. */
+:root {
+  --gradient-brand: radial-gradient(120% 90% at 85% 10%, rgb(43 183 201 / 0.28), transparent 55%),
+    linear-gradient(160deg, #0a1a3d 0%, #102654 55%, #173a72 100%);
+  --gradient-gold: linear-gradient(135deg, #f1c46a, #e0a83c);
+}

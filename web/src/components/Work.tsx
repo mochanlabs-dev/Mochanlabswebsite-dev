@@ -38,7 +38,7 @@ export default function Work() {
           <div>
             <p className="label mb-4">{odts.kicker}</p>
             <h3 className="heading text-[clamp(2rem,3.4vw,3rem)]">
-              {odts.name} <span className="text-ink/35">— {odts.fullName}</span>
+              {odts.name} <span className="text-ink/35">- {odts.fullName}</span>
             </h3>
             <p className="mt-4 max-w-lg text-base leading-relaxed text-ink/65">{odts.summary}</p>
 

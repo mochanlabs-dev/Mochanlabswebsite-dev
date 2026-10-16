@@ -24,7 +24,7 @@ export const hero = {
   badge: "Innovative IT Solutions",
   titleLead: "Transforming Ideas Into",
   titleAccent: "Digital Reality",
-  body: "Mochan Labs delivers cutting-edge IT solutions — web development, cloud services, cybersecurity, and custom software. We turn your vision into powerful digital experiences.",
+  body: "Mochan Labs delivers cutting-edge IT solutions - web development, cloud services, cybersecurity, and custom software. We turn your vision into powerful digital experiences.",
   cta: "Get Free Consultation",
 };
 
@@ -34,7 +34,7 @@ export const about = {
   titleAccent: "Partner",
   paragraphs: [
     "Mochan Labs is a leading IT solutions company committed to delivering innovative technology services that drive business growth. Founded with a passion for technology, we combine expertise with creativity to build solutions that make a real difference.",
-    "Our team of experienced professionals works closely with clients to understand their unique challenges and develop tailored solutions that exceed expectations — from startups to enterprises across all industries.",
+    "Our team of experienced professionals works closely with clients to understand their unique challenges and develop tailored solutions that exceed expectations - from startups to enterprises across all industries.",
   ],
   features: [
     "Client-First Approach",
@@ -53,7 +53,7 @@ export const services = {
   items: [
     {
       title: "Web Development",
-      body: "Custom, responsive websites and web applications built with modern technologies — from landing pages to complex enterprise portals.",
+      body: "Custom, responsive websites and web applications built with modern technologies - from landing pages to complex enterprise portals.",
       points: ["React / Next.js / Vue", "Node.js / Django / Laravel", "E-Commerce Solutions"],
     },
     {
@@ -120,13 +120,13 @@ export const work = {
     name: "Weighbridge",
     kicker: "Weighbridge management software",
     summary:
-      "Weigh vehicles, bill sales and purchases, print receipts, and keep Tally and the government portal in step — from one app on the weighbridge computer.",
+      "Weigh vehicles, bill sales and purchases, print receipts, and keep Tally and the government portal in step - from one app on the weighbridge computer.",
     tags: ["Windows desktop app", "SQL Server", "Tally integration", "MDTSS govt portal", "RFID & IP cameras", "Multi-computer"],
     docsUrl: "https://mochanlabs-dev.github.io/app-docs/weighbridge/",
     steps: [
       {
         title: "Weigh",
-        body: "Live weight straight from the scale. Vehicles are recognised by RFID and photographed by IP cameras — first weight on entry, second on exit.",
+        body: "Live weight straight from the scale. Vehicles are recognised by RFID and photographed by IP cameras - first weight on entry, second on exit.",
         image: "/projects/weighbridge/token-entry.webp",
         alt: "Weighbridge token page recording a vehicle's first weight",
       },
@@ -138,13 +138,13 @@ export const work = {
       },
       {
         title: "Print",
-        body: "Weight slips, inward tokens and GST tax invoices — on A4 or straight to a thermal receipt printer.",
+        body: "Weight slips, inward tokens and GST tax invoices - on A4 or straight to a thermal receipt printer.",
         image: "/projects/weighbridge/slip-sale.webp",
         alt: "Weight slip with two copies on one sheet",
       },
       {
         title: "Sync",
-        body: "Every sale and purchase posts to Tally, and every weighment is reported to the Uttarakhand MDTSS portal — retried automatically if either is offline.",
+        body: "Every sale and purchase posts to Tally, and every weighment is reported to the Uttarakhand MDTSS portal - retried automatically if either is offline.",
         image: "/projects/weighbridge/tally.webp",
         alt: "Tally connection setup",
       },
@@ -155,7 +155,7 @@ export const work = {
     fullName: "Order Dispatch & Tracking System",
     kicker: "Dealer order and dispatch platform",
     summary:
-      "Dealers place orders, dispatchers accept and dispatch them, and the office sees every order's status as it changes — one web app for the whole dealer network.",
+      "Dealers place orders, dispatchers accept and dispatch them, and the office sees every order's status as it changes - one web app for the whole dealer network.",
     roles: ["Dealer", "Dispatcher", "Office", "Admin", "Sales Officer"],
     features: [
       "Orders checked against each dealer's credit limit, with alerts as limits run low",
@@ -172,7 +172,7 @@ export const whyUs = {
   titleLead: "What Makes",
   titleAccent: "Mochan Labs",
   titleTrail: "Different",
-  intro: "We don't just build technology — we build partnerships that drive long-term success.",
+  intro: "We don't just build technology - we build partnerships that drive long-term success.",
   items: [
     { title: "Expert Team", body: "Our certified professionals bring years of experience across multiple domains and the latest technologies." },
     { title: "Cost Effective", body: "Premium quality solutions at competitive prices. Maximum ROI for your technology investment." },
