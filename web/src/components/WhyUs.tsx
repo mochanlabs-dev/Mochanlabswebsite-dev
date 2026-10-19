@@ -54,8 +54,7 @@ const icons: ReactNode[] = [
 // Desktop: the section pins and the cards are dealt from a deck at the bottom
 // edge, face down, flipping as they travel and settling into a fan with a small
 // overshoot. Hovering (or tabbing to) a card brings it forward, tilts it
-// towards the cursor with a light sheen, and slides its neighbours apart
-// (see globals.css). Phones: each card pins while the next slides over it.
+// towards the cursor, and slides its neighbours apart (see globals.css). Phones: each card pins while the next slides over it.
 export default function WhyUs() {
   const root = useRef<HTMLElement>(null);
   const list = useRef<HTMLUListElement>(null);
@@ -133,39 +132,59 @@ export default function WhyUs() {
     { scope: root },
   );
 
-  // Cursor-driven tilt and sheen on the card under the pointer (fine pointers only).
+  // Picks the active card from the cursor's position against the fan's fixed
+  // slots (the <li>s never move; only their insides do). Choosing by what is
+  // visually under the cursor would not work: the neighbours slide aside when
+  // a card is active, so the cursor would land on a card further along.
   useEffect(() => {
     const ul = list.current!;
-    if (!window.matchMedia("(min-width: 1024px) and (hover: hover)").matches) return;
-    let current: HTMLElement | null = null;
+    const wide = window.matchMedia("(min-width: 1024px)");
+    let active: HTMLElement | null = null;
 
-    const reset = (el: HTMLElement | null) => {
-      el?.style.setProperty("--px", "0");
-      el?.style.setProperty("--py", "0");
-    };
-    const move = (e: PointerEvent) => {
-      const card = (e.target as HTMLElement).closest<HTMLElement>("[data-why-card]");
-      if (current && current !== card) reset(current);
-      current = card;
-      if (!card) return;
-      const r = card.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width - 0.5;
-      const py = (e.clientY - r.top) / r.height - 0.5;
-      card.style.setProperty("--px", px.toFixed(3));
-      card.style.setProperty("--py", py.toFixed(3));
-      card.style.setProperty("--gx", `${((px + 0.5) * 100).toFixed(1)}%`);
-      card.style.setProperty("--gy", `${((py + 0.5) * 100).toFixed(1)}%`);
-    };
-    const leave = () => {
-      reset(current);
-      current = null;
+    const activate = (el: HTMLElement | null) => {
+      if (el === active) return;
+      active?.removeAttribute("data-active");
+      active?.style.setProperty("--px", "0");
+      active?.style.setProperty("--py", "0");
+      active = el;
+      active?.setAttribute("data-active", "");
     };
 
-    ul.addEventListener("pointermove", move);
-    ul.addEventListener("pointerleave", leave);
+    // The slot nearest the cursor horizontally, if the cursor is over the fan.
+    const pick = (x: number, y: number) => {
+      const slots = [...ul.querySelectorAll<HTMLElement>("[data-why-card]")].map((card) => ({ card, r: card.getBoundingClientRect() }));
+      const left = Math.min(...slots.map((s) => s.r.left));
+      const right = Math.max(...slots.map((s) => s.r.right));
+      const top = Math.min(...slots.map((s) => s.r.top)) - 40; // room for the lift
+      const bottom = Math.max(...slots.map((s) => s.r.bottom));
+      if (x < left || x > right || y < top || y > bottom) return null;
+      return slots.reduce((best, s) => (Math.abs(x - (s.r.left + s.r.width / 2)) < Math.abs(x - (best.r.left + best.r.width / 2)) ? s : best));
+    };
+
+    const point = (e: PointerEvent) => {
+      if (!wide.matches) return;
+      const hit = pick(e.clientX, e.clientY);
+      activate(hit?.card ?? null);
+      if (!hit) return;
+      // Tilt towards the cursor.
+      const px = Math.max(-0.5, Math.min(0.5, (e.clientX - hit.r.left) / hit.r.width - 0.5));
+      const py = Math.max(-0.5, Math.min(0.5, (e.clientY - hit.r.top) / hit.r.height - 0.5));
+      hit.card.style.setProperty("--px", px.toFixed(3));
+      hit.card.style.setProperty("--py", py.toFixed(3));
+    };
+    const away = (e: PointerEvent) => {
+      // Touch: a tap outside the fan puts the card back.
+      if (!ul.contains(e.target as Node)) activate(null);
+    };
+
+    ul.addEventListener("pointermove", point);
+    ul.addEventListener("pointerdown", point);
+    ul.addEventListener("pointerleave", () => activate(null));
+    window.addEventListener("pointerdown", away);
     return () => {
-      ul.removeEventListener("pointermove", move);
-      ul.removeEventListener("pointerleave", leave);
+      ul.removeEventListener("pointermove", point);
+      ul.removeEventListener("pointerdown", point);
+      window.removeEventListener("pointerdown", away);
     };
   }, []);
 
@@ -217,7 +236,6 @@ export default function WhyUs() {
                   <div
                     className={`why-face relative flex h-full min-h-[19rem] flex-col justify-between overflow-hidden rounded-xl p-7 shadow-[0_24px_60px_-24px_rgb(0_0_0/0.35)] lg:min-h-0 lg:p-[calc(var(--why-h)*0.07)] ${tones[i % tones.length]}`}
                   >
-                    <span aria-hidden className="why-glare pointer-events-none absolute inset-0 rounded-xl opacity-0" />
                     <span className="grid size-14 place-items-center rounded-2xl border border-current/40 lg:size-[calc(var(--why-h)*0.15)]">
                       <svg viewBox="0 0 24 24" className="size-6 lg:size-[45%]" aria-hidden>
                         {icons[i]}
