@@ -112,14 +112,19 @@ export default function WhyUs() {
         if (reduced) return;
         const cards = gsap.utils.toArray<HTMLElement>("[data-why-card]");
         cards.slice(0, -1).forEach((card, i) => {
-          gsap.to(card, {
-            // Scale and darken rather than fade: a faded card would show the
-            // one beneath it through.
-            scale: 0.92,
-            filter: "brightness(0.9)",
-            ease: "none",
-            scrollTrigger: { trigger: cards[i + 1], start: "top bottom", end: "top 30%", scrub: true },
-          });
+          // Scale and darken rather than fade: a faded card would show the one
+          // beneath it through. The filter starts from an explicit value:
+          // tweening from "none" overshoots and turns the card black.
+          gsap.fromTo(
+            card,
+            { scale: 1, filter: "brightness(1)" },
+            {
+              scale: 0.92,
+              filter: "brightness(0.92)",
+              ease: "none",
+              scrollTrigger: { trigger: cards[i + 1], start: "top bottom", end: "top 30%", scrub: true },
+            },
+          );
         });
       });
 
