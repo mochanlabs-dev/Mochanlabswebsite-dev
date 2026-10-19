@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { whyUs } from "@/content/site";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import CircuitLines from "./CircuitLines";
 import { Label } from "./ui";
 
-// Card colours, in the order the cards are dealt (the last one ends on top).
+// Card colours for the phone stack.
 const tones = [
   "bg-accent text-card",
   "bg-accent-soft text-ink",
@@ -51,64 +50,107 @@ const icons: ReactNode[] = [
   </g>,
 ];
 
-// Desktop: the section pins and the cards are dealt from a deck at the bottom
-// edge, face down, flipping as they travel and settling into a fan with a small
-// overshoot. Hovering (or tabbing to) a card brings it forward, tilts it
-// towards the cursor, and slides its neighbours apart (see globals.css). Phones: each card pins while the next slides over it.
+const chip = "rounded-md bg-card px-2.5 py-1 text-xs font-medium text-ink/70 shadow-sm";
+const tick = (
+  <svg viewBox="0 0 14 14" className="size-3.5" aria-hidden>
+    <path d="M2 7.5l3.2 3L12 3.5" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+// A small illustrative picture for each reason, in whyUs.items order.
+const visuals: ReactNode[] = [
+  // Expert team
+  <div key="team" className="space-y-5">
+    <div className="flex -space-x-3">
+      {["A", "R", "S", "K", "M"].map((l, i) => (
+        <span key={l} className={`grid size-12 place-items-center rounded-full border-2 border-accent-soft text-sm font-semibold ${i % 2 ? "bg-card text-accent" : "bg-accent text-card"}`}>
+          {l}
+        </span>
+      ))}
+    </div>
+    <div className="flex flex-wrap gap-2">
+      {["Web", "Mobile", "Cloud", "AI", "Security", "ERP & CRM"].map((t) => (
+        <span key={t} className={chip}>
+          {t}
+        </span>
+      ))}
+    </div>
+  </div>,
+  // Cost effective
+  <div key="cost" className="space-y-3">
+    {[
+      ["Agency retainers", "92%", "bg-ink/15"],
+      ["In-house team", "78%", "bg-ink/15"],
+      ["Mochan Labs", "46%", "bg-accent"],
+    ].map(([n, w, c]) => (
+      <div key={n}>
+        <p className="mb-1.5 text-xs font-medium text-ink/60">{n}</p>
+        <div className="h-3 rounded-full bg-card">
+          <div className={`h-full rounded-full ${c}`} style={{ width: w }} />
+        </div>
+      </div>
+    ))}
+    <p className="pt-1 text-xs text-ink/50">Illustrative: cost for the same scope of work</p>
+  </div>,
+  // Fast delivery
+  <div key="fast" className="space-y-4">
+    <div className="relative flex justify-between">
+      <span aria-hidden className="absolute top-3 right-3 left-3 h-0.5 bg-accent/25" />
+      <span aria-hidden className="absolute top-3 left-3 h-0.5 w-[62%] bg-accent" />
+      {["Plan", "Build", "Review", "Launch"].map((t, i) => (
+        <div key={t} className="relative flex flex-col items-center gap-2">
+          <span className={`grid size-6 place-items-center rounded-full ${i < 3 ? "bg-accent text-card" : "border-2 border-accent bg-card"}`}>{i < 3 && tick}</span>
+          <span className="text-xs font-medium text-ink/70">{t}</span>
+        </div>
+      ))}
+    </div>
+    <p className="rounded-lg bg-card px-3 py-2 text-sm text-ink/70">Regular updates at every step, so nothing is a surprise.</p>
+  </div>,
+  // Ongoing support
+  <div key="support" className="space-y-3">
+    <div className="flex items-center justify-between rounded-lg bg-card px-4 py-3 text-sm">
+      <span className="flex items-center gap-2 font-medium">
+        <span className="size-2 rounded-full bg-accent" /> All systems running
+      </span>
+      <span className="text-ink/50">24/7</span>
+    </div>
+    {["Update shipped", "Backup completed", "Support ticket closed"].map((t) => (
+      <div key={t} className="flex items-center gap-3 px-1 text-sm text-ink/70">
+        <span className="grid size-5 place-items-center rounded-full bg-accent text-card">{tick}</span>
+        {t}
+      </div>
+    ))}
+  </div>,
+  // Scalable solutions
+  <div key="scale" className="flex h-36 items-end gap-3">
+    {[18, 28, 40, 56, 78, 100].map((h, i) => (
+      <div key={h} className={`flex-1 rounded-t-md ${i === 5 ? "bg-accent" : "bg-accent/30"}`} style={{ height: `${h}%` }} />
+    ))}
+  </div>,
+  // Trusted partner
+  <div key="trust" className="space-y-3">
+    {["NDA signed before we start", "Clear scope and timeline", "You own the code", "Open, regular updates"].map((t) => (
+      <div key={t} className="flex items-center gap-3 rounded-lg bg-card px-4 py-3 text-sm">
+        <span className="grid size-5 place-items-center rounded-full bg-accent text-card">{tick}</span>
+        {t}
+      </div>
+    ))}
+  </div>,
+];
+
+// Desktop: a list of reasons on the left; the chosen one opens on the right
+// with a small picture. Nothing moves by itself: it changes on a click, hover
+// or key press. Phones and tablets: each card pins while the next slides over it.
 export default function WhyUs() {
   const root = useRef<HTMLElement>(null);
-  const list = useRef<HTMLUListElement>(null);
+  const [active, setActive] = useState(0);
+  const item = whyUs.items[active];
 
   useGSAP(
     () => {
-      const reduced = prefersReducedMotion();
+      if (prefersReducedMotion()) return;
       const mm = gsap.matchMedia();
-
-      mm.add("(min-width: 1024px)", () => {
-        const cards = gsap.utils.toArray<HTMLElement>("[data-why-card]");
-        const flips = cards.map((c) => c.querySelector<HTMLElement>("[data-flip]")!);
-        const hint = root.current!.querySelector<HTMLElement>("[data-why-hint]")!;
-        const n = cards.length;
-        // Cards are sized from the viewport height (--why-h); space them by
-        // ~40% of a card's width so the fan stays compact.
-        const spread = () => cards[0].offsetWidth * 0.4;
-        const tilt = (i: number) => gsap.utils.interpolate(-9, 11, i / (n - 1)); // left → right
-        const spot = (i: number) => ({ x: (i - (n - 1) / 2) * spread(), y: Math.abs(i - (n - 1) / 2) * 8, rotate: tilt(i) });
-
-        gsap.set(cards, { xPercent: -50, yPercent: -50 });
-        gsap.set(flips, { transformPerspective: 1400 });
-
-        if (reduced) {
-          // No animation: lay the fan out as it should finally look.
-          cards.forEach((card, i) => gsap.set(card, spot(i)));
-          gsap.set(flips, { rotateY: 0 });
-          return;
-        }
-
-        gsap.set(flips, { rotateY: 180 });
-        gsap.set(hint, { autoAlpha: 0, y: 6 });
-
-        const tl = gsap.timeline({
-          scrollTrigger: { trigger: root.current, start: "top top", end: `+=${n * 55}%`, pin: true, scrub: 0.8, invalidateOnRefresh: true },
-        });
-        cards.forEach((card, i) => {
-          const at = i * 0.7;
-          const to = spot(i);
-          tl.fromTo(
-            card,
-            { x: () => i * 3, y: () => window.innerHeight, rotate: (i - (n - 1) / 2) * 1.5 },
-            { x: () => to.x, y: to.y, rotate: to.rotate, ease: "back.out(1.15)", duration: 1.05 },
-            at,
-          );
-          // Face-down on the way up, face-up as it reaches the fan.
-          tl.fromTo(flips[i], { rotateY: 180 }, { rotateY: 0, ease: "power2.inOut", duration: 0.7 }, at + 0.15);
-        });
-        tl.to(hint, { autoAlpha: 1, y: 0, duration: 0.4 }, (n - 1) * 0.7 + 0.9);
-        tl.to({}, { duration: 0.5 });
-      });
-
       mm.add("(max-width: 1023px)", () => {
-        if (reduced) return;
         const cards = gsap.utils.toArray<HTMLElement>("[data-why-card]");
         cards.slice(0, -1).forEach((card, i) => {
           // Scale and darken rather than fade: a faded card would show the one
@@ -126,132 +168,104 @@ export default function WhyUs() {
           );
         });
       });
-
       return () => mm.revert();
     },
     { scope: root },
   );
 
-  // Picks the active card from the cursor's position against the fan's fixed
-  // slots (the <li>s never move; only their insides do). Choosing by what is
-  // visually under the cursor would not work: the neighbours slide aside when
-  // a card is active, so the cursor would land on a card further along.
-  useEffect(() => {
-    const ul = list.current!;
-    const wide = window.matchMedia("(min-width: 1024px)");
-    let active: HTMLElement | null = null;
-
-    const activate = (el: HTMLElement | null) => {
-      if (el === active) return;
-      active?.removeAttribute("data-active");
-      active?.style.setProperty("--px", "0");
-      active?.style.setProperty("--py", "0");
-      active = el;
-      active?.setAttribute("data-active", "");
-    };
-
-    // The slot nearest the cursor horizontally, if the cursor is over the fan.
-    const pick = (x: number, y: number) => {
-      const slots = [...ul.querySelectorAll<HTMLElement>("[data-why-card]")].map((card) => ({ card, r: card.getBoundingClientRect() }));
-      const left = Math.min(...slots.map((s) => s.r.left));
-      const right = Math.max(...slots.map((s) => s.r.right));
-      const top = Math.min(...slots.map((s) => s.r.top)) - 40; // room for the lift
-      const bottom = Math.max(...slots.map((s) => s.r.bottom));
-      if (x < left || x > right || y < top || y > bottom) return null;
-      return slots.reduce((best, s) => (Math.abs(x - (s.r.left + s.r.width / 2)) < Math.abs(x - (best.r.left + best.r.width / 2)) ? s : best));
-    };
-
-    const point = (e: PointerEvent) => {
-      if (!wide.matches) return;
-      const hit = pick(e.clientX, e.clientY);
-      activate(hit?.card ?? null);
-      if (!hit) return;
-      // Tilt towards the cursor.
-      const px = Math.max(-0.5, Math.min(0.5, (e.clientX - hit.r.left) / hit.r.width - 0.5));
-      const py = Math.max(-0.5, Math.min(0.5, (e.clientY - hit.r.top) / hit.r.height - 0.5));
-      hit.card.style.setProperty("--px", px.toFixed(3));
-      hit.card.style.setProperty("--py", py.toFixed(3));
-    };
-    const away = (e: PointerEvent) => {
-      // Touch: a tap outside the fan puts the card back.
-      if (!ul.contains(e.target as Node)) activate(null);
-    };
-
-    ul.addEventListener("pointermove", point);
-    ul.addEventListener("pointerdown", point);
-    ul.addEventListener("pointerleave", () => activate(null));
-    window.addEventListener("pointerdown", away);
-    return () => {
-      ul.removeEventListener("pointermove", point);
-      ul.removeEventListener("pointerdown", point);
-      window.removeEventListener("pointerdown", away);
-    };
-  }, []);
-
   return (
-    <section
-      ref={root}
-      id="why-us"
-      // overflow-x-clip (not hidden) so the cards can stick on small screens.
-      className="relative overflow-x-clip bg-tint lg:h-svh lg:overflow-hidden"
-      // Card height follows the screen height so the fan always fits.
-      style={{ ["--why-h" as string]: "clamp(17rem, 48svh, 27rem)" }}
-    >
-      {/* Faint line work behind the cards */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 hidden text-ink opacity-[0.07] lg:block">
-        <CircuitLines className="h-full w-full [&_[data-trace]]:[stroke-dashoffset:0]" />
-      </div>
-
-      <div className="relative mx-auto flex h-full max-w-[1400px] flex-col px-5 py-24 sm:px-8 lg:py-0 lg:pt-24 lg:pb-6">
-        <div className="mx-auto max-w-3xl text-center">
-          <Label className="mb-5">{whyUs.tag}</Label>
-          <h2 className="heading text-[clamp(2.2rem,min(4.4vw,7svh),4rem)]">
-            {whyUs.titleLead} <span className="text-accent">{whyUs.titleAccent}</span> {whyUs.titleTrail}
-          </h2>
-          <p data-why-hint className="label mt-3 hidden lg:block">
-            Hover a card to read it
+    <section ref={root} id="why-us" className="scroll-mt-20 overflow-x-clip bg-tint">
+      <div className="mx-auto max-w-[1400px] px-5 py-24 sm:px-8 sm:py-32">
+        <div className="mb-12 grid gap-6 lg:mb-16 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <Label className="mb-6">{whyUs.tag}</Label>
+            <h2 data-reveal="lines" className="heading text-[clamp(2.2rem,4.4vw,4rem)]">
+              {whyUs.titleLead} <span className="text-accent">{whyUs.titleAccent}</span> {whyUs.titleTrail}
+            </h2>
+          </div>
+          <p data-reveal="fade" className="max-w-sm self-end text-base text-ink/60">
+            {whyUs.intro}
           </p>
         </div>
 
-        <ul ref={list} className="relative mt-12 flex flex-col gap-6 lg:mt-0 lg:block lg:flex-1">
-          {whyUs.items.map((item, i) => (
-            // The <li> is dealt by the scroll animation. Inside it, .why-inner
-            // handles hover (lift, tilt, neighbours part) and [data-flip] turns
-            // the card over; the faces are the back (logo) and the front (text).
+        {/* Phones and tablets: stacking cards */}
+        <ul className="flex flex-col gap-6 lg:hidden">
+          {whyUs.items.map((it, i) => (
             <li
-              key={item.title}
+              key={it.title}
               data-why-card
-              tabIndex={0}
-              style={{ ["--i" as string]: i, ["--rot" as string]: `${gsap.utils.interpolate(-9, 11, i / (whyUs.items.length - 1))}deg` }}
-              className="why-card origin-top outline-none max-lg:sticky max-lg:top-[calc(84px+var(--i)*12px)] sm:mx-auto sm:w-full sm:max-w-lg lg:absolute lg:top-1/2 lg:left-1/2 lg:h-[var(--why-h)] lg:w-[calc(var(--why-h)*0.72)] lg:cursor-pointer"
+              style={{ ["--i" as string]: i }}
+              className="sticky top-[calc(84px+var(--i)*12px)] origin-top sm:mx-auto sm:w-full sm:max-w-lg"
             >
-              <div className="why-inner h-full">
-                <div data-flip className="why-flip relative h-full">
-                  {/* Back: shown while the card is dealt face down (desktop only) */}
-                  <div className="why-face why-back absolute inset-0 hidden place-items-center rounded-xl border border-ink/10 bg-card shadow-[0_24px_60px_-24px_rgb(0_0_0/0.35)] lg:grid">
-                    <Image src="/brand/mark.png" alt="" width={292} height={321} className="h-[26%] w-auto opacity-90" />
-                  </div>
-
-                  {/* Front */}
-                  <div
-                    className={`why-face relative flex h-full min-h-[19rem] flex-col justify-between overflow-hidden rounded-xl p-7 shadow-[0_24px_60px_-24px_rgb(0_0_0/0.35)] lg:min-h-0 lg:p-[calc(var(--why-h)*0.07)] ${tones[i % tones.length]}`}
-                  >
-                    <span className="grid size-14 place-items-center rounded-2xl border border-current/40 lg:size-[calc(var(--why-h)*0.15)]">
-                      <svg viewBox="0 0 24 24" className="size-6 lg:size-[45%]" aria-hidden>
-                        {icons[i]}
-                      </svg>
-                    </span>
-                    <div>
-                      <h3 className="heading text-[1.6rem] lg:text-[calc(var(--why-h)*0.068)]">{item.title}</h3>
-                      <p className="mt-3 text-[0.95rem] leading-relaxed opacity-80 lg:text-[calc(var(--why-h)*0.037)]">{item.body}</p>
-                    </div>
-                  </div>
+              <div className={`flex min-h-[19rem] flex-col justify-between overflow-hidden rounded-xl p-7 shadow-[0_24px_60px_-24px_rgb(0_0_0/0.35)] ${tones[i % tones.length]}`}>
+                <span className="grid size-14 place-items-center rounded-2xl border border-current/40">
+                  <svg viewBox="0 0 24 24" className="size-6" aria-hidden>
+                    {icons[i]}
+                  </svg>
+                </span>
+                <div>
+                  <h3 className="heading text-[1.6rem]">{it.title}</h3>
+                  <p className="mt-3 text-[0.95rem] leading-relaxed opacity-80">{it.body}</p>
                 </div>
               </div>
             </li>
           ))}
         </ul>
+
+        {/* Desktop: list + panel */}
+        <div data-reveal="fade" className="hidden gap-4 lg:grid lg:grid-cols-[1fr_1.1fr] lg:gap-6">
+          <ul role="tablist" aria-label="Why choose Mochan Labs" className="flex flex-col gap-2 lg:min-h-[31rem]">
+            {whyUs.items.map((it, i) => {
+              const on = i === active;
+              return (
+                <li key={it.title}>
+                  <button
+                    type="button"
+                    role="tab"
+                    id={`why-tab-${i}`}
+                    aria-selected={on}
+                    aria-controls="why-panel"
+                    onClick={() => setActive(i)}
+                    onMouseEnter={() => window.matchMedia("(hover: hover)").matches && setActive(i)}
+                    className={`flex w-full items-start gap-4 rounded-xl border p-4 text-left transition-colors duration-300 sm:p-5 ${
+                      on ? "border-accent/40 bg-card" : "border-transparent hover:bg-card/60"
+                    }`}
+                  >
+                    <span className={`grid size-11 shrink-0 place-items-center rounded-xl transition-colors duration-300 ${on ? "bg-accent text-card" : "bg-accent-soft text-accent"}`}>
+                      <svg viewBox="0 0 24 24" className="size-5" aria-hidden>
+                        {icons[i]}
+                      </svg>
+                    </span>
+                    <span className="min-w-0">
+                      <span className="heading block text-[1.2rem]">{it.title}</span>
+                      <span className={`grid transition-[grid-template-rows,opacity] duration-300 ${on ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                        <span className="overflow-hidden">
+                          <span className="mt-2 block text-[0.95rem] leading-relaxed text-ink/60">{it.body}</span>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div
+            key={active}
+            id="why-panel"
+            role="tabpanel"
+            aria-labelledby={`why-tab-${active}`}
+            className="svc-card relative min-h-[22rem] overflow-hidden rounded-2xl bg-accent-soft p-7 sm:p-10 lg:min-h-0"
+          >
+            <CircuitLines className="pointer-events-none absolute inset-0 h-full w-full text-accent opacity-25 [&_[data-trace]]:[stroke-dashoffset:0]" />
+            <div className="relative flex h-full flex-col justify-between gap-10">
+              <p className="heading text-[clamp(1.6rem,2.4vw,2.2rem)]">{item.title}</p>
+              <div className="max-w-md">{visuals[active]}</div>
+            </div>
+          </div>
+        </div>
       </div>
+      <div aria-hidden className="h-px bg-ink/10" />
     </section>
   );
 }

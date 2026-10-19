@@ -7,7 +7,7 @@ export const contact = {
   whatsappUrl: "https://wa.me/919971203567",
   instagramUrl: "https://www.instagram.com/mochan_labs/reels/",
   location: "India",
-  hours: "Mon – Sat: 9AM – 7PM IST",
+  hours: "Mon - Sat: 9AM - 7PM IST",
 };
 
 export const nav = [
@@ -105,6 +105,21 @@ export const services = {
       title: "AI & Automation Solutions",
       body: "Leverage artificial intelligence and automation to streamline operations and enhance productivity.",
       points: ["AI Solutions", "Custom Automation", "Machine Learning Integration"],
+    },
+    {
+      title: "Process Optimisation",
+      body: "We find where your team loses time and remove those steps, then build only what is left.",
+      points: ["Workflow Review", "Manual Work Removed", "Faster Order to Delivery"],
+    },
+    {
+      title: "AI Bots",
+      body: "Bots on WhatsApp and your website that answer customers in seconds, day and night.",
+      points: ["WhatsApp & Web Chat", "24/7 Replies", "Hands Over to Your Team"],
+    },
+    {
+      title: "AI Employees",
+      body: "Give AI a job, such as replies, reminders, invoices or reports, and it does it every day.",
+      points: ["Daily Task Automation", "Works With Your Tools", "Reports to You"],
     },
   ],
 };
@@ -228,7 +243,7 @@ export const footer = {
   madeWith: "Built with ♥ for Innovation",
 };
 
-// EmailJS IDs (public by design — the same ones the previous site used).
+// EmailJS IDs (public by design - the same ones the previous site used).
 export const emailjs = {
   serviceId: "service_9wjhtlg",
   templateId: "template_7ahq6of",

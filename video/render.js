@@ -25,7 +25,7 @@ const name = portrait ? `${page_}-portrait` : page_;
 // Frame used as the poster image (shown before the video loads).
 const POSTER_FRAME = { brand: 290, "weighbridge-demo": 105 }[page_] ?? 0;
 const frames = path.join(__dirname, "frames", name);
-const out = path.join(__dirname, "..", "web", "public", "video");
+const out = process.env.OUT_DIR || path.join(__dirname, "..", "web", "public", "video");
 
 (async () => {
   fs.rmSync(frames, { recursive: true, force: true });

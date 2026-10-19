@@ -1,11 +1,12 @@
 <!doctype html>
 <!--
-  Mochan Labs - 19.3 s brand film (1920×1080 or ?format=portrait 1080×1200, 30 fps).
+  Mochan Labs - 36 s brand film (1920×1080 or ?format=portrait 1080×1200, 30 fps).
 
-  Script: logo intro → "We build websites. / mobile apps. / ERP & CRM. /
-  AI employees. / faster processes." → "Let's build yours." One white panel
-  morphs between a browser, a phone, a dashboard, a WhatsApp chat answered by
-  an AI agent, and a before/after process view while each is built.
+  Script: logo intro → Build (websites, mobile apps, ERP & CRM) → Optimise
+  (fix what slows you down) → AI bots → Integrate and automate → AI employees
+  → "Let's build yours." One white panel morphs between a browser, a phone, a
+  dashboard, a before/after process view, a WhatsApp chat answered by an AI
+  bot, a connected workflow and an AI employee's task list.
 
   One paused GSAP timeline; render.js seeks it frame by frame.
   Preview: `npm run preview`, then open /video/brand.html (add ?format=portrait).
@@ -46,6 +47,16 @@
   #cap .slot { position: relative; width: 16ch; height: 1.15em; overflow: hidden; color: var(--accent); }
   #cap .slot span { position: absolute; left: 0; top: 0; white-space: nowrap; }
   .portrait #cap .lead, .portrait #cap .slot { font-size: 76px; }
+  /* One block per chapter: small label, headline, one plain sentence. */
+  #cap .chap { position: absolute; left: 0; top: 0; width: 660px; }
+  #cap .kick { font-size: 18px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; }
+  #cap h2 { font-size: 80px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.06; }
+  #cap h2 em { font-style: normal; color: var(--accent); }
+  #cap .sub { margin-top: 22px; font-size: 28px; line-height: 1.4; color: rgb(10 10 10 / 0.55); max-width: 560px; }
+  .portrait #cap .chap { width: 960px; }
+  .portrait #cap h2 { font-size: 64px; }
+  .portrait #cap .sub { font-size: 26px; max-width: 900px; margin-top: 16px; }
+  .portrait #cap .kick { margin-bottom: 12px; }
 
   /* Morphing panel */
   #panel { position: absolute; background: var(--card); border: 1px solid var(--line); overflow: hidden;
@@ -150,6 +161,34 @@
   .fill.before { width: 100%; background: rgb(10 10 10 / 0.08); color: rgb(10 10 10 / 0.6); }
   .fill.after { width: 100%; min-width: 92px; background: var(--accent); color: #fff; }
 
+  /* Connected workflow */
+  #L-flow { width: 760px; height: 500px; padding: 28px 30px; }
+  .flow { display: flex; align-items: center; margin-top: 26px; }
+  .node { width: 128px; height: 104px; border-radius: 14px; border: 1px solid rgb(10 10 10 / 0.1); background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 500; flex: none; }
+  .node i { width: 34px; height: 34px; border-radius: 10px; background: var(--paper); display: grid; place-items: center; font-style: normal; font-weight: 600; font-size: 15px; }
+  .wire { flex: 1; height: 3px; margin: 0 8px; border-radius: 2px; background: rgb(10 10 10 / 0.08); position: relative; overflow: hidden; }
+  .wire u { position: absolute; inset: 0; background: var(--accent); transform: scaleX(0); transform-origin: left; }
+  .log { margin-top: 24px; }
+  .lrow { display: grid; grid-template-columns: 28px 1fr auto; align-items: center; gap: 12px; height: 46px; border-top: 1px solid rgb(10 10 10 / 0.07); font-size: 16px; }
+  .lrow time { font-size: 14px; color: rgb(10 10 10 / 0.45); font-variant-numeric: tabular-nums; }
+  .chk { width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgb(10 10 10 / 0.18); display: grid; place-items: center; }
+  .chk svg { opacity: 0; }
+  .saved { margin-top: 18px; display: flex; align-items: baseline; justify-content: space-between; padding: 16px 20px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); font-size: 16px; font-weight: 600; }
+  .saved b { font-size: 34px; font-weight: 500; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+
+  /* AI employee */
+  #L-emp { width: 760px; height: 540px; padding: 28px 30px; }
+  .ehead { display: flex; align-items: center; gap: 16px; }
+  .ehead .av { width: 54px; height: 54px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 24px; font-weight: 600; }
+  .ehead b { display: block; font-size: 24px; font-weight: 500; letter-spacing: -0.01em; }
+  .ehead small { font-size: 15px; color: rgb(10 10 10 / 0.5); }
+  .ehead .live { margin-left: auto; }
+  .tasks { margin-top: 18px; }
+  .trow { display: grid; grid-template-columns: 28px 1fr auto; align-items: center; gap: 12px; height: 52px; border-top: 1px solid rgb(10 10 10 / 0.07); font-size: 17px; }
+  .trow em { font-style: normal; font-size: 15px; color: rgb(10 10 10 / 0.5); font-variant-numeric: tabular-nums; }
+  .etiles { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+  .etiles .tile { padding: 14px 20px; }
+
   /* End line */
   #endline { position: absolute; left: 0; right: 0; text-align: center; }
   #endline h2 { font-size: 92px; font-weight: 500; letter-spacing: -0.03em; }
@@ -170,9 +209,33 @@
   </svg>
 
   <div id="cap">
-    <div class="lead" id="cap-lead">We build</div>
-    <div class="slot" id="slot">
-      <span>websites.</span><span>mobile apps.</span><span>ERP &amp; CRM.</span><span>AI employees.</span><span>faster processes.</span>
+    <div class="chap" id="c-build">
+      <div class="kick">Build</div>
+      <div class="lead" id="cap-lead">We build</div>
+      <div class="slot" id="slot">
+        <span>websites.</span><span>mobile apps.</span><span>ERP &amp; CRM.</span>
+      </div>
+      <p class="sub">Websites, apps and business software made around how you work.</p>
+    </div>
+    <div class="chap" id="c-opt">
+      <div class="kick">Optimise</div>
+      <h2>Fix what slows you <em>down.</em></h2>
+      <p class="sub">We find where your team loses time and remove those steps.</p>
+    </div>
+    <div class="chap" id="c-bot">
+      <div class="kick">AI bots</div>
+      <h2>Answers customers while you <em>sleep.</em></h2>
+      <p class="sub">A bot on WhatsApp and your website that replies in seconds, day and night.</p>
+    </div>
+    <div class="chap" id="c-flow">
+      <div class="kick">Integrate and automate</div>
+      <h2>Your tools, <em>talking</em> to each other.</h2>
+      <p class="sub">Orders, invoices and updates move on their own. No copy and paste.</p>
+    </div>
+    <div class="chap" id="c-emp">
+      <div class="kick">AI employees</div>
+      <h2>Make AI your <em>employee.</em></h2>
+      <p class="sub">Give it a job. It does it every day, with no breaks.</p>
     </div>
   </div>
 
@@ -249,13 +312,50 @@
     <!-- WhatsApp automation -->
     <div class="layer" id="L-chat">
       <div class="chat-h"><i>ST</i><div><b>Sharma Traders</b><small>WhatsApp Business</small></div></div>
-      <div class="ai-bar"><span><i></i>AI agent · on duty 24/7</span><span><b id="n-chats">0</b>&nbsp;chats today · 0 needed staff</span></div>
+      <div class="ai-bar"><span><i></i>AI bot · on duty 24/7</span><span><b id="n-chats">0</b>&nbsp;chats today · 0 needed staff</span></div>
       <div class="msgs">
-        <div class="msg in" id="m1">Hi, has order 1044 left the rake?<time>10:43</time></div>
+        <div class="msg in" id="m1">Hi, has order 1044 left the rake?<time>2:14 am</time></div>
         <div class="typing" id="typing"><i></i><i></i><i></i></div>
-        <div class="msg out" id="m2">Yes ✓ Vehicle UK07 CA 4412 left at 10:42. Driver: 98•• •• 4521, ETA 2 hours.<time>10:43</time></div>
+        <div class="msg out" id="m2">Yes ✓ Vehicle UK07 CA 4412 left at 9:40 pm. ETA 2 hours.<time>2:14 am</time></div>
         <div class="track-btn" id="m3">Track live ↗</div>
-        <div class="auto" id="m4"><b></b>Answered by your AI agent in 2 seconds</div>
+        <div class="msg in" id="m5">Can you change the delivery address?<time>2:15 am</time></div>
+        <div class="typing" id="typing2"><i></i><i></i><i></i></div>
+        <div class="msg out" id="m6">Done ✓ Updated to Plot 14, Sector 8.<time>2:15 am</time></div>
+        <div class="auto" id="m4"><b></b>Both answered by your AI bot in under 3 seconds</div>
+      </div>
+    </div>
+
+    <!-- Connected workflow -->
+    <div class="layer" id="L-flow">
+      <div class="proc-h f-in"><small>Automation · Order #1046</small><b>Runs on its own</b></div>
+      <div class="flow">
+        <div class="node f-node"><i>W</i>WhatsApp</div><div class="wire"><u></u></div>
+        <div class="node f-node"><i>C</i>CRM</div><div class="wire"><u></u></div>
+        <div class="node f-node"><i>A</i>Accounts</div><div class="wire"><u></u></div>
+        <div class="node f-node"><i>D</i>Dispatch</div>
+      </div>
+      <div class="log">
+        <div class="lrow f-row"><span class="chk"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5l3.2 3L12 3.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Order captured from WhatsApp</span><time>0.4 s</time></div>
+        <div class="lrow f-row"><span class="chk"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5l3.2 3L12 3.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Customer added to the CRM</span><time>0.9 s</time></div>
+        <div class="lrow f-row"><span class="chk"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5l3.2 3L12 3.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Invoice and e-way bill created</span><time>1.6 s</time></div>
+        <div class="lrow f-row"><span class="chk"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5l3.2 3L12 3.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Driver and customer notified</span><time>2.1 s</time></div>
+      </div>
+      <div class="saved f-in"><span>Hands-on time saved this month</span><b><span id="n-hrs">0</span> hours</b></div>
+    </div>
+
+    <!-- AI employee -->
+    <div class="layer" id="L-emp">
+      <div class="ehead e-in"><div class="av">A</div><div><b>Asha</b><small>AI employee · Accounts desk</small></div><span class="live"><i></i>Working</span></div>
+      <div class="tasks">
+        <div class="trow e-row"><span class="chk"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5l3.2 3L12 3.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Reply to customer enquiries</span><em>214 answered</em></div>
+        <div class="trow e-row"><span class="chk"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5l3.2 3L12 3.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Send payment reminders</span><em>38 sent</em></div>
+        <div class="trow e-row"><span class="chk"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5l3.2 3L12 3.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Prepare invoices</span><em>52 ready</em></div>
+        <div class="trow e-row"><span class="chk"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5l3.2 3L12 3.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Update delivery status</span><em>31 updated</em></div>
+        <div class="trow e-row"><span class="chk"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.5l3.2 3L12 3.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Daily sales report to the owner</span><em>Sent 8:00 am</em></div>
+      </div>
+      <div class="etiles">
+        <div class="tile e-tile"><div class="k">Tasks done today</div><div class="v"><span id="n-tasks">0</span></div></div>
+        <div class="tile e-tile"><div class="k">Hours saved this week</div><div class="v"><span id="n-eh">0</span></div></div>
       </div>
     </div>
 
@@ -301,7 +401,7 @@
   const portrait = params.get("format") === "portrait";
   if (portrait) document.documentElement.classList.add("portrait");
   const $ = (s) => document.querySelector(s);
-  const DUR = 19.3;
+  const DUR = 36;
 
   // Layout per format
   const W = portrait ? 1080 : 1920;
@@ -310,7 +410,7 @@
     ? { lock: [48, 54], cap: [48, 140], panel: [540, 760], end: 560 }
     : { lock: [120, 312], cap: [120, 400], panel: [1255, 545], end: 600 };
   // [width, height, radius, horizontal shift] per scene
-  const sizes = { web: [1000, 640, 14], phone: [360, 740, 46], dash: [1040, 640, 14], chat: [560, 760, 22], proc: [700, 500, 14, portrait ? 0 : 70] };
+  const sizes = { web: [1000, 640, 14], phone: [360, 740, 46], dash: [1040, 640, 14], chat: [560, 760, 22], proc: [700, 500, 14, portrait ? 0 : 70], flow: [760, 500, 14], emp: [760, 540, 14] };
   const rect = (name) => {
     const [w, h, r, dx = 0] = sizes[name];
     return { width: w * K, height: h * K, left: L.panel[0] + dx - (w * K) / 2, top: L.panel[1] - (h * K) / 2, borderRadius: r };
@@ -350,6 +450,9 @@
     gsap.set(".q-in, .q-row", { opacity: 0, y: 14 });
     gsap.set("#L-proc .new", { opacity: 0, scale: 0.8 });
     gsap.set("#notif", { yPercent: -160, opacity: 0 });
+    gsap.set(["#c-opt", "#c-bot", "#c-flow", "#c-emp"], { opacity: 0 });
+    gsap.set(["#m5", "#m6", "#typing2"], { opacity: 0, y: 12 });
+    gsap.set(".f-in, .f-node, .f-row, .e-in, .e-row, .e-tile", { opacity: 0, y: 14 });
     gsap.set("#endline > *", { opacity: 0, y: 24 });
 
     // ---- 0 - 2.9s: logo
@@ -365,7 +468,8 @@
       .to("#traces", { opacity: 0, duration: 0.4 }, 2.0)
       .to(lock, { x: 0, y: 0, scale: 1, duration: 0.8, ease: "power3.inOut" }, 2.15)
       .to(cap, { opacity: 1, duration: 0.5 }, 2.55)
-      .from("#cap-lead", { yPercent: 40, duration: 0.6 }, 2.55);
+      .from("#cap-lead", { yPercent: 40, duration: 0.6 }, 2.55)
+      .from("#c-build .kick, #c-build .sub", { opacity: 0, y: 20, duration: 0.6, stagger: 0.5 }, 2.6);
 
     const swap = (i, t) => {
       if (i > 0) tl.to(slot[i - 1], { yPercent: -110, duration: 0.5, ease: "power3.inOut" }, t);
@@ -419,49 +523,99 @@
     count("#n-rev", 4.2, 9.0, (v) => v.toFixed(1));
     count("#n-ot", 96, 9.05);
 
-    // ---- 11 - 13.7s: WhatsApp, answered by an AI agent
-    swap(3, 11.05);
-    morph("chat", 11.0);
-    fadeLayer("#L-dash", "#L-chat", 11.0);
-    tl.to("#m1", { opacity: 1, y: 0, duration: 0.4 }, 11.55)
-      .to("#typing", { opacity: 1, y: 0, duration: 0.25 }, 11.95)
-      .to("#typing i", { y: -5, duration: 0.18, stagger: 0.09, yoyo: true, repeat: 1, ease: "sine.inOut" }, 12.0)
-      .set("#typing", { display: "none" }, 12.4)
-      .to("#m2", { opacity: 1, y: 0, duration: 0.4 }, 12.4)
-      .to("#m3", { opacity: 1, y: 0, duration: 0.35 }, 12.7)
-      .to("#m4", { opacity: 1, y: 0, duration: 0.35 }, 12.9);
+    // Chapter captions: the old block leaves, the new one rises in.
+    const chapIn = (id, t) => tl.set(id, { opacity: 1, y: 0 }, t)
+      .fromTo(`${id} > *`, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.1 }, t);
+    const chapOut = (id, t) => tl.to(id, { opacity: 0, y: -22, duration: 0.35, ease: "power2.in" }, t);
+    const tick = (row, t) => {
+      tl.to(row.querySelector(".chk"), { backgroundColor: "#2b59ff", borderColor: "#2b59ff", duration: 0.25 }, t)
+        .to(row.querySelector(".chk svg"), { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, t);
+    };
+    gsap.set(".chk svg", { scale: 0.4 });
 
-    const chats = { v: 0 };
-    tl.to(chats, { v: 214, duration: 1.6, ease: "power2.out", onUpdate: () => ($("#n-chats").textContent = Math.round(chats.v)) }, 11.6);
-
-    // ---- 13.75 - 16.7s: process optimisation (before → after)
-    swap(4, 13.8);
-    morph("proc", 13.75);
-    fadeLayer("#L-chat", "#L-proc", 13.75);
-    tl.to("#L-proc .q-in", { opacity: 1, y: 0, duration: 0.45, stagger: 0.5 }, 14.25)
-      .to("#L-proc .q-row", { opacity: 1, y: 0, duration: 0.35, stagger: 0.09 }, 14.35);
+    // ---- 11 - 17s: process optimisation (before → after)
+    const O = 11.0;
+    chapOut("#c-build", O); chapIn("#c-opt", O + 0.35);
+    morph("proc", O);
+    fadeLayer("#L-dash", "#L-proc", O);
+    tl.to("#L-proc .q-in", { opacity: 1, y: 0, duration: 0.45, stagger: 0.5 }, O + 0.5)
+      .to("#L-proc .q-row", { opacity: 1, y: 0, duration: 0.35, stagger: 0.09 }, O + 0.6);
     gsap.utils.toArray("#L-proc .q-row").forEach((row, i) => {
-      const t = 14.95 + i * 0.22;
+      const t = O + 1.4 + i * 0.5;
       tl.to(row.querySelector(".old"), { "--s": 1, duration: 0.3, ease: "power2.inOut" }, t)
         .to(row.querySelector(".new"), { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, t + 0.15);
     });
     // The "after" bar collapses from 2 days (48 h) to 3 hours.
     const hrs = { v: 48 };
-    tl.to("#after-bar", { width: "8%", duration: 1.1, ease: "power3.inOut" }, 15.65)
-      .to(hrs, { v: 3, duration: 1.1, ease: "power3.inOut", onUpdate: () => {
+    tl.to("#after-bar", { width: "8%", duration: 1.3, ease: "power3.inOut" }, O + 4.2)
+      .to(hrs, { v: 3, duration: 1.3, ease: "power3.inOut", onUpdate: () => {
         const h = Math.round(hrs.v);
         $("#after-t").textContent = h >= 24 ? `${(h / 24).toFixed(1)} days` : `${h} hours`;
-      } }, 15.65);
+      } }, O + 4.2);
 
-    // ---- 16.8 - 19.3s: "Let's build yours." (fully faded before the loop point)
-    tl.to(panel, { opacity: 0, scale: 0.94, duration: 0.5, ease: "power2.in" }, 16.8)
-      .to(cap, { opacity: 0, duration: 0.4 }, 16.8);
+    // ---- 17 - 23s: AI bot answers on WhatsApp at 2 am
+    const B = 17.0;
+    chapOut("#c-opt", B); chapIn("#c-bot", B + 0.35);
+    morph("chat", B);
+    fadeLayer("#L-proc", "#L-chat", B);
+    tl.to("#m1", { opacity: 1, y: 0, duration: 0.4 }, B + 0.7)
+      .to("#typing", { opacity: 1, y: 0, duration: 0.25 }, B + 1.1)
+      .to("#typing i", { y: -5, duration: 0.18, stagger: 0.09, yoyo: true, repeat: 1, ease: "sine.inOut" }, B + 1.15)
+      .set("#typing", { display: "none" }, B + 1.7)
+      .to("#m2", { opacity: 1, y: 0, duration: 0.4 }, B + 1.7)
+      .to("#m3", { opacity: 1, y: 0, duration: 0.35 }, B + 2.0)
+      .to("#m5", { opacity: 1, y: 0, duration: 0.4 }, B + 2.9)
+      .to("#typing2", { opacity: 1, y: 0, duration: 0.25 }, B + 3.3)
+      .to("#typing2 i", { y: -5, duration: 0.18, stagger: 0.09, yoyo: true, repeat: 1, ease: "sine.inOut" }, B + 3.35)
+      .set("#typing2", { display: "none" }, B + 3.9)
+      .to("#m6", { opacity: 1, y: 0, duration: 0.4 }, B + 3.9)
+      .to("#m4", { opacity: 1, y: 0, duration: 0.35 }, B + 4.4);
+    const chats = { v: 0 };
+    tl.to(chats, { v: 214, duration: 4, ease: "power2.out", onUpdate: () => ($("#n-chats").textContent = Math.round(chats.v)) }, B + 0.7);
+
+    // ---- 23 - 29s: integrate and automate
+    const F = 23.0;
+    chapOut("#c-bot", F); chapIn("#c-flow", F + 0.35);
+    morph("flow", F);
+    fadeLayer("#L-chat", "#L-flow", F);
+    tl.to("#L-flow .f-in:first-child", { opacity: 1, y: 0, duration: 0.45 }, F + 0.5)
+      .to("#L-flow .f-node", { opacity: 1, y: 0, duration: 0.45, stagger: 0.12 }, F + 0.7);
+    const nodes = gsap.utils.toArray("#L-flow .f-node"), wires = gsap.utils.toArray("#L-flow .wire u"), logs = gsap.utils.toArray("#L-flow .f-row");
+    nodes.forEach((n, i) => {
+      const t = F + 1.5 + i * 0.7;
+      tl.to(n, { backgroundColor: "#dce4ff", borderColor: "#2b59ff", duration: 0.3 }, t);
+      tl.to(n.querySelector("i"), { backgroundColor: "#2b59ff", color: "#fff", duration: 0.3 }, t);
+      if (wires[i]) tl.to(wires[i], { scaleX: 1, duration: 0.45, ease: "power2.inOut" }, t + 0.2);
+      tl.to(logs[i], { opacity: 1, y: 0, duration: 0.35 }, t + 0.1);
+      tick(logs[i], t + 0.3);
+    });
+    tl.to("#L-flow .saved", { opacity: 1, y: 0, duration: 0.5 }, F + 4.6);
+    const sv = { v: 0 };
+    tl.to(sv, { v: 86, duration: 1.4, ease: "power2.out", onUpdate: () => ($("#n-hrs").textContent = Math.round(sv.v)) }, F + 4.7);
+
+    // ---- 29 - 33.4s: AI employee
+    const E = 29.0;
+    chapOut("#c-flow", E); chapIn("#c-emp", E + 0.35);
+    morph("emp", E);
+    fadeLayer("#L-flow", "#L-emp", E);
+    tl.to("#L-emp .e-in", { opacity: 1, y: 0, duration: 0.45 }, E + 0.5)
+      .to("#L-emp .e-row", { opacity: 1, y: 0, duration: 0.4, stagger: 0.12 }, E + 0.65);
+    gsap.utils.toArray("#L-emp .e-row").forEach((row, i) => tick(row, E + 1.4 + i * 0.4));
+    tl.to("#L-emp .e-tile", { opacity: 1, y: 0, duration: 0.45, stagger: 0.1 }, E + 2.2);
+    const tk = { v: 0 }, eh = { v: 0 };
+    tl.to(tk, { v: 335, duration: 1.8, ease: "power2.out", onUpdate: () => ($("#n-tasks").textContent = Math.round(tk.v)) }, E + 2.3)
+      .to(eh, { v: 42, duration: 1.6, ease: "power2.out", onUpdate: () => ($("#n-eh").textContent = Math.round(eh.v)) }, E + 2.4);
+
+    // ---- 33.4 - 36s: "Let's build yours." (fully faded before the loop point)
+    const X = 33.4;
+    tl.to(panel, { opacity: 0, scale: 0.94, duration: 0.5, ease: "power2.in" }, X)
+      .to(cap, { opacity: 0, duration: 0.4 }, X);
     const S1 = portrait ? 1.7 : 1.9;
     const endY = L.end - 40 - lh * S1;
-    tl.to(lock, { x: cx - (lw * S1) / 2 - L.lock[0], y: endY - L.lock[1], scale: S1, duration: 0.8, ease: "power3.inOut" }, 16.9)
-      .to("#endline h2", { opacity: 1, y: 0, duration: 0.7 }, 17.3)
-      .to("#endline p", { opacity: 1, y: 0, duration: 0.7 }, 17.55)
-      .to([lock, "#endline"], { opacity: 0, duration: 0.45, ease: "power2.in" }, 18.7)
+    tl.to(lock, { x: cx - (lw * S1) / 2 - L.lock[0], y: endY - L.lock[1], scale: S1, duration: 0.8, ease: "power3.inOut" }, X + 0.1)
+      .to("#endline h2", { opacity: 1, y: 0, duration: 0.7 }, X + 0.5)
+      .to("#endline p", { opacity: 1, y: 0, duration: 0.7 }, X + 0.75)
+      .to([lock, "#endline"], { opacity: 0, duration: 0.45, ease: "power2.in" }, X + 2.0)
       .set({}, {}, DUR);
     return tl;
   }

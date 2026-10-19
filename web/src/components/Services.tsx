@@ -8,8 +8,8 @@ import { Button, Label } from "./ui";
 // content/site.ts stays as written).
 const groups = [
   { name: "Web & Mobile", titles: ["Web Development", "Mobile App Development", "Enterprise Web Applications", "E-commerce & Logistics"] },
-  { name: "Business Software", titles: ["Custom Software", "ERP & CRM Development"] },
-  { name: "AI & Automation", titles: ["AI & Automation Solutions", "API Integration & Automation"] },
+  { name: "Business Software", titles: ["Custom Software", "ERP & CRM Development", "Process Optimisation"] },
+  { name: "AI & Automation", titles: ["AI & Automation Solutions", "AI Bots", "AI Employees", "API Integration & Automation"] },
   { name: "Cloud & Security", titles: ["Cloud Solutions & DevOps", "Cybersecurity", "IT Support & Consulting"] },
 ].map((g) => ({ ...g, items: g.titles.map((t) => services.items.find((s) => s.title === t)!) }));
 

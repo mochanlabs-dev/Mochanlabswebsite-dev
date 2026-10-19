@@ -4,9 +4,9 @@ import { useEffect, useRef } from "react";
 import { prefersReducedMotion } from "@/lib/gsap";
 
 const label =
-  "Mochan Labs builds websites, mobile apps, ERP and CRM systems, AI agents that answer customers around the clock, and faster processes: an order-to-dispatch workflow cut from 2 days to 3 hours. Let's build yours.";
+  "Mochan Labs builds websites, mobile apps, ERP and CRM systems. We fix what slows your team down, run AI bots that answer customers around the clock, connect your tools so work moves on its own, and build AI employees. Let's build yours.";
 
-// The ~19 s brand film (rendered from /video/brand.html in the repo): a 16:9
+// The ~36 s brand film (rendered from /video/brand.html in the repo): a 16:9
 // cut on larger screens and a 9:10 cut on phones. Only the visible one loads
 // (preload="none", and a hidden video never intersects). Muted loop that
 // plays while on screen; with reduced motion it stays on the poster with
