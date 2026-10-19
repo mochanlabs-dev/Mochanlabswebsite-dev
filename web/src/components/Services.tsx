@@ -13,7 +13,7 @@ const groups = [
   { name: "Cloud & Security", titles: ["Cloud Solutions & DevOps", "Cybersecurity", "IT Support & Consulting"] },
 ].map((g) => ({ ...g, items: g.titles.map((t) => services.items.find((s) => s.title === t)!) }));
 
-// Category tabs with every service in the chosen category visible at once —
+// Category tabs with every service in the chosen category visible at once -
 // nothing moves on its own, so visitors read at their own pace.
 export default function Services() {
   const [active, setActive] = useState(0);

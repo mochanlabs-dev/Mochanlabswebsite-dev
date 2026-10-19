@@ -1,5 +1,5 @@
 // A designed fragment of the ODTS dispatcher screen (demo data): orders
-// grouped by dealer, oldest first, with their status — plus the dispatch form
+// grouped by dealer, oldest first, with their status - plus the dispatch form
 // a dispatcher fills in for an accepted order.
 
 type Status = "Order Placed" | "Accepted" | "Dispatched" | "On Hold";

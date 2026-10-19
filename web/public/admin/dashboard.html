@@ -1014,10 +1014,10 @@ function calcTotals() {
 /* ===== Live preview ===== */
 function updatePreview() {
   const sym     = document.getElementById('currency').value;
-  const number  = document.getElementById('inv-number').value  || '—';
-  const date    = document.getElementById('inv-date').value    || '—';
-  const due     = document.getElementById('inv-due').value     || '—';
-  const cname   = document.getElementById('client-name').value || '—';
+  const number  = document.getElementById('inv-number').value  || '-';
+  const date    = document.getElementById('inv-date').value    || '-';
+  const due     = document.getElementById('inv-due').value     || '-';
+  const cname   = document.getElementById('client-name').value || '-';
   const ccomp   = document.getElementById('client-company').value;
   const cemail  = document.getElementById('client-email').value;
   const cphone  = document.getElementById('client-phone').value;
@@ -1266,8 +1266,8 @@ async function downloadPDF() {
   doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(15, 23, 42);
-  doc.text(data.date || '—', w - 80, dateY);
-  doc.text(data.due  || '—', w - margin, dateY, { align: 'right' });
+  doc.text(data.date || '-', w - 80, dateY);
+  doc.text(data.due  || '-', w - margin, dateY, { align: 'right' });
 
   /* Items table */
   const tableY = Math.max(y + 10, 72);
@@ -1473,7 +1473,7 @@ async function refreshDashboard() {
     <tr>
       <td><strong>${inv.number}</strong></td>
       <td>${inv.clientName}</td>
-      <td>${inv.date || '—'}</td>
+      <td>${inv.date || '-'}</td>
       <td><strong>${inv.currency || '₹'}${(inv.grandTotal || 0).toFixed(2)}</strong></td>
       <td><span class="badge ${statusBadge(inv.status)}">${inv.status || 'pending'}</span></td>
       <td>
@@ -1504,7 +1504,7 @@ async function renderSavedList() {
         <div>
           <div class="inv-list-card-num">${inv.number}</div>
           <div class="inv-list-card-client">${inv.clientName}</div>
-          <div class="inv-list-card-date">${inv.date || '—'}</div>
+          <div class="inv-list-card-date">${inv.date || '-'}</div>
         </div>
         <span class="badge ${statusBadge(inv.status)}">${inv.status || 'pending'}</span>
       </div>
@@ -1597,7 +1597,7 @@ function renderAnalytics() {
   document.getElementById('stat-visitors').textContent = totalVisitors;
   document.getElementById('stat-visits').textContent = totalVisits;
   document.getElementById('stat-avg').textContent = avgVisitsPerPerson;
-  document.getElementById('stat-top-page').textContent = topPages.length ? topPages[0].page : '—';
+  document.getElementById('stat-top-page').textContent = topPages.length ? topPages[0].page : '-';
 
   // Top pages table
   const topPagesTable = document.getElementById('top-pages-table');
@@ -1644,7 +1644,7 @@ function renderAnalytics() {
         <tr>
           <td><code style="background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:4px;font-size:0.75rem">${v.ip}</code></td>
           <td>${v.country}</td>
-          <td>${v.city || '—'}</td>
+          <td>${v.city || '-'}</td>
           <td><strong>${v.visits}</strong></td>
           <td style="color:var(--muted);font-size:0.75rem">${v.pages.slice(0, 2).join(', ')}${v.pages.length > 2 ? '...' : ''}</td>
           <td style="color:var(--faint);font-size:0.75rem">${lastSeenDate}</td>

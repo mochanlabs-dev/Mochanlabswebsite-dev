@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "lenis/dist/lenis.css";
 
-/* Design 2 — calm and minimal. Warm off-white paper, near-black ink, and one
+/* Design 2 - calm and minimal. Warm off-white paper, near-black ink, and one
    accent (sapphire, from the logo's "M"), used sparingly. */
 @theme {
   --color-paper: #f5f6f3;

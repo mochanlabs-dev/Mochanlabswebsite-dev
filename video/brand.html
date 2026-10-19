@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  Mochan Labs — 19.3 s brand film (1920×1080 or ?format=portrait 1080×1200, 30 fps).
+  Mochan Labs - 19.3 s brand film (1920×1080 or ?format=portrait 1080×1200, 30 fps).
 
   Script: logo intro → "We build websites. / mobile apps. / ERP & CRM. /
   AI employees. / faster processes." → "Let's build yours." One white panel
@@ -14,7 +14,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Mochan Labs — brand film</title>
+<title>Mochan Labs - brand film</title>
 <style>
   @font-face { font-family: Figtree; font-weight: 400; src: url(node_modules/@fontsource/figtree/files/figtree-latin-400-normal.woff2) format("woff2"); }
   @font-face { font-family: Figtree; font-weight: 500; src: url(node_modules/@fontsource/figtree/files/figtree-latin-500-normal.woff2) format("woff2"); }
@@ -352,7 +352,7 @@
     gsap.set("#notif", { yPercent: -160, opacity: 0 });
     gsap.set("#endline > *", { opacity: 0, y: 24 });
 
-    // ---- 0 – 2.9s: logo
+    // ---- 0 - 2.9s: logo
     tl.to(["#tr-l", "#tr-l2", "#tr-r", "#tr-r2"], { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut", stagger: 0.08 }, 0.1)
       .set(["#sig-l", "#sig-r"], { opacity: 1 }, 0.25)
       .to(["#sig-l", "#sig-r"], { strokeDashoffset: -0.92, duration: 0.9, ease: "power2.in" }, 0.25)
@@ -374,7 +374,7 @@
     const morph = (to, t) => tl.to(panel, { ...rect(to), duration: 0.65, ease: "power3.inOut" }, t);
     const fadeLayer = (from, to, t) => tl.to(from, { opacity: 0, duration: 0.25 }, t).to(to, { opacity: 1, duration: 0.3 }, t + 0.3);
 
-    // ---- 2.75 – 5.4s: website
+    // ---- 2.75 - 5.4s: website
     swap(0, 2.85);
     tl.to(panel, { opacity: 1, y: 0, duration: 0.7 }, 2.75)
       .set("#L-web", { opacity: 1 }, 2.75)
@@ -393,7 +393,7 @@
       },
     }, 3.5);
 
-    // ---- 5.4 – 8.2s: mobile app
+    // ---- 5.4 - 8.2s: mobile app
     swap(1, 5.45);
     morph("phone", 5.4);
     fadeLayer("#L-web", "#L-phone", 5.4);
@@ -403,7 +403,7 @@
       .set("#ph-status", { textContent: "On the way" }, 7.4)
       .to("#notif", { yPercent: 0, opacity: 1, duration: 0.5 }, 7.35);
 
-    // ---- 8.2 – 11s: ERP & CRM dashboard
+    // ---- 8.2 - 11s: ERP & CRM dashboard
     swap(2, 8.25);
     morph("dash", 8.2);
     fadeLayer("#L-phone", "#L-dash", 8.2);
@@ -419,7 +419,7 @@
     count("#n-rev", 4.2, 9.0, (v) => v.toFixed(1));
     count("#n-ot", 96, 9.05);
 
-    // ---- 11 – 13.7s: WhatsApp, answered by an AI agent
+    // ---- 11 - 13.7s: WhatsApp, answered by an AI agent
     swap(3, 11.05);
     morph("chat", 11.0);
     fadeLayer("#L-dash", "#L-chat", 11.0);
@@ -434,7 +434,7 @@
     const chats = { v: 0 };
     tl.to(chats, { v: 214, duration: 1.6, ease: "power2.out", onUpdate: () => ($("#n-chats").textContent = Math.round(chats.v)) }, 11.6);
 
-    // ---- 13.75 – 16.7s: process optimisation (before → after)
+    // ---- 13.75 - 16.7s: process optimisation (before → after)
     swap(4, 13.8);
     morph("proc", 13.75);
     fadeLayer("#L-chat", "#L-proc", 13.75);
@@ -453,7 +453,7 @@
         $("#after-t").textContent = h >= 24 ? `${(h / 24).toFixed(1)} days` : `${h} hours`;
       } }, 15.65);
 
-    // ---- 16.8 – 19.3s: "Let's build yours." (fully faded before the loop point)
+    // ---- 16.8 - 19.3s: "Let's build yours." (fully faded before the loop point)
     tl.to(panel, { opacity: 0, scale: 0.94, duration: 0.5, ease: "power2.in" }, 16.8)
       .to(cap, { opacity: 0, duration: 0.4 }, 16.8);
     const S1 = portrait ? 1.7 : 1.9;
