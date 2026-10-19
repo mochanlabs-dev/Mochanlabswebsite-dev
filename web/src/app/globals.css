@@ -95,28 +95,71 @@ body {
 }
 
 
-/* Why Us fan (desktop): hovering, tapping or focusing a card brings it to the
-   front, straightens it and lifts it; the rest of the deck dims and eases
-   back. --rot is each card's resting tilt. */
+/* Why Us deck (desktop). The cards are dealt face down and flip over; hovering
+   or focusing one brings it forward, tilts it towards the cursor (--px/--py,
+   set from WhyUs.tsx) with a sheen, and slides its neighbours apart. --rot is
+   each card's resting tilt; --shift is how far a neighbour has moved aside. */
 @media (min-width: 1024px) {
+  .why-flip {
+    transform-style: preserve-3d;
+  }
+  .why-face {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .why-back {
+    transform: rotateY(180deg);
+  }
+
   .why-inner {
+    --shift: 0%;
+    transform: translateX(var(--shift));
     transition:
-      transform 0.45s var(--ease-out-expo),
-      box-shadow 0.45s var(--ease-out-expo),
+      transform 0.6s var(--ease-out-expo),
       filter 0.45s var(--ease-out-expo);
   }
-  .why-card:hover,
-  .why-card:focus-visible {
+
+  .why-card:is(:hover, :focus-visible) {
     z-index: 50;
   }
-  .why-card:hover .why-inner,
-  .why-card:focus-visible .why-inner {
-    transform: rotate(calc(var(--rot) * -1)) translateY(-28px) scale(1.06);
+
+  /* Neighbours part: everyone moves a little, the adjacent cards more. */
+  .why-card:is(:hover, :focus-visible) ~ .why-card .why-inner {
+    --shift: 16%;
+  }
+  .why-card:has(~ .why-card:is(:hover, :focus-visible)) .why-inner {
+    --shift: -16%;
+  }
+  .why-card:is(:hover, :focus-visible) + .why-card .why-inner {
+    --shift: 32%;
+  }
+  .why-card:has(+ .why-card:is(:hover, :focus-visible)) .why-inner {
+    --shift: -32%;
+  }
+
+  /* The others step back and dim slightly. */
+  ul:has(.why-card:is(:hover, :focus-visible)) .why-card:not(:is(:hover, :focus-visible)) .why-inner {
+    transform: translateX(var(--shift)) scale(0.96);
+    filter: brightness(0.93) saturate(0.9);
+  }
+
+  /* The chosen card: lift, straighten, tilt towards the cursor. */
+  .why-card:is(:hover, :focus-visible) .why-inner {
+    transform: perspective(1000px) translateY(-30px) rotate(calc(var(--rot) * -1)) scale(1.07)
+      rotateX(calc(var(--py, 0) * -9deg)) rotateY(calc(var(--px, 0) * 11deg));
+    transition:
+      transform 0.25s var(--ease-out-expo),
+      filter 0.45s var(--ease-out-expo);
+  }
+  .why-card:is(:hover, :focus-visible) .why-face {
     box-shadow: 0 40px 80px -24px rgb(0 0 0 / 0.4);
   }
-  ul:has(.why-card:hover) .why-card:not(:hover) .why-inner,
-  ul:has(.why-card:focus-visible) .why-card:not(:focus-visible) .why-inner {
-    filter: brightness(0.92) saturate(0.85);
-    transform: scale(0.97);
+
+  .why-glare {
+    background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgb(255 255 255 / 0.34), transparent 55%);
+    transition: opacity 0.3s;
+  }
+  .why-card:is(:hover, :focus-visible) .why-glare {
+    opacity: 1;
   }
 }

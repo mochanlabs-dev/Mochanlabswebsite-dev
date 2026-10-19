@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import Image from "next/image";
+import { useEffect, useRef, type ReactNode } from "react";
 import { whyUs } from "@/content/site";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import CircuitLines from "./CircuitLines";
-import { Label, Plus } from "./ui";
+import { Label } from "./ui";
 
 // Card colours, in the order the cards are dealt (the last one ends on top).
 const tones = [
@@ -50,42 +51,65 @@ const icons: ReactNode[] = [
   </g>,
 ];
 
-// As on Abatable: the section pins, the cards rise from below one at a time,
-// tilting as they come, and settle into a fan from left to right so the last
-// card reads in full. On small screens each card pins below the heading
-// while the next slides over it, and the one beneath eases back.
+// Desktop: the section pins and the cards are dealt from a deck at the bottom
+// edge, face down, flipping as they travel and settling into a fan with a small
+// overshoot. Hovering (or tabbing to) a card brings it forward, tilts it
+// towards the cursor with a light sheen, and slides its neighbours apart
+// (see globals.css). Phones: each card pins while the next slides over it.
 export default function WhyUs() {
   const root = useRef<HTMLElement>(null);
+  const list = useRef<HTMLUListElement>(null);
 
   useGSAP(
     () => {
-      if (prefersReducedMotion()) return;
+      const reduced = prefersReducedMotion();
       const mm = gsap.matchMedia();
+
       mm.add("(min-width: 1024px)", () => {
         const cards = gsap.utils.toArray<HTMLElement>("[data-why-card]");
+        const flips = cards.map((c) => c.querySelector<HTMLElement>("[data-flip]")!);
+        const hint = root.current!.querySelector<HTMLElement>("[data-why-hint]")!;
         const n = cards.length;
-        // Hovered/tapped/focused card: straighten, lift, bring to front (CSS
-        // in globals.css). The mm context below handles the dealing.
-        // Cards are sized from the viewport height (see --why-h); space them
-        // by ~40% of a card's width so the fan stays compact.
+        // Cards are sized from the viewport height (--why-h); space them by
+        // ~40% of a card's width so the fan stays compact.
         const spread = () => cards[0].offsetWidth * 0.4;
+        const tilt = (i: number) => gsap.utils.interpolate(-9, 11, i / (n - 1)); // left → right
+        const spot = (i: number) => ({ x: (i - (n - 1) / 2) * spread(), y: Math.abs(i - (n - 1) / 2) * 8, rotate: tilt(i) });
+
         gsap.set(cards, { xPercent: -50, yPercent: -50 });
+        gsap.set(flips, { transformPerspective: 1400 });
+
+        if (reduced) {
+          // No animation: lay the fan out as it should finally look.
+          cards.forEach((card, i) => gsap.set(card, spot(i)));
+          gsap.set(flips, { rotateY: 0 });
+          return;
+        }
+
+        gsap.set(flips, { rotateY: 180 });
+        gsap.set(hint, { autoAlpha: 0, y: 6 });
+
         const tl = gsap.timeline({
           scrollTrigger: { trigger: root.current, start: "top top", end: `+=${n * 55}%`, pin: true, scrub: 0.8, invalidateOnRefresh: true },
         });
         cards.forEach((card, i) => {
-          const t = i - (n - 1) / 2; // centred index
-          const rot = gsap.utils.interpolate(-9, 11, i / (n - 1)); // left tilt → right tilt
+          const at = i * 0.7;
+          const to = spot(i);
           tl.fromTo(
             card,
-            { y: () => window.innerHeight, x: () => t * spread() + 60, rotate: rot + 12 },
-            { y: Math.abs(t) * 8, x: () => t * spread(), rotate: rot, ease: "power2.out", duration: 1 },
-            i * 0.7,
+            { x: () => i * 3, y: () => window.innerHeight, rotate: (i - (n - 1) / 2) * 1.5 },
+            { x: () => to.x, y: to.y, rotate: to.rotate, ease: "back.out(1.15)", duration: 1.05 },
+            at,
           );
+          // Face-down on the way up, face-up as it reaches the fan.
+          tl.fromTo(flips[i], { rotateY: 180 }, { rotateY: 0, ease: "power2.inOut", duration: 0.7 }, at + 0.15);
         });
+        tl.to(hint, { autoAlpha: 1, y: 0, duration: 0.4 }, (n - 1) * 0.7 + 0.9);
         tl.to({}, { duration: 0.5 });
       });
+
       mm.add("(max-width: 1023px)", () => {
+        if (reduced) return;
         const cards = gsap.utils.toArray<HTMLElement>("[data-why-card]");
         cards.slice(0, -1).forEach((card, i) => {
           gsap.to(card, {
@@ -98,10 +122,47 @@ export default function WhyUs() {
           });
         });
       });
+
       return () => mm.revert();
     },
     { scope: root },
   );
+
+  // Cursor-driven tilt and sheen on the card under the pointer (fine pointers only).
+  useEffect(() => {
+    const ul = list.current!;
+    if (!window.matchMedia("(min-width: 1024px) and (hover: hover)").matches) return;
+    let current: HTMLElement | null = null;
+
+    const reset = (el: HTMLElement | null) => {
+      el?.style.setProperty("--px", "0");
+      el?.style.setProperty("--py", "0");
+    };
+    const move = (e: PointerEvent) => {
+      const card = (e.target as HTMLElement).closest<HTMLElement>("[data-why-card]");
+      if (current && current !== card) reset(current);
+      current = card;
+      if (!card) return;
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      card.style.setProperty("--px", px.toFixed(3));
+      card.style.setProperty("--py", py.toFixed(3));
+      card.style.setProperty("--gx", `${((px + 0.5) * 100).toFixed(1)}%`);
+      card.style.setProperty("--gy", `${((py + 0.5) * 100).toFixed(1)}%`);
+    };
+    const leave = () => {
+      reset(current);
+      current = null;
+    };
+
+    ul.addEventListener("pointermove", move);
+    ul.addEventListener("pointerleave", leave);
+    return () => {
+      ul.removeEventListener("pointermove", move);
+      ul.removeEventListener("pointerleave", leave);
+    };
+  }, []);
 
   return (
     <section
@@ -112,14 +173,9 @@ export default function WhyUs() {
       // Card height follows the screen height so the fan always fits.
       style={{ ["--why-h" as string]: "clamp(17rem, 48svh, 27rem)" }}
     >
-      {/* Faint line work and blueprint markers behind the cards */}
+      {/* Faint line work behind the cards */}
       <div aria-hidden className="pointer-events-none absolute inset-0 hidden text-ink opacity-[0.07] lg:block">
         <CircuitLines className="h-full w-full [&_[data-trace]]:[stroke-dashoffset:0]" />
-      </div>
-      <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block">
-        {["16%", "50%", "84%"].map((top) =>
-          ["4%", "50%", "96%"].map((left) => <Plus key={top + left} style={{ top, left }} />),
-        )}
       </div>
 
       <div className="relative mx-auto flex h-full max-w-[1400px] flex-col px-5 py-24 sm:px-8 lg:py-0 lg:pt-24 lg:pb-6">
@@ -128,32 +184,46 @@ export default function WhyUs() {
           <h2 className="heading text-[clamp(2.2rem,min(4.4vw,7svh),4rem)]">
             {whyUs.titleLead} <span className="text-accent">{whyUs.titleAccent}</span> {whyUs.titleTrail}
           </h2>
+          <p data-why-hint className="label mt-3 hidden lg:block">
+            Hover a card to read it
+          </p>
         </div>
 
-        <ul className="relative mt-12 flex flex-col gap-6 lg:mt-0 lg:block lg:flex-1">
+        <ul ref={list} className="relative mt-12 flex flex-col gap-6 lg:mt-0 lg:block lg:flex-1">
           {whyUs.items.map((item, i) => (
-            // The <li> is placed and dealt by the scroll animation; the inner
-            // card handles hover/tap: it straightens, lifts and comes to the
-            // front so its text can be read in full.
+            // The <li> is dealt by the scroll animation. Inside it, .why-inner
+            // handles hover (lift, tilt, neighbours part) and [data-flip] turns
+            // the card over; the faces are the back (logo) and the front (text).
             <li
               key={item.title}
               data-why-card
               tabIndex={0}
               style={{ ["--i" as string]: i, ["--rot" as string]: `${gsap.utils.interpolate(-9, 11, i / (whyUs.items.length - 1))}deg` }}
-              className="why-card group/card origin-top outline-none max-lg:sticky max-lg:top-[calc(84px+var(--i)*12px)] sm:mx-auto sm:w-full sm:max-w-lg lg:absolute lg:top-1/2 lg:left-1/2 lg:h-[var(--why-h)] lg:w-[calc(var(--why-h)*0.72)] lg:cursor-pointer"
+              className="why-card origin-top outline-none max-lg:sticky max-lg:top-[calc(84px+var(--i)*12px)] sm:mx-auto sm:w-full sm:max-w-lg lg:absolute lg:top-1/2 lg:left-1/2 lg:h-[var(--why-h)] lg:w-[calc(var(--why-h)*0.72)] lg:cursor-pointer"
             >
-              <div
-                className={`why-inner flex h-full min-h-[19rem] flex-col justify-between rounded-xl p-7 shadow-[0_24px_60px_-24px_rgb(0_0_0/0.35)] lg:min-h-0 lg:p-[calc(var(--why-h)*0.07)] ${tones[i % tones.length]}`}
-              >
-              <span className="grid size-14 place-items-center rounded-2xl border border-current/40 lg:size-[calc(var(--why-h)*0.15)]">
-                <svg viewBox="0 0 24 24" className="size-6 lg:size-[45%]" aria-hidden>
-                  {icons[i]}
-                </svg>
-              </span>
-              <div>
-                <h3 className="heading text-[1.6rem] lg:text-[calc(var(--why-h)*0.068)]">{item.title}</h3>
-                <p className="mt-3 text-[0.95rem] leading-relaxed opacity-80 lg:text-[calc(var(--why-h)*0.037)]">{item.body}</p>
-              </div>
+              <div className="why-inner h-full">
+                <div data-flip className="why-flip relative h-full">
+                  {/* Back: shown while the card is dealt face down (desktop only) */}
+                  <div className="why-face why-back absolute inset-0 hidden place-items-center rounded-xl border border-ink/10 bg-card shadow-[0_24px_60px_-24px_rgb(0_0_0/0.35)] lg:grid">
+                    <Image src="/brand/mark.png" alt="" width={292} height={321} className="h-[26%] w-auto opacity-90" />
+                  </div>
+
+                  {/* Front */}
+                  <div
+                    className={`why-face relative flex h-full min-h-[19rem] flex-col justify-between overflow-hidden rounded-xl p-7 shadow-[0_24px_60px_-24px_rgb(0_0_0/0.35)] lg:min-h-0 lg:p-[calc(var(--why-h)*0.07)] ${tones[i % tones.length]}`}
+                  >
+                    <span aria-hidden className="why-glare pointer-events-none absolute inset-0 rounded-xl opacity-0" />
+                    <span className="grid size-14 place-items-center rounded-2xl border border-current/40 lg:size-[calc(var(--why-h)*0.15)]">
+                      <svg viewBox="0 0 24 24" className="size-6 lg:size-[45%]" aria-hidden>
+                        {icons[i]}
+                      </svg>
+                    </span>
+                    <div>
+                      <h3 className="heading text-[1.6rem] lg:text-[calc(var(--why-h)*0.068)]">{item.title}</h3>
+                      <p className="mt-3 text-[0.95rem] leading-relaxed opacity-80 lg:text-[calc(var(--why-h)*0.037)]">{item.body}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </li>
           ))}
