@@ -6,7 +6,10 @@ import { contact, contactSection, emailjs } from "@/content/site";
 
 type Status = { type: "success" | "error"; message: string } | null;
 
-const REQUIRED = ["name", "email", "subject", "message"] as const;
+const REQUIRED = ["name", "email", "phone"] as const;
+// Sent in place of an empty optional subject / message.
+const DEFAULT_SUBJECT = "New enquiry from the website";
+const DEFAULT_MESSAGE = "No message was written. Please get in touch with this person.";
 
 const field =
   "w-full rounded-[4px] border border-ink/12 bg-paper/60 px-3.5 py-3 text-base text-ink outline-none transition-colors placeholder:text-ink/35 focus:border-accent focus:bg-card";
@@ -26,9 +29,14 @@ export default function ContactForm() {
     const value = (k: string) => String(data.get(k) ?? "").trim();
 
     const missing = REQUIRED.filter((k) => !value(k));
-    setInvalid(missing);
+    const badPhone = value("phone") && value("phone").replace(/\D/g, "").length < 10 ? (["phone"] as const) : [];
+    setInvalid([...missing, ...badPhone]);
     if (missing.length) {
       setStatus({ type: "error", message: "Please fill in all required fields." });
+      return;
+    }
+    if (badPhone.length) {
+      setStatus({ type: "error", message: "Please enter a valid phone number (at least 10 digits)." });
       return;
     }
 
@@ -38,10 +46,10 @@ export default function ContactForm() {
       to_email: contact.email,
       from_name: value("name"),
       from_email: value("email"),
-      phone: value("phone") || "Not provided",
+      phone: value("phone"),
       service: value("service") || "Not specified",
-      subject: value("subject"),
-      message: value("message"),
+      subject: value("subject") || DEFAULT_SUBJECT,
+      message: value("message") || DEFAULT_MESSAGE,
     };
 
     try {
@@ -92,13 +100,13 @@ export default function ContactForm() {
         </div>
         <div>
           <label htmlFor="phone" className={label}>
-            Phone / WhatsApp
+            Phone / WhatsApp *
           </label>
-          <input id="phone" name="phone" type="tel" autoComplete="tel" className={field} />
+          <input id="phone" name="phone" type="tel" required autoComplete="tel" className={`${field} ${errorRing("phone")}`} />
         </div>
         <div>
           <label htmlFor="service" className={label}>
-            Service Interested In
+            Service Interested In (optional)
           </label>
           <select id="service" name="service" defaultValue="" className={`${field} appearance-none`}>
             <option value="">Select a service</option>
@@ -110,20 +118,19 @@ export default function ContactForm() {
       </div>
       <div>
         <label htmlFor="subject" className={label}>
-          Subject *
+          Subject (optional)
         </label>
-        <input id="subject" name="subject" required className={`${field} ${errorRing("subject")}`} />
+        <input id="subject" name="subject" className={field} />
       </div>
       <div>
         <label htmlFor="message" className={label}>
-          Message *
+          Message (optional)
         </label>
         <textarea
           id="message"
           name="message"
           rows={4}
-          required
-          className={`${field} resize-none ${errorRing("message")}`}
+          className={`${field} resize-none`}
         />
       </div>
 

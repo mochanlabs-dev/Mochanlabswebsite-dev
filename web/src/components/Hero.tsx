@@ -1,12 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import { contact, hero } from "@/content/site";
+import { hero } from "@/content/site";
 import { gsap, SplitText, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import BrandFilm from "./BrandFilm";
 import CircuitLines from "./CircuitLines";
-import { WhatsAppIcon } from "./icons";
-import { Button, Plus } from "./ui";
+import { Plus } from "./ui";
 
 // Hero: headline, intro and actions on the left; the brand film framed on
 // the right. The circuit lines draw themselves in as faint background texture.
@@ -72,18 +71,6 @@ export default function Hero() {
           <p data-hero-fade className="mt-6 max-w-md text-lg leading-relaxed text-ink/70">
             {hero.body}
           </p>
-          <div data-hero-fade className="mt-8 flex flex-wrap gap-2">
-            <Button href="#contact">{hero.cta}</Button>
-            <a
-              href={contact.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-[4px] border border-ink/15 bg-card/60 px-4 py-2.5 text-sm font-medium transition-colors hover:border-ink"
-            >
-              <WhatsAppIcon className="size-3.5" />
-              WhatsApp
-            </a>
-          </div>
         </div>
 
         {/* Brand film */}

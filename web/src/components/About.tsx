@@ -20,13 +20,22 @@ export default function About() {
             {about.paragraphs[1]}
           </p>
 
-          <ul className="mt-12 grid border-t border-ink/10 sm:grid-cols-2">
+          <div className="mt-12 grid gap-8 sm:grid-cols-2 sm:gap-12">
+            {about.blocks.map((b) => (
+              <div key={b.title} data-reveal="fade">
+                <h3 className="heading text-xl">{b.title}</h3>
+                <p className="mt-3 text-base leading-relaxed text-ink/60">{b.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <p data-reveal="fade" className="heading mt-12 max-w-2xl text-[clamp(1.3rem,2vw,1.7rem)]">
+            {about.closing}
+          </p>
+
+          <ul className="mt-10 grid gap-x-8 gap-y-3 sm:grid-cols-2">
             {about.features.map((f) => (
-              <li
-                key={f}
-                data-reveal="fade"
-                className="flex items-center gap-3 border-b border-ink/10 py-4 sm:odd:pr-6 sm:even:border-l sm:even:pl-6"
-              >
+              <li key={f} data-reveal="fade" className="flex items-center gap-3">
                 <span aria-hidden className="size-1.5 rounded-full bg-accent" />
                 {f}
               </li>

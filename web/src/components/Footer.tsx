@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { contact, footer, nav } from "@/content/site";
-import { InstagramIcon, WhatsAppIcon } from "./icons";
-import { Button } from "./ui";
+import { ArrowIcon, InstagramIcon, WhatsAppIcon } from "./icons";
+import FooterLink from "./FooterLink";
 
 // Dark footer in the Abatable mould: brand and call to action on the left,
 // link columns on the right, legal line at the bottom.
@@ -17,9 +17,13 @@ export default function Footer() {
               <span className="text-lg font-medium tracking-tight">Mochan Labs</span>
             </Link>
             <p className="heading mt-8 max-w-sm text-2xl">{footer.blurb}</p>
-            <Button href="#contact" className="mt-8">
+            <FooterLink
+              href="#contact"
+              className="group mt-8 inline-flex items-center gap-2 rounded-[4px] bg-accent px-4 py-2.5 text-sm font-medium text-card transition-colors duration-300 hover:bg-accent-deep"
+            >
               {footer.cta}
-            </Button>
+              <ArrowIcon className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+            </FooterLink>
           </div>
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-7">
@@ -28,9 +32,9 @@ export default function Footer() {
               <ul className="flex flex-col gap-2 text-sm">
                 {footer.services.map((s) => (
                   <li key={s}>
-                    <Link href="/#services" className="text-ink/70 transition-colors hover:text-accent">
+                    <FooterLink href="#services" className="text-ink/70 transition-colors hover:text-accent">
                       {s}
-                    </Link>
+                    </FooterLink>
                   </li>
                 ))}
               </ul>
@@ -40,9 +44,9 @@ export default function Footer() {
               <ul className="flex flex-col gap-2 text-sm">
                 {footer.company.map((c) => (
                   <li key={c.href}>
-                    <a href={c.href.startsWith("#") ? `/${c.href}` : c.href} className="text-ink/70 transition-colors hover:text-accent">
+                    <FooterLink href={c.href} className="text-ink/70 transition-colors hover:text-accent">
                       {c.label}
-                    </a>
+                    </FooterLink>
                   </li>
                 ))}
                 <li>
@@ -108,9 +112,9 @@ export default function Footer() {
           <span>{footer.copyright}</span>
           <nav aria-label="Footer" className="flex flex-wrap gap-4">
             {nav.slice(1).map((n) => (
-              <a key={n.href} href={n.href.startsWith("#") ? `/${n.href}` : n.href} className="hover:text-accent">
+              <FooterLink key={n.href} href={n.href} className="inline-block py-1 hover:text-accent">
                 {n.label}
-              </a>
+              </FooterLink>
             ))}
           </nav>
           <span>{footer.madeWith}</span>

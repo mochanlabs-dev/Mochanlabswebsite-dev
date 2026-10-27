@@ -33,9 +33,20 @@ export const about = {
   titleLead: "Your Trusted Technology",
   titleAccent: "Partner",
   paragraphs: [
-    "Mochan Labs is a leading IT solutions company committed to delivering innovative technology services that drive business growth. Founded with a passion for technology, we combine expertise with creativity to build solutions that make a real difference.",
-    "Our team of experienced professionals works closely with clients to understand their unique challenges and develop tailored solutions that exceed expectations - from startups to enterprises across all industries.",
+    "Mochan Labs is a leading IT solutions company committed to delivering innovative technology services that drive business growth. Founded with a passion for technology, we combine expertise with the creativity to build customised solutions around each client's business.",
+    "Mochan Labs helps businesses turn everyday operational challenges into opportunities for improvement through AI, automation, and technology. We work closely with our clients to understand their unique business processes and build practical solutions that make work simpler and more efficient.",
   ],
+  blocks: [
+    {
+      title: "What We Do",
+      body: "From automating manual workflows to developing custom software and digital solutions, we help businesses reduce repetitive work, improve productivity, and scale with confidence.",
+    },
+    {
+      title: "What We Believe",
+      body: "We believe technology should solve real problems, not add complexity. Our approach is built on understanding your business, collaborating closely, and creating solutions that deliver lasting value.",
+    },
+  ],
+  closing: "We don't just build technology. We help businesses work smarter and grow better.",
   features: [
     "Client-First Approach",
     "Agile Development",
@@ -44,6 +55,9 @@ export const about = {
   ],
   cta: "Work With Us",
 };
+
+// The line that darkens word by word between the hero and About.
+export const statement = "More Than Technology. A Partner in Your Business Transformation.";
 
 export const services = {
   tag: "Our Services",

@@ -56,9 +56,6 @@ export default function Services() {
                 }`}
               >
                 {g.name}
-                <span className={`grid size-5 place-items-center rounded-full text-[0.7rem] tabular-nums ${on ? "bg-card/20" : "bg-ink/[0.06]"}`}>
-                  {g.items.length}
-                </span>
               </button>
             );
           })}
@@ -81,13 +78,6 @@ export default function Services() {
               <span aria-hidden className="mb-6 h-1 w-10 rounded-full bg-accent transition-[width] duration-300 group-hover:w-16" />
               <h3 className="heading text-[1.4rem]">{s.title}</h3>
               <p className="mt-3 text-[0.95rem] leading-relaxed text-ink/60">{s.body}</p>
-              <ul className="mt-auto flex flex-wrap gap-1.5 pt-6">
-                {s.points.map((p) => (
-                  <li key={p} className="rounded-[4px] bg-tint px-2 py-1 text-xs text-ink/70">
-                    {p}
-                  </li>
-                ))}
-              </ul>
             </li>
           ))}
         </ul>
