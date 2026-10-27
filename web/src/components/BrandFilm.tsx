@@ -9,18 +9,17 @@ const label =
 // The ~36 s brand film (rendered from /video/brand.html in the repo): a 16:9
 // cut on larger screens and a 9:10 cut on phones. Only the visible one loads
 // (preload="none", and a hidden video never intersects). Muted loop that
-// plays while on screen; with reduced motion it stays on the poster with
-// controls instead.
+// plays while on screen; with reduced motion it also shows controls.
 export default function BrandFilm({ className = "" }: { className?: string }) {
   const wide = useRef<HTMLVideoElement>(null);
   const tall = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const videos = [wide.current!, tall.current!];
-    if (prefersReducedMotion()) {
-      videos.forEach((v) => (v.controls = true));
-      return;
-    }
+    // A muted looping film still plays when the system asks for less motion
+    // (it is the main content of the page), but it gets controls so it can be
+    // paused.
+    if (prefersReducedMotion()) videos.forEach((v) => (v.controls = true));
     const io = new IntersectionObserver(
       (entries) =>
         entries.forEach(({ target, isIntersecting }) => {
