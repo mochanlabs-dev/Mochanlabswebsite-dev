@@ -14,7 +14,7 @@
   var DEMO_PASS = 'mochan@demo';
   var TOKEN_KEY = 'ml_admin_token';
   var DB_KEY = 'ml_demo_db_v1';
-  var onLoginPage = /\/login(\.html)?$/.test(location.pathname);
+  var onLoginPage = /\/login(\.html|\/)?$/.test(location.pathname);
 
   // ---------- helpers ----------
   function id() {
