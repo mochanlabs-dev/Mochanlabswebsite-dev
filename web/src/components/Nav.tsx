@@ -45,6 +45,15 @@ export default function Nav() {
           href={link("#home")}
           onClick={(e) => {
             e.preventDefault();
+            // Hidden door to the admin panel: click the logo three times in a
+            // row (a single click still goes home). It is a convenience, not
+            // security - the login itself is what protects the panel.
+            if (e.detail >= 3) {
+              // A plain page load: the admin app is served outside Next.js.
+              // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+              window.location.href = "/admin/login.html";
+              return;
+            }
             go("#home");
           }}
           className="flex items-center gap-2"
