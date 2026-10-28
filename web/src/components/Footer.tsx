@@ -49,6 +49,12 @@ export default function Footer() {
                     </FooterLink>
                   </li>
                 ))}
+                <li>
+                  {/* Served by the Express app, outside the Next.js export */}
+                  <a href="/admin/login.html" className="text-ink/70 transition-colors hover:text-accent">
+                    Admin Login
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
