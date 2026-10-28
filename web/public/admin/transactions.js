@@ -556,10 +556,10 @@ function exportPDF() {
   // Create HTML content for PDF
   let html = `
     <div style="font-family: Arial, sans-serif; color: #333;">
-      <h1 style="text-align: center; color: #00b4d8; margin-bottom: 10px;">MOCHAN LABS</h1>
+      <h1 style="text-align: center; color: #2b59ff; margin-bottom: 10px;">MOCHAN LABS</h1>
       <h2 style="text-align: center; color: #555; margin-top: 0;">Financial Transactions Report</h2>
 
-      <div style="border-bottom: 2px solid #00b4d8; padding-bottom: 15px; margin-bottom: 20px;">
+      <div style="border-bottom: 2px solid #2b59ff; padding-bottom: 15px; margin-bottom: 20px;">
         <p style="margin: 5px 0;"><strong>Date Range:</strong> ${currentFilters.startDate || 'Start'} to ${currentFilters.endDate || 'End'}</p>
         <p style="margin: 5px 0;"><strong>Type Filter:</strong> ${currentFilters.type || 'All'}</p>
         <p style="margin: 5px 0;"><strong>Status Filter:</strong> ${currentFilters.status || 'All'}</p>
@@ -575,7 +575,7 @@ function exportPDF() {
           <p style="margin: 0; color: #666; font-size: 12px;">Total Debits</p>
           <p style="margin: 5px 0 0 0; font-size: 18px; font-weight: bold; color: #ef4444;">₹${fmt(debits)}</p>
         </div>
-        <div style="flex: 1; padding: 15px; background: #f8f8f8; border-left: 4px solid #00b4d8; border-radius: 5px;">
+        <div style="flex: 1; padding: 15px; background: #f8f8f8; border-left: 4px solid #2b59ff; border-radius: 5px;">
           <p style="margin: 0; color: #666; font-size: 12px;">Net Balance</p>
           <p style="margin: 5px 0 0 0; font-size: 18px; font-weight: bold; color: ${balance >= 0 ? '#22c55e' : '#ef4444'};">₹${fmt(balance)}</p>
         </div>
@@ -583,7 +583,7 @@ function exportPDF() {
 
       <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
         <thead>
-          <tr style="background: #00b4d8; color: white;">
+          <tr style="background: #2b59ff; color: white;">
             <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Date</th>
             <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Description</th>
             <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Category</th>

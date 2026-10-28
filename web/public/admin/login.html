@@ -5,175 +5,127 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Login | Mochan Labs</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
   <style>
-    :root {
-      --bg:       #050b18;
-      --card:     rgba(13,27,62,0.9);
-      --accent:   #00b4d8;
-      --purple:   #7c3aed;
-      --grad:     linear-gradient(135deg, #00b4d8, #7c3aed);
-      --text:     #f1f5f9;
-      --muted:    #94a3b8;
-      --border:   rgba(255,255,255,0.08);
-      --radius:   14px;
-    }
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      overflow: hidden;
+      padding: 24px 16px;
+      background: var(--bg);
       color: var(--text);
+      position: relative;
+      overflow-x: hidden;
     }
-    /* Background effects */
-    .bg-glow {
-      position: absolute; border-radius: 50%;
-      filter: blur(90px); opacity: 0.1;
-    }
-    .bg-glow.g1 { width:500px; height:500px; background:var(--accent); top:-150px; right:-150px; }
-    .bg-glow.g2 { width:400px; height:400px; background:var(--purple); bottom:-100px; left:-100px; }
-    .bg-grid {
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(0,180,216,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,180,216,0.03) 1px, transparent 1px);
-      background-size: 50px 50px;
+    /* Soft blue glow, as on the site's hero */
+    body::before {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(45% 40% at 85% 15%, rgb(43 89 255 / 0.12), transparent 70%),
+        radial-gradient(40% 35% at 5% 95%, rgb(43 89 255 / 0.08), transparent 70%);
     }
 
-    /* Card */
     .login-card {
-      position: relative; z-index: 10;
-      width: 420px; max-width: 95vw;
+      position: relative; z-index: 1;
+      width: 420px; max-width: 100%;
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 42px 38px;
-      backdrop-filter: blur(24px);
-      box-shadow: 0 8px 48px rgba(0,0,0,0.5);
+      border-radius: 12px;
+      padding: 40px 36px 32px;
+      box-shadow: 0 30px 80px -40px rgb(10 10 10 / 0.35);
       animation: fadeUp 0.6s ease both;
     }
     @keyframes fadeUp {
-      from { opacity:0; transform:translateY(24px); }
-      to   { opacity:1; transform:translateY(0); }
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Logo */
-    .login-logo {
-      display: flex; align-items: center; gap: 10px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.25rem; letter-spacing: 1px;
-      margin-bottom: 28px;
-    }
-    .logo-icon {
-      width: 42px; height: 42px;
-      background: var(--grad); border-radius: 11px;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 0.9rem; color: #fff;
-    }
-    .login-title { font-family:'Poppins',sans-serif; font-size:1.55rem; font-weight:700; margin-bottom:6px; }
-    .login-sub   { color: var(--muted); font-size: 0.88rem; margin-bottom: 30px; }
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
+    .brand img { height: 36px; width: auto; }
+    .brand span { font-size: 1.1rem; font-weight: 500; letter-spacing: -0.01em; }
 
-    /* Form */
-    .form-group { margin-bottom: 18px; }
-    label { display:block; font-size:0.82rem; font-weight:500; color:var(--muted); margin-bottom:7px; }
-    .input-wrap {
-      position: relative;
+    .label {
+      font-size: 0.8rem; color: var(--muted); margin-bottom: 10px;
     }
-    .input-wrap i {
-      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-      color: var(--muted); font-size: 0.9rem; pointer-events: none;
+    .login-title { font-size: 2rem; font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 8px; }
+    .login-title em { font-style: normal; color: var(--accent); }
+    .login-sub { color: var(--muted); font-size: 0.92rem; margin-bottom: 28px; line-height: 1.5; }
+
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; }
+    .input-wrap { position: relative; }
+    .input-wrap i.lead {
+      position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+      color: var(--faint); font-size: 0.85rem; pointer-events: none;
     }
     .input-wrap input {
       width: 100%;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 11px 14px 11px 40px;
-      color: var(--text);
-      font-family: 'Inter', sans-serif; font-size: 0.9rem;
+      padding: 12px 40px 12px 38px;
+      font-size: 0.95rem;
       outline: none;
-      transition: all 0.25s ease;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .input-wrap input::placeholder { color: #475569; }
-    .input-wrap input:focus {
-      border-color: var(--accent);
-      background: rgba(0,180,216,0.05);
-      box-shadow: 0 0 0 3px rgba(0,180,216,0.12);
-    }
+    .input-wrap input::placeholder { color: rgba(10, 10, 10, 0.35); }
     .toggle-pw {
-      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
       background: none; border: none; cursor: pointer;
-      color: var(--muted); font-size: 0.88rem;
+      color: var(--faint); font-size: 0.9rem; padding: 6px 8px;
     }
     .toggle-pw:hover { color: var(--text); }
 
     .btn-login {
       width: 100%;
+      margin-top: 8px;
       padding: 13px;
-      background: var(--grad);
-      border: none; border-radius: 50px;
-      color: #fff; font-family:'Poppins',sans-serif;
-      font-weight: 600; font-size: 0.95rem;
+      background: var(--accent);
+      border: none; border-radius: 4px;
+      color: #fff; font-weight: 500; font-size: 0.95rem;
       cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 20px rgba(0,180,216,0.3);
-      margin-top: 6px;
       display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background-color 0.25s;
     }
-    .btn-login:hover   { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,180,216,0.5); }
-    .btn-login:active  { transform: translateY(0); }
-    .btn-login:disabled{ opacity:0.65; cursor:not-allowed; }
+    .btn-login:hover { background: var(--accent-deep); }
+    .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
 
     .error-msg {
-      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
-      color: #f87171; border-radius: 8px;
+      border: 1px solid rgba(220, 38, 38, 0.25);
+      background: rgba(220, 38, 38, 0.06);
+      color: var(--red); border-radius: 4px;
       padding: 10px 14px; font-size: 0.85rem;
       margin-top: 14px; display: none; text-align: center;
     }
 
-    .back-link {
-      display: block; text-align: center;
-      margin-top: 22px; color: var(--muted); font-size: 0.82rem;
+    .demo-note {
+      margin-top: 18px; padding: 10px 12px;
+      border: 1px dashed var(--border); border-radius: 4px;
+      font-size: 0.8rem; color: var(--muted); text-align: center;
     }
-    .back-link a { color: var(--accent); }
-    .demo-note { margin-top: 16px; padding: 10px 12px; border: 1px dashed var(--border); border-radius: 10px; font-size: 0.8rem; color: var(--muted); text-align: center; }
     .demo-note b { color: var(--text); font-weight: 600; }
-    .back-link a:hover { text-decoration: underline; }
 
-    /* Hint (remove in production) */
-    .hint {
-      background: rgba(0,180,216,0.07); border: 1px solid rgba(0,180,216,0.2);
-      border-radius: 8px; padding: 10px 14px;
-      font-size: 0.78rem; color: var(--muted);
-      margin-bottom: 22px; line-height: 1.6;
-    }
-    .hint strong { color: var(--accent); }
+    .back-link { display: block; text-align: center; margin-top: 22px; color: var(--muted); font-size: 0.85rem; }
+    .back-link a { color: var(--accent); text-decoration: none; }
+    .back-link a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <div class="bg-grid"></div>
-  <div class="bg-glow g1"></div>
-  <div class="bg-glow g2"></div>
-
   <div class="login-card">
-    <div class="login-logo" style="flex-direction: column; align-items: center; gap: 12px;">
-      <img src="../images/mochan_labs.png" alt="Mochan Labs Logo" style="width: 85px; height: 85px; object-fit: contain;">
-      <span style="text-align: center;">MOCHAN <strong>LABS</strong></span>
+    <div class="brand">
+      <img src="/brand/mark.png" alt="Mochan Labs logo">
+      <span>Mochan Labs</span>
     </div>
-    <h1 class="login-title">Admin Login</h1>
-    <p class="login-sub">Access the admin dashboard to manage invoices</p>
+    <p class="label">Admin</p>
+    <h1 class="login-title">Welcome <em>back.</em></h1>
+    <p class="login-sub">Sign in to manage invoices, transactions and employees.</p>
 
     <form id="loginForm" novalidate>
       <div class="form-group">
         <label for="username">Username</label>
         <div class="input-wrap">
-          <i class="fas fa-user"></i>
+          <i class="fas fa-user lead"></i>
           <input type="text" id="username" placeholder="Enter username" autocomplete="username" required>
         </div>
       </div>
@@ -181,7 +133,7 @@
       <div class="form-group">
         <label for="password">Password</label>
         <div class="input-wrap">
-          <i class="fas fa-lock"></i>
+          <i class="fas fa-lock lead"></i>
           <input type="password" id="password" placeholder="Enter password" autocomplete="current-password" required>
           <button type="button" class="toggle-pw" id="togglePw" aria-label="Show/hide password">
             <i class="fas fa-eye" id="eyeIcon"></i>

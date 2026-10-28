@@ -470,6 +470,7 @@
       .form-row2, .form-row3 { grid-template-columns: 1fr; }
     }
   </style>
+  <link rel="stylesheet" href="admin.css">
 </head>
 <body>
 
@@ -477,7 +478,7 @@
   <!-- ===== SIDEBAR ===== -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <img src="../images/mochan_labs.png" alt="Mochan Labs Logo" style="width: 50px; height: 50px; object-fit: contain;">
+      <img src="/brand/mark.png" alt="Mochan Labs Logo" style="width: 50px; height: 50px; object-fit: contain;">
       <span>MOCHAN <strong>LABS</strong></span>
     </div>
     <nav class="sidebar-nav">
@@ -1642,7 +1643,7 @@ function renderAnalytics() {
       });
       return `
         <tr>
-          <td><code style="background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:4px;font-size:0.75rem">${v.ip}</code></td>
+          <td><code style="background:rgba(10,10,10,0.06);padding:2px 6px;border-radius:4px;font-size:0.75rem">${v.ip}</code></td>
           <td>${v.country}</td>
           <td>${v.city || '-'}</td>
           <td><strong>${v.visits}</strong></td>

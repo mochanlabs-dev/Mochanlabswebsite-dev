@@ -1395,9 +1395,9 @@ function showToast(msg, type = 'info') {
   const t = document.createElement('div');
   t.style.cssText = `
     position: fixed; top: 20px; right: 20px; padding: 15px 20px;
-    background: ${type === 'success' ? 'rgba(34,197,94,0.15)' : type === 'error' ? 'rgba(239,68,68,0.15)' : 'rgba(0,180,216,0.15)'};
-    border: 1px solid ${type === 'success' ? 'rgba(34,197,94,0.35)' : type === 'error' ? 'rgba(239,68,68,0.35)' : 'rgba(0,180,216,0.35)'};
-    color: ${type === 'success' ? '#4ade80' : type === 'error' ? '#f87171' : '#00b4d8'};
+    background: ${type === 'success' ? 'rgba(34,197,94,0.15)' : type === 'error' ? 'rgba(239,68,68,0.15)' : 'rgba(43,89,255,0.12)'};
+    border: 1px solid ${type === 'success' ? 'rgba(34,197,94,0.35)' : type === 'error' ? 'rgba(239,68,68,0.35)' : 'rgba(43,89,255,0.35)'};
+    color: ${type === 'success' ? '#15803d' : type === 'error' ? '#dc2626' : '#2b59ff'};
     border-radius: 8px; z-index: 9999; display: flex; align-items: center; gap: 10px;
     font-weight: 500; animation: slideInRight 0.3s ease both;
   `;
