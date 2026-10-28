@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/admin/:page(login|dashboard|invoices|transactions|employees).html",
+      "destination": "/admin/:page/"
+    }
+  ]
+}
