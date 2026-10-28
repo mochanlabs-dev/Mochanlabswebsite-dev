@@ -51,8 +51,19 @@ app.use((req, res, next) => {
 // Only these directories are served — never the project root, which would
 // expose server code, logs and documents.
 const WEB_DIR = path.join(__dirname, '..', 'web', 'out');
-// The build includes /admin (front-end demo for now) and /images.
 app.use(express.static(WEB_DIR));
+
+// Page views from the static site (on Vercel the pages are not served by this
+// app, so the site reports each page view here instead).
+app.post('/api/visit', async (req, res) => {
+  try {
+    const page = String((req.body && req.body.page) || '/').slice(0, 200);
+    await trackVisit(getClientIP(req), page, req.headers['user-agent'] || '');
+  } catch (err) {
+    console.error('Visit error:', err.message);
+  }
+  res.status(204).end();
+});
 
 // API routes
 app.use('/api/auth', require('./routes/auth'));
@@ -69,31 +80,37 @@ app.use((req, res) => {
   res.status(404).sendFile(path.join(WEB_DIR, '404.html'));
 });
 
-const PORT       = process.env.PORT || 3000;
-const MONGO_URI  = process.env.MONGODB_URI;
+// Started directly (`node server.js`, Render): connect to MongoDB and listen.
+// Required by api/index.js on Vercel: the function connects per instance.
+if (require.main === module) {
+  const PORT       = process.env.PORT || 3000;
+  const MONGO_URI  = process.env.MONGODB_URI;
 
-if (!MONGO_URI) {
-  logger.warn('⚠️  WARNING: MONGODB_URI is not set in server/.env');
-}
-
-if (MONGO_URI) {
-  mongoose.connect(MONGO_URI)
-    .then(() => {
-      logger.info('✅ MongoDB connected successfully');
-    })
-    .catch(err => {
-      logger.error('❌ MongoDB connection failed:', { error: err.message });
-      logger.warn('⚠️  Continuing without MongoDB...');
-    });
-}
-
-app.listen(PORT, () => {
-  logger.info(`✅ Server running on port ${PORT}`, {
-    environment: process.env.NODE_ENV,
-    node_version: process.version
-  });
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`📱 Admin dashboard → http://localhost:${PORT}/admin/dashboard.html`);
-    console.log(`🌐 Website → http://localhost:${PORT}`);
+  if (!MONGO_URI) {
+    logger.warn('⚠️  WARNING: MONGODB_URI is not set in server/.env');
   }
-});
+
+  if (MONGO_URI) {
+    mongoose.connect(MONGO_URI)
+      .then(() => {
+        logger.info('✅ MongoDB connected successfully');
+      })
+      .catch(err => {
+        logger.error('❌ MongoDB connection failed:', { error: err.message });
+        logger.warn('⚠️  Continuing without MongoDB...');
+      });
+  }
+
+  app.listen(PORT, () => {
+    logger.info(`✅ Server running on port ${PORT}`, {
+      environment: process.env.NODE_ENV,
+      node_version: process.version
+    });
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`📱 Admin dashboard → http://localhost:${PORT}/admin/dashboard.html`);
+      console.log(`🌐 Website → http://localhost:${PORT}`);
+    }
+  });
+}
+
+module.exports = app;

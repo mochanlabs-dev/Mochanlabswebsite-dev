@@ -3,6 +3,9 @@ const path = require('path');
 
 const logDir = path.join(__dirname, '../logs');
 
+// Vercel's filesystem is read-only, so there it logs to the console only.
+const onVercel = Boolean(process.env.VERCEL);
+
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
   format: winston.format.combine(
@@ -11,7 +14,7 @@ const logger = winston.createLogger({
     winston.format.json()
   ),
   defaultMeta: { service: 'mochan-admin' },
-  transports: [
+  transports: onVercel ? [new winston.transports.Console()] : [
     new winston.transports.File({
       filename: path.join(logDir, 'error.log'),
       level: 'error',
@@ -26,7 +29,7 @@ const logger = winston.createLogger({
   ]
 });
 
-if (process.env.NODE_ENV !== 'production') {
+if (!onVercel && process.env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
     format: winston.format.combine(
       winston.format.colorize(),

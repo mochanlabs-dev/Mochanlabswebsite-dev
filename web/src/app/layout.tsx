@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Figtree } from "next/font/google";
+import VisitBeacon from "@/components/VisitBeacon";
 import "./globals.css";
 
 // Figtree: a plain, friendly sans (the face vinskyn.com uses).
@@ -21,7 +22,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={figtree.variable}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <VisitBeacon />
+      </body>
     </html>
   );
 }
