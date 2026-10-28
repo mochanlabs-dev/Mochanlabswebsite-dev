@@ -1693,6 +1693,10 @@ document.querySelectorAll('#page-new-invoice input, #page-new-invoice textarea, 
   document.getElementById('saveBtnInv').addEventListener('click', saveInvoice);
   document.getElementById('downloadBtnInv').addEventListener('click', downloadPDF);
   document.getElementById('clearBtnInv').addEventListener('click', clearForm);
+
+  // Links from the other admin pages arrive as dashboard.html#analytics etc.
+  const startPage = location.hash.slice(1);
+  if (startPage && pages[startPage] && startPage !== 'home') switchPage(startPage);
 })();
 </script>
 </body>
