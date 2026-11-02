@@ -105,6 +105,13 @@
     activated: 'Computer activated', reactivated: 'Computer re-activated', 'machine-limit': 'Activation refused (computer limit)',
   };
 
+  // Readable label for an activity entry, including ones this page has no wording for.
+  function actionLabel(a) {
+    if (ACTIONS[a]) return ACTIONS[a];
+    var t = String(a || '').replace(/-/g, ' ');
+    return t.charAt(0).toUpperCase() + t.slice(1);
+  }
+
   // ------------------------------------------------------------------ modals
 
   function modal(opts) {
@@ -266,7 +273,7 @@
           : '<p class="pj-muted pj-pad">Nothing needs attention. No license expires in the next 30 days.</p>';
         var activity = o.activity.length
           ? o.activity.map(function (a) {
-              return '<div class="pj-event"><span class="pj-dot"></span><div><b>' + esc(ACTIONS[a.action] || a.action) + '</b>' +
+              return '<div class="pj-event"><span class="pj-dot"></span><div><b>' + esc(actionLabel(a.action)) + '</b>' +
                 (a.customer_name ? ' <span class="pj-muted">· ' + esc(a.customer_name) + '</span>' : '') +
                 '<small>' + esc(a.detail || '') + (a.detail ? ' · ' : '') + ago(a.at) + ' · ' + esc(a.actor) + '</small></div></div>';
             }).join('')
@@ -379,7 +386,7 @@
       }).join('') : '<tr><td colspan="6" class="pj-none">No computer has activated this key yet.</td></tr>';
 
       var log = d.log.length ? d.log.map(function (a) {
-        return '<div class="pj-event"><span class="pj-dot"></span><div><b>' + esc(ACTIONS[a.action] || a.action) + '</b>' +
+        return '<div class="pj-event"><span class="pj-dot"></span><div><b>' + esc(actionLabel(a.action)) + '</b>' +
           '<small>' + esc(a.detail || '') + (a.detail ? ' · ' : '') + fmtDateTime(a.at) + ' · ' + esc(a.actor) + '</small></div></div>';
       }).join('') : '<p class="pj-muted pj-pad">No activity yet.</p>';
 

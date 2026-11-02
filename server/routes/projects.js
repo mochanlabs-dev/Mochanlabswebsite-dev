@@ -120,7 +120,7 @@ router.get('/weighbridge/overview', wrap(async (req, res) => {
   const activity = await query(
     `select a.id, a.at, a.actor, a.action, a.license_id, a.detail, l.customer_name
        from weighbridge.activity_log a left join weighbridge.licenses l on l.id = a.license_id
-      where a.action <> 'invalid-key'
+      where a.action <> 'invalid-key' and a.action not like 'admin-login%'
       order by a.at desc limit 12`);
   res.json({ success: true, data: { counts, attention, activity } });
 }));
