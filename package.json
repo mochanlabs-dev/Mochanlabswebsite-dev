@@ -2,7 +2,9 @@
   "name": "mochanlabs",
   "private": true,
   "description": "Repo root for Vercel: the website (web/) plus the API function (api/ -> server/)",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "@sendgrid/mail": "^8.1.0",
     "cors": "^2.8.5",
@@ -11,6 +13,7 @@
     "express-rate-limit": "^7.1.5",
     "helmet": "^7.1.0",
     "mongoose": "^8.4.0",
+    "pg": "^8.23.1",
     "winston": "^3.11.0"
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "mochanlabs-server",
   "version": "1.0.0",
-  "description": "Mochan Labs backend — Express + MongoDB",
+  "description": "Mochan Labs backend \u2014 Express + MongoDB",
   "main": "server.js",
   "license": "MIT",
   "author": "Mochan Labs",
@@ -17,6 +17,7 @@
     "express-rate-limit": "^7.1.5",
     "helmet": "^7.1.0",
     "mongoose": "^8.4.0",
+    "pg": "^8.23.1",
     "winston": "^3.11.0"
   },
   "devDependencies": {

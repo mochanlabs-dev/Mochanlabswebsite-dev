@@ -17,10 +17,16 @@ function connect() {
   return connecting;
 }
 
+// The licensing routes use Postgres only. They must keep answering the installed apps even
+// if MongoDB is down, so MongoDB is connected only for the other routes.
+const needsMongo = (url) => !/^\/api\/(v1|projects)(\/|\?|$)/.test(url || '');
+
 module.exports = async (req, res) => {
   try {
-    if (!process.env.MONGODB_URI) throw new Error('MONGODB_URI is not set');
-    await connect();
+    if (needsMongo(req.url)) {
+      if (!process.env.MONGODB_URI) throw new Error('MONGODB_URI is not set');
+      await connect();
+    }
   } catch (err) {
     console.error('MongoDB connection failed:', err.message);
     res.statusCode = 503;

@@ -66,6 +66,10 @@ app.post('/api/visit', async (req, res) => {
 });
 
 // API routes
+// Licensing: the signed protocol the Weighbridge app uses, and the admin Projects API.
+// Both talk to Postgres (Neon), not MongoDB.
+app.use('/api/v1', require('./routes/licenseApp'));
+app.use('/api/projects', require('./routes/projects'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/transactions', require('./routes/transactions'));
 app.use('/api/invoices', require('./routes/invoices'));
