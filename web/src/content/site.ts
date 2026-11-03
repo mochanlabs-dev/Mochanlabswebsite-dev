@@ -61,62 +61,37 @@ export const services = {
   ],
 };
 
-// Case studies. Facts come from the products' own documentation; screenshots
-// use demo data. Steps are shown as sticky steps with a screenshot each.
+// The Work page: a short list of products, each with a demo video.
 export const work = {
   tag: "our work",
   titleLead: "Some of our",
   titleAccent: "products",
-  intro: "A selection of what we have built and still support, from first draft to everyday use.",
-  weighbridge: {
-    name: "Weighbridge",
-    kicker: "Weighbridge management software",
-    summary:
-      "Weigh vehicles, bill sales and purchases, print receipts, and keep Tally and the government portal in step - from one app on the weighbridge computer.",
-    tags: ["Windows desktop app", "SQL Server", "Tally integration", "MDTSS govt portal", "RFID & IP cameras", "Multi-computer"],
-    docsUrl: "https://mochanlabs-dev.github.io/app-docs/weighbridge/",
-    steps: [
-      {
-        title: "Weigh",
-        body: "Live weight straight from the scale. Vehicles are recognised by RFID and photographed by IP cameras - first weight on entry, second on exit.",
-        image: "/projects/weighbridge/token-entry.webp",
-        alt: "Weighbridge token page recording a vehicle's first weight",
-      },
-      {
-        title: "Bill",
-        body: "The weights decide whether it's a sale or a purchase. Party rates, GST, freight and round-off fill in by themselves.",
-        image: "/projects/weighbridge/sale-billing.webp",
-        alt: "Completing a sale with line items, GST and charges",
-      },
-      {
-        title: "Print",
-        body: "Weight slips, inward tokens and GST tax invoices - on A4 or straight to a thermal receipt printer.",
-        image: "/projects/weighbridge/slip-sale.webp",
-        alt: "Weight slip with two copies on one sheet",
-      },
-      {
-        title: "Sync",
-        body: "Every sale and purchase posts to Tally, and every weighment is reported to the Uttarakhand MDTSS portal - retried automatically if either is offline.",
-        image: "/projects/weighbridge/tally.webp",
-        alt: "Tally connection setup",
-      },
-    ],
-  },
-  odts: {
-    name: "ODTS",
-    fullName: "Order Dispatch & Tracking System",
-    kicker: "Dealer order and dispatch platform",
-    summary:
-      "Dealers place orders, dispatchers accept and dispatch them, and the office sees every order's status as it changes - one web app for the whole dealer network.",
-    roles: ["Dealer", "Dispatcher", "Office", "Admin", "Sales Officer"],
-    features: [
-      "Orders checked against each dealer's credit limit, with alerts as limits run low",
-      "Dispatch with vehicle, driver contact, bilty number and receipt upload",
-      "Orders put on hold with a reason that every role can see",
-      "Role-based access, live status updates and Excel exports",
-    ],
-    tags: ["React", "Node.js", "PostgreSQL", "Supabase"],
-  },
+  intro: "Two products we built and still support. Press play to see each one at work.",
+  items: [
+    {
+      slug: "weighbridge",
+      kicker: "weighbridge management software",
+      name: "Weighbridge",
+      summary: "Weigh vehicles, bill sales and purchases, print slips, and keep Tally and the government portal in step, all from one app.",
+      points: ["Live weight straight from the scale", "Billed before the truck leaves", "Tally and MDTSS portal sync built in"],
+      tags: ["Windows desktop app", "Tally", "MDTSS portal", "RFID & cameras"],
+      video: "/video/products/weighbridge.mp4",
+      poster: "/video/products/weighbridge-poster.jpg",
+      length: "1:46",
+      docsUrl: "https://mochanlabs-dev.github.io/app-docs/weighbridge/",
+    },
+    {
+      slug: "odts",
+      kicker: "dealer order & dispatch platform",
+      name: "ODTS",
+      summary: "Dealers place orders, dispatchers ship them, and the office sees every order's status live, in one web app.",
+      points: ["Orders checked against each dealer's credit limit", "Dispatch with vehicle, driver and a receipt photo", "A dashboard for every role"],
+      tags: ["Web app", "Role-based access", "Excel exports", "Daily backups"],
+      video: "/video/products/odts.mp4",
+      poster: "/video/products/odts-poster.jpg",
+      length: "0:30",
+    },
+  ],
 };
 
 export const whyUs = {

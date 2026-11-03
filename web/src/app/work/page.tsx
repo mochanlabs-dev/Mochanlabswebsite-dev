@@ -8,10 +8,10 @@ import Reveals from "@/components/Reveals";
 
 export const metadata: Metadata = {
   title: "Our Work | Mochan Labs",
-  description: "Case studies: Weighbridge management software and ODTS, an order dispatch & tracking system.",
+  description: "Some of our products, with demo videos: Weighbridge management software and ODTS, an order dispatch & tracking system.",
 };
 
-// Case studies live on their own page rather than the home page.
+// The products live on their own page rather than the home page.
 export default function WorkPage() {
   return (
     <>
