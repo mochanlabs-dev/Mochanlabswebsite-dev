@@ -1,16 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { footer, services } from "@/content/site";
-import { Button, Label } from "./ui";
+import { services } from "@/content/site";
+import { Label } from "./ui";
 
 // Services grouped into four categories (by title, so the copy in
 // content/site.ts stays as written).
 const groups = [
-  { name: "Web & Mobile", titles: ["Web Development", "Mobile App Development", "Enterprise Web Applications", "E-commerce & Logistics"] },
-  { name: "Business Software", titles: ["Custom Software", "ERP & CRM Development", "Process Optimisation"] },
-  { name: "AI & Automation", titles: ["AI & Automation Solutions", "AI Bots", "AI Employees", "API Integration & Automation"] },
-  { name: "Cloud & Security", titles: ["Cloud Solutions & DevOps", "Cybersecurity", "IT Support & Consulting"] },
+  { name: "Web & mobile", titles: ["Web development", "Mobile app development", "E-commerce & logistics"] },
+  { name: "Business software", titles: ["Custom software, ERP & CRM", "Process optimisation"] },
+  { name: "AI & automation", titles: ["AI bots", "AI employees", "Integration & automation"] },
+  { name: "Cloud & security", titles: ["Cloud & DevOps", "Cybersecurity", "IT support & consulting"] },
 ].map((g) => ({ ...g, items: g.titles.map((t) => services.items.find((s) => s.title === t)!) }));
 
 // Category tabs with every service in the chosen category visible at once -
@@ -81,14 +81,6 @@ export default function Services() {
             </li>
           ))}
         </ul>
-
-        {/* Closing call to action */}
-        <div className="mt-6 flex flex-col items-start justify-between gap-5 rounded-xl bg-accent px-6 py-6 text-card sm:flex-row sm:items-center sm:px-8">
-          <p className="heading max-w-2xl text-xl">{footer.blurb}</p>
-          <Button href="#contact" variant="light" className="shrink-0">
-            {footer.cta}
-          </Button>
-        </div>
       </div>
       <div aria-hidden className="h-px bg-ink/10" />
     </section>

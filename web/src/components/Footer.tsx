@@ -1,46 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
-import { contact, footer, nav } from "@/content/site";
-import { ArrowIcon, InstagramIcon, WhatsAppIcon } from "./icons";
+import { contact, footer } from "@/content/site";
+import { InstagramIcon, WhatsAppIcon } from "./icons";
 import FooterLink from "./FooterLink";
 
-// Dark footer in the Abatable mould: brand and call to action on the left,
-// link columns on the right, legal line at the bottom.
+// Brand and a short line on the left, the page links and a way to reach us on
+// the right, the two QR codes, then the legal line. The contact section and the
+// top bar already carry the calls to action, so none is repeated here.
 export default function Footer() {
   return (
     <footer className="mt-20 px-3 pb-3 sm:px-5 sm:pb-5">
       <div className="mx-auto max-w-[1400px] rounded-lg border border-ink/10 bg-card px-6 pt-14 pb-8 text-ink sm:px-10">
         <div className="grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-6">
             <Link href="/" className="inline-flex items-center gap-2.5">
               <Image src="/brand/mark.png" alt="" width={292} height={321} className="h-9 w-auto" />
               <span className="text-lg font-medium tracking-tight">Mochan Labs</span>
             </Link>
             <p className="heading mt-8 max-w-sm text-2xl">{footer.blurb}</p>
-            <FooterLink
-              href="#contact"
-              className="group mt-8 inline-flex items-center gap-2 rounded-[4px] bg-accent px-4 py-2.5 text-sm font-medium text-card transition-colors duration-300 hover:bg-accent-deep"
-            >
-              {footer.cta}
-              <ArrowIcon className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
-            </FooterLink>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-7">
+          <div className="grid grid-cols-2 gap-8 lg:col-span-6 lg:grid-cols-2">
             <div>
-              <h4 className="label mb-4">Services</h4>
-              <ul className="flex flex-col gap-2 text-sm">
-                {footer.services.map((s) => (
-                  <li key={s}>
-                    <FooterLink href="#services" className="text-ink/70 transition-colors hover:text-accent">
-                      {s}
-                    </FooterLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="label mb-4">Company</h4>
+              <h4 className="label mb-4">company</h4>
               <ul className="flex flex-col gap-2 text-sm">
                 {footer.company.map((c) => (
                   <li key={c.href}>
@@ -50,24 +32,19 @@ export default function Footer() {
                   </li>
                 ))}
                 <li>
-                  {/* Served by the Express app, outside the Next.js export */}
+                  {/* Served outside the Next.js export */}
                   <a href="/admin/login.html" className="text-ink/70 transition-colors hover:text-accent">
-                    Admin Login
+                    Admin login
                   </a>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="label mb-4">Get In Touch</h4>
+              <h4 className="label mb-4">get in touch</h4>
               <ul className="flex flex-col gap-2 text-sm text-ink/70">
                 <li>
                   <a href={`mailto:${contact.email}`} className="transition-colors hover:text-accent">
                     {contact.email}
-                  </a>
-                </li>
-                <li>
-                  <a href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer" className="hover:text-accent">
-                    WhatsApp Us
                   </a>
                 </li>
                 <li>{contact.location}</li>
@@ -110,13 +87,6 @@ export default function Footer() {
 
         <div className="mt-8 flex flex-col gap-2 border-t border-ink/10 pt-6 text-xs text-ink/45 sm:flex-row sm:justify-between">
           <span>{footer.copyright}</span>
-          <nav aria-label="Footer" className="flex flex-wrap gap-4">
-            {nav.slice(1).map((n) => (
-              <FooterLink key={n.href} href={n.href} className="inline-block py-1 hover:text-accent">
-                {n.label}
-              </FooterLink>
-            ))}
-          </nav>
           <span>{footer.madeWith}</span>
         </div>
       </div>
