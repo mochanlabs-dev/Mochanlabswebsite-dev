@@ -81,13 +81,13 @@ export default function ContactForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="name" className={label}>
-            Full name *
+            Full Name *
           </label>
           <input id="name" name="name" required autoComplete="name" className={`${field} ${errorRing("name")}`} />
         </div>
         <div>
           <label htmlFor="email" className={label}>
-            Email address *
+            Email Address *
           </label>
           <input
             id="email"
@@ -106,7 +106,7 @@ export default function ContactForm() {
         </div>
         <div>
           <label htmlFor="service" className={label}>
-            Service interested in (optional)
+            Service Interested In (optional)
           </label>
           <select id="service" name="service" defaultValue="" className={`${field} appearance-none`}>
             <option value="">Select a service</option>
@@ -140,7 +140,7 @@ export default function ContactForm() {
           disabled={sending}
           className="rounded-[4px] bg-accent px-5 py-3 text-sm font-medium text-card transition-colors hover:bg-accent-deep disabled:opacity-60"
         >
-          {sending ? "Sending…" : "Send message →"}
+          {sending ? "Sending…" : "Send Message →"}
         </button>
         <p
           id="form-status"

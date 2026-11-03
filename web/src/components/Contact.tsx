@@ -5,8 +5,8 @@ import { ArrowUpRightIcon, InstagramIcon, MailIcon, WhatsAppIcon } from "./icons
 import { Label } from "./ui";
 
 const channels = [
-  { label: "Email us", value: contact.email, href: `mailto:${contact.email}`, Icon: MailIcon },
-  { label: "WhatsApp", value: "Chat on WhatsApp", href: contact.whatsappUrl, Icon: WhatsAppIcon },
+  { label: "Email Us", value: contact.email, href: `mailto:${contact.email}`, Icon: MailIcon },
+  { label: "WhatsApp", value: "Chat Instantly on WhatsApp", href: contact.whatsappUrl, Icon: WhatsAppIcon },
   { label: "Instagram", value: "@mochan_labs", href: contact.instagramUrl, Icon: InstagramIcon },
 ];
 
@@ -57,7 +57,7 @@ export default function Contact() {
               <dd className="text-sm">{contact.location}</dd>
             </div>
             <div>
-              <dt className="label mb-1">Business hours</dt>
+              <dt className="label mb-1">Business Hours</dt>
               <dd className="text-sm">{contact.hours}</dd>
             </div>
           </dl>

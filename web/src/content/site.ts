@@ -24,50 +24,127 @@ export const hero = {
   badge: "Innovative IT Solutions",
   titleLead: "Transforming Ideas Into",
   titleAccent: "Digital Reality",
-  body: "Websites, apps, AI and automation, built around the way your business actually works.",
+  body: "Mochan Labs delivers cutting-edge IT solutions - web development, cloud services, cybersecurity, and custom software. We turn your vision into powerful digital experiences.",
+  cta: "Get Free Consultation",
 };
 
 export const about = {
-  tag: "about us",
+  tag: "About Us",
   titleLead: "Your Trusted Technology",
   titleAccent: "Partner",
-  lead: "We help businesses turn everyday operational problems into simpler, faster ways of working, using AI, automation and software built around how you run.",
-  blocks: [
-    { title: "What we do", body: "We automate manual work, build the software your processes need, and help you scale." },
-    { title: "What we believe", body: "Technology should solve real problems, not add complexity." },
+  paragraphs: [
+    "Mochan Labs is a leading IT solutions company committed to delivering innovative technology services that drive business growth. Founded with a passion for technology, we combine expertise with the creativity to build customised solutions around each client's business.",
+    "Mochan Labs helps businesses turn everyday operational challenges into opportunities for improvement through AI, automation, and technology. We work closely with our clients to understand their unique business processes and build practical solutions that make work simpler and more efficient.",
   ],
+  blocks: [
+    {
+      title: "What We Do",
+      body: "From automating manual workflows to developing custom software and digital solutions, we help businesses reduce repetitive work, improve productivity, and scale with confidence.",
+    },
+    {
+      title: "What We Believe",
+      body: "We believe technology should solve real problems, not add complexity. Our approach is built on understanding your business, collaborating closely, and creating solutions that deliver lasting value.",
+    },
+  ],
+  closing: "We don't just build technology. We help businesses work smarter and grow better.",
+  features: [
+    "Client-First Approach",
+    "Agile Development",
+    "Transparent Communication",
+    "On-Time Delivery",
+  ],
+  cta: "Work With Us",
 };
 
 // The line that darkens word by word between the hero and About.
 export const statement = "More Than Technology. A Partner in Your Business Transformation.";
 
 export const services = {
-  tag: "our services",
+  tag: "Our Services",
   titleLead: "Comprehensive IT",
   titleAccent: "Solutions",
-  intro: "Everything you need, from a first website to fully automated operations.",
+  intro: "We offer a full spectrum of IT services to help your business thrive in the digital age.",
   items: [
-    { title: "Web development", body: "Fast, responsive websites and web apps, from landing pages to full business portals." },
-    { title: "Mobile app development", body: "Android and iOS apps, native or cross-platform, built to feel simple." },
-    { title: "E-commerce & logistics", body: "Online stores and order-tracking systems that keep stock and deliveries in view." },
-    { title: "Custom software, ERP & CRM", body: "Software built around your processes, from a single tool to a full ERP or CRM." },
-    { title: "Process optimisation", body: "We find where your team loses time and remove those steps." },
-    { title: "AI bots", body: "Bots on WhatsApp and your website that answer customers in seconds, day and night." },
-    { title: "AI employees", body: "Give AI a job, such as replies, reminders, invoices or reports, and it does it every day." },
-    { title: "Integration & automation", body: "Connect your tools, WhatsApp and third-party APIs so work moves on its own." },
-    { title: "Cloud & DevOps", body: "Cloud setup, migration and automated deployments that stay reliable as you grow." },
-    { title: "Cybersecurity", body: "Security reviews, testing and fixes to keep your data and customers safe." },
-    { title: "IT support & consulting", body: "Hands-on IT help and planning, from day-to-day support to long-term strategy." },
+    {
+      title: "Web Development",
+      body: "Custom, responsive websites and web applications built with modern technologies - from landing pages to complex enterprise portals.",
+      points: ["React / Next.js / Vue", "Node.js / Django / Laravel", "E-Commerce Solutions"],
+    },
+    {
+      title: "Mobile App Development",
+      body: "Native and cross-platform mobile applications for iOS and Android that deliver exceptional user experiences.",
+      points: ["React Native / Flutter", "iOS & Android", "App Store Deployment"],
+    },
+    {
+      title: "Cloud Solutions & DevOps",
+      body: "Scalable cloud infrastructure, migration services, and DevOps automation to modernize your IT operations.",
+      points: ["AWS / Azure / GCP", "Cloud Migration", "CI/CD Pipelines"],
+    },
+    {
+      title: "Cybersecurity",
+      body: "Protect your business with comprehensive security assessments, penetration testing, and security implementation.",
+      points: ["Security Audits", "Penetration Testing", "Data Protection & Compliance"],
+    },
+    {
+      title: "Custom Software",
+      body: "Bespoke software solutions designed to solve your specific business challenges and automate workflows.",
+      points: ["Business Automation", "ERP / CRM Systems", "API Integration"],
+    },
+    {
+      title: "IT Support & Consulting",
+      body: "24/7 IT support, strategic consulting, and managed services to keep your business running smoothly.",
+      points: ["24/7 Technical Support", "IT Strategy Planning", "Infrastructure Management"],
+    },
+    {
+      title: "ERP & CRM Development",
+      body: "Enterprise resource planning and customer relationship management systems tailored to your business needs.",
+      points: ["ERP Development", "CRM Development", "Custom Modules & Integration"],
+    },
+    {
+      title: "E-commerce & Logistics",
+      body: "Complete e-commerce platforms with real-time order tracking and logistics management systems.",
+      points: ["E-commerce Solutions", "Logistics & Tracking Systems", "Real-Time Order Tracking"],
+    },
+    {
+      title: "API Integration & Automation",
+      body: "Seamless integration of third-party services and WhatsApp API for enhanced customer communication.",
+      points: ["WhatsApp API Integration", "Third-Party API Integration", "Workflow Automation"],
+    },
+    {
+      title: "Enterprise Web Applications",
+      body: "Robust, scalable enterprise-grade web applications designed for high performance and security.",
+      points: ["Enterprise Web Apps", "Cloud Migration", "Microservices Architecture"],
+    },
+    {
+      title: "AI & Automation Solutions",
+      body: "Leverage artificial intelligence and automation to streamline operations and enhance productivity.",
+      points: ["AI Solutions", "Custom Automation", "Machine Learning Integration"],
+    },
+    {
+      title: "Process Optimisation",
+      body: "We find where your team loses time and remove those steps, then build only what is left.",
+      points: ["Workflow Review", "Manual Work Removed", "Faster Order to Delivery"],
+    },
+    {
+      title: "AI Bots",
+      body: "Bots on WhatsApp and your website that answer customers in seconds, day and night.",
+      points: ["WhatsApp & Web Chat", "24/7 Replies", "Hands Over to Your Team"],
+    },
+    {
+      title: "AI Employees",
+      body: "Give AI a job, such as replies, reminders, invoices or reports, and it does it every day.",
+      points: ["Daily Task Automation", "Works With Your Tools", "Reports to You"],
+    },
   ],
 };
 
 // Case studies. Facts come from the products' own documentation; screenshots
 // use demo data. Steps are shown as sticky steps with a screenshot each.
 export const work = {
-  tag: "our work",
-  titleLead: "Some of our",
-  titleAccent: "products",
-  intro: "A selection of what we have built and still support, from first draft to everyday use.",
+  tag: "Our Work",
+  titleLead: "Software that runs",
+  titleAccent: "real operations",
+  intro: "Two products we designed, built and support end to end.",
   weighbridge: {
     name: "Weighbridge",
     kicker: "Weighbridge management software",
@@ -120,66 +197,64 @@ export const work = {
 };
 
 export const whyUs = {
-  tag: "why choose us",
+  tag: "Why Choose Us",
   titleLead: "What Makes",
   titleAccent: "Mochan Labs",
   titleTrail: "Different",
-  intro: "Why teams choose us, and stay.",
+  intro: "We don't just build technology - we build partnerships that drive long-term success.",
   items: [
-    { title: "Expert team", body: "Experienced engineers across web, mobile, cloud, AI and security." },
-    { title: "Cost effective", body: "Clear pricing and no over-engineering, so you pay only for what you need." },
-    { title: "Fast delivery", body: "Small, regular releases keep every project on schedule." },
-    { title: "Ongoing support", body: "We stay after launch with updates, fixes and help when you need it." },
-    { title: "Scalable solutions", body: "Built to grow with your business, so you never have to start over." },
-    { title: "Trusted partner", body: "NDA-friendly, transparent about scope and cost, and easy to reach." },
+    { title: "Expert Team", body: "Our certified professionals bring years of experience across multiple domains and the latest technologies." },
+    { title: "Cost Effective", body: "Premium quality solutions at competitive prices. Maximum ROI for your technology investment." },
+    { title: "Fast Delivery", body: "Agile methodology ensures rapid development and on-time delivery without compromising quality." },
+    { title: "Ongoing Support", body: "We're with you beyond launch. Continuous maintenance, updates, and 24/7 technical support." },
+    { title: "Scalable Solutions", body: "Future-proof architecture that grows with your business. No limits, no compromises." },
+    { title: "Trusted Partner", body: "NDA-compliant, transparent processes, and a proven track record of client satisfaction." },
   ],
 };
 
 export const process = {
-  tag: "how we work",
+  tag: "How We Work",
   titleLead: "Our Simple",
   titleAccent: "Process",
-  intro: "Four steps from first call to launch.",
+  intro: "A streamlined process designed to deliver results efficiently and effectively.",
   steps: [
-    { title: "Discovery", body: "We learn your goals, your challenges and how work really flows." },
-    { title: "Planning", body: "A clear roadmap, the right technology and realistic timelines." },
-    { title: "Development", body: "Regular updates and thorough testing as we build." },
-    { title: "Launch & support", body: "Smooth rollout, training and help after go-live." },
+    { title: "Discovery", body: "We listen, analyze, and understand your business goals, challenges, and requirements in depth." },
+    { title: "Planning", body: "Strategic roadmap, technology selection, and detailed project planning with clear timelines." },
+    { title: "Development", body: "Agile development with regular updates, code reviews, and thorough quality assurance testing." },
+    { title: "Launch & Support", body: "Seamless deployment, user training, and ongoing support to ensure long-term success." },
   ],
 };
 
 export const contactSection = {
-  tag: "contact us",
+  tag: "Contact Us",
   titleLead: "Let's Build Something",
   titleAccent: "Amazing",
-  intro: "Tell us what you need. We usually reply within a day.",
-  formTitle: "Send us a message",
+  intro: "Ready to transform your business? Reach out to us through any channel below.",
+  formTitle: "Send Us a Message",
   serviceOptions: [
-    "Web development",
-    "Mobile apps",
-    "Custom software, ERP & CRM",
-    "AI bots & automation",
-    "Process optimisation",
-    "Cloud & DevOps",
+    "Web Development",
+    "Mobile App Development",
+    "Cloud Solutions",
     "Cybersecurity",
-    "IT support & consulting",
+    "Custom Software",
+    "IT Support & Consulting",
     "Other",
   ],
 };
 
 export const footer = {
-  blurb: "IT solutions, AI and automation for growing businesses.",
+  blurb: "Transforming businesses through innovative technology solutions. Your trusted IT partner for digital success and growth.",
+  services: ["Web Development", "Mobile Apps", "Cloud Solutions", "Cybersecurity", "Custom Software", "IT Consulting"],
   company: [
-    { label: "About", href: "#about" },
-    { label: "Our work", href: "/work" },
-    { label: "Why us", href: "#why-us" },
-    { label: "Process", href: "#process" },
+    { label: "About Us", href: "#about" },
+    { label: "Our Work", href: "/work" },
+    { label: "Why Choose Us", href: "#why-us" },
+    { label: "Our Process", href: "#process" },
     { label: "Contact", href: "#contact" },
   ],
-  // The one "start a project" button on the site lives in the top bar.
-  cta: "Start a project",
+  cta: "Start a Project",
   copyright: "© 2026 Mochan Labs. All rights reserved.",
-  madeWith: "Built with ♥ for innovation",
+  madeWith: "Built with ♥ for Innovation",
 };
 
 // EmailJS IDs (public by design - the same ones the previous site used).
