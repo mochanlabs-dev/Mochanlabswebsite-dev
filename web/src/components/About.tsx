@@ -1,5 +1,5 @@
 import { about } from "@/content/site";
-import { Label } from "./ui";
+import { Button, Label } from "./ui";
 
 export default function About() {
   return (
@@ -14,7 +14,10 @@ export default function About() {
 
         <div className="lg:col-span-2 lg:border-l lg:border-ink/10 lg:pl-12">
           <p data-reveal="fade" className="max-w-3xl text-[clamp(1.15rem,1.7vw,1.45rem)] leading-snug">
-            {about.lead}
+            {about.paragraphs[0]}
+          </p>
+          <p data-reveal="fade" className="mt-6 max-w-2xl text-base leading-relaxed text-ink/60">
+            {about.paragraphs[1]}
           </p>
 
           <div className="mt-12 grid gap-8 sm:grid-cols-2 sm:gap-12">
@@ -24,6 +27,25 @@ export default function About() {
                 <p className="mt-3 text-base leading-relaxed text-ink/60">{b.body}</p>
               </div>
             ))}
+          </div>
+
+          <p data-reveal="fade" className="heading mt-12 max-w-2xl text-[clamp(1.3rem,2vw,1.7rem)]">
+            {about.closing}
+          </p>
+
+          <ul className="mt-10 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+            {about.features.map((f) => (
+              <li key={f} data-reveal="fade" className="flex items-center gap-3">
+                <span aria-hidden className="size-1.5 rounded-full bg-accent" />
+                {f}
+              </li>
+            ))}
+          </ul>
+
+          <div data-reveal="fade" className="mt-10">
+            <Button href="#contact" variant="ink">
+              {about.cta}
+            </Button>
           </div>
         </div>
       </div>
