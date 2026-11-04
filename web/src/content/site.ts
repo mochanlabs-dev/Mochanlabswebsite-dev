@@ -34,16 +34,6 @@ export const about = {
   titleAccent: "Partner",
   titleTrail: "in your Business Transformation.",
   lead: "Mochan Labs delivers innovative IT solutions that help businesses grow through technology, AI, and automation. We combine technical expertise with a personalised approach to simplify processes, improve efficiency, and build solutions tailored to each business.",
-  blocks: [
-    {
-      title: "What we do",
-      body: "From automating manual workflows to developing custom software and digital solutions, we help businesses reduce repetitive work, improve productivity, and scale with confidence.",
-    },
-    {
-      title: "What we believe",
-      body: "We believe technology should solve real problems, not add complexity. Our approach is built on understanding your business, collaborating closely, and creating solutions that deliver lasting value.",
-    },
-  ],
   closing: "We don't just build technology, we help businesses work smarter and grow better.",
   features: [
     "Client-First Approach",

@@ -17,15 +17,6 @@ export default function About() {
             {about.lead}
           </p>
 
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 sm:gap-12">
-            {about.blocks.map((b) => (
-              <div key={b.title} data-reveal="fade">
-                <h3 className="heading text-xl">{b.title}</h3>
-                <p className="mt-3 text-base leading-relaxed text-ink/60">{b.body}</p>
-              </div>
-            ))}
-          </div>
-
           <p data-reveal="fade" className="heading mt-12 max-w-2xl text-[clamp(1.3rem,2vw,1.7rem)]">
             {about.closing}
           </p>
