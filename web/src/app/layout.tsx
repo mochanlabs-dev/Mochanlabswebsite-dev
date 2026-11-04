@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Figtree } from "next/font/google";
 import VisitBeacon from "@/components/VisitBeacon";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import "./globals.css";
 
 // Figtree: a plain, friendly sans (the face vinskyn.com uses).
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         {children}
         <VisitBeacon />
+        <WhatsAppButton />
       </body>
     </html>
   );
