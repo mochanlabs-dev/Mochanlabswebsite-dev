@@ -47,7 +47,7 @@ body {
 
 /* Small section labels. */
 .label {
-  font-size: 0.78rem;
+  font-size: 1.05rem;
   font-weight: 500;
   letter-spacing: 0.02em;
   color: color-mix(in srgb, currentColor 55%, transparent);

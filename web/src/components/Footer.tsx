@@ -16,7 +16,7 @@ export default function Footer() {
               <Image src="/brand/mark.png" alt="" width={292} height={321} className="h-9 w-auto" />
               <span className="text-lg font-medium tracking-tight">Mochan Labs</span>
             </Link>
-            <p className="heading mt-8 max-w-sm text-2xl">{footer.blurb}</p>
+            <p className="heading mt-8 text-2xl [text-wrap:wrap]! sm:max-w-md">{footer.blurb}</p>
             <FooterLink
               href="#contact"
               className="group mt-8 inline-flex items-center gap-2 rounded-[4px] bg-accent px-4 py-2.5 text-sm font-medium text-card transition-colors duration-300 hover:bg-accent-deep"

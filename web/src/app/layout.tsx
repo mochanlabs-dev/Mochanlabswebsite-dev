@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Figtree } from "next/font/google";
+import DevBadge from "@/components/DevBadge";
 import VisitBeacon from "@/components/VisitBeacon";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import "./globals.css";
@@ -14,6 +15,8 @@ export const metadata: Metadata = {
   title: "Mochan Labs | IT Solutions & Services",
   description:
     "Mochan Labs - Premier IT Solutions & Services. Web Development, Mobile Apps, Cloud, Cybersecurity and more.",
+  // Test sites (dev and branch previews) must never show up in search results.
+  ...(process.env.VERCEL_ENV === "preview" || process.env.DEV_SITE === "1" ? { robots: { index: false, follow: false } } : {}),
 };
 
 export const viewport: Viewport = {
@@ -27,6 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
         <VisitBeacon />
         <WhatsAppButton />
+        <DevBadge />
       </body>
     </html>
   );

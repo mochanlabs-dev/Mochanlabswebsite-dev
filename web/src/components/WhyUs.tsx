@@ -81,18 +81,16 @@ export default function WhyUs() {
   );
 
   return (
-    <section ref={root} id="why-us" className="scroll-mt-20 overflow-x-clip bg-tint">
-      <div className="mx-auto max-w-[1400px] px-5 py-24 sm:px-8 sm:py-32">
-        <div className="mb-12 grid gap-6 lg:mb-16 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <Label className="mb-6">{whyUs.tag}</Label>
-            <h2 data-reveal="lines" className="heading text-[clamp(2.2rem,4.4vw,4rem)]">
-              {whyUs.titleLead} <span className="text-accent">{whyUs.titleAccent}</span> {whyUs.titleTrail}
-            </h2>
-          </div>
-          <p data-reveal="fade" className="max-w-sm self-end text-base text-ink/60">
-            {whyUs.intro}
-          </p>
+    <section ref={root} id="why-us" className="scroll-mt-[4.5rem] overflow-x-clip bg-tint">
+      <div className="mx-auto max-w-[1400px] px-5 pt-14 pb-16 sm:px-8 sm:pt-16 sm:pb-20">
+        <div className="mb-10 lg:mb-12">
+          <Label className="mb-4">{whyUs.tag}</Label>
+          <h2
+            data-reveal="lines"
+            className="heading text-[clamp(2.1rem,6vw,3rem)] lg:text-[clamp(2rem,3vw,2.7rem)] lg:whitespace-nowrap"
+          >
+            {whyUs.titleLead} <span className="text-accent">{whyUs.titleAccent}</span> {whyUs.titleTrail}
+          </h2>
         </div>
 
         {/* Phones and tablets: stacking cards */}
