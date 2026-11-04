@@ -129,7 +129,6 @@ export const work = {
   tag: "Our Work",
   titleLead: "Some of our",
   titleAccent: "products",
-  intro: "Two products we built and still support. Press play to see each one at work.",
   items: [
     {
       slug: "weighbridge",

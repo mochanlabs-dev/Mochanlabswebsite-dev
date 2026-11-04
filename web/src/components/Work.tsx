@@ -10,16 +10,11 @@ export default function Work() {
   return (
     <section id="work" className="scroll-mt-20">
       <div className="mx-auto max-w-[1400px] px-5 pt-24 pb-8 sm:px-8 sm:pt-32">
-        <div className="mb-16 grid gap-6 lg:mb-24 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <Label className="mb-6">{work.tag}</Label>
-            <h1 data-reveal="lines" className="heading text-[clamp(2.2rem,4.4vw,4rem)]">
-              {work.titleLead} <span className="text-accent">{work.titleAccent}</span>
-            </h1>
-          </div>
-          <p data-reveal="fade" className="max-w-sm self-end text-base text-ink/60">
-            {work.intro}
-          </p>
+        <div className="mb-16 lg:mb-24">
+          <Label className="mb-6">{work.tag}</Label>
+          <h1 data-reveal="lines" className="heading text-[clamp(2.2rem,4.4vw,4rem)]">
+            {work.titleLead} <span className="text-accent">{work.titleAccent}</span>
+          </h1>
         </div>
 
         <div className="divide-y divide-ink/10 border-t border-ink/10">
