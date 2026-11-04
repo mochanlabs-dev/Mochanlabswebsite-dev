@@ -13,11 +13,11 @@ export default function About() {
         </div>
 
         <div className="lg:col-span-2 lg:border-l lg:border-ink/10 lg:pl-12">
-          <p data-reveal="fade" className="max-w-3xl text-[clamp(1.15rem,1.7vw,1.45rem)] leading-snug">
+          <p data-reveal="fade" className="max-w-3xl text-[clamp(1.15rem,1.7vw,1.45rem)] leading-snug [text-wrap:pretty]">
             {about.lead}
           </p>
 
-          <p data-reveal="fade" className="heading mt-12 max-w-2xl text-[clamp(1.3rem,2vw,1.7rem)]">
+          <p data-reveal="fade" className="heading mt-12 max-w-2xl text-[clamp(1.3rem,2vw,1.7rem)] [text-wrap:wrap]!">
             {about.closing}
           </p>
 
