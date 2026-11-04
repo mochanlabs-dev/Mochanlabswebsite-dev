@@ -25,15 +25,6 @@ export default function Work() {
                 <h2 className="heading text-[clamp(2.4rem,4.4vw,3.8rem)]">{p.name}</h2>
                 <p className="mt-5 max-w-md text-base leading-relaxed text-ink/65">{p.summary}</p>
 
-                <ul className="mt-8 space-y-3">
-                  {p.points.map((pt) => (
-                    <li key={pt} className="flex gap-3 text-[0.95rem]">
-                      <span aria-hidden className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
-                      {pt}
-                    </li>
-                  ))}
-                </ul>
-
                 <ul className="mt-8 flex flex-wrap gap-1.5">
                   {p.tags.map((t) => (
                     <li key={t} className="rounded-[4px] bg-ink/[0.05] px-2 py-1 text-xs text-ink/70">
@@ -57,6 +48,21 @@ export default function Work() {
 
               <div data-reveal="fade" className={`lg:col-span-7 ${i % 2 ? "lg:order-1" : ""}`}>
                 <ProductVideo src={p.video} poster={p.poster} title={p.name} length={p.length} />
+
+                <dl className="mt-8 grid gap-6 sm:grid-cols-3 sm:gap-8">
+                  {(
+                    [
+                      ["The problem", p.story.problem],
+                      ["What we built", p.story.built],
+                      ["How it's used", p.story.use],
+                    ] as const
+                  ).map(([title, text]) => (
+                    <div key={title}>
+                      <dt className="label mb-2">{title}</dt>
+                      <dd className="text-[0.92rem] leading-relaxed text-ink/65">{text}</dd>
+                    </div>
+                  ))}
+                </dl>
               </div>
             </article>
           ))}
