@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { footer, services } from "@/content/site";
-import { Button, Label } from "./ui";
+import { services } from "@/content/site";
+import { Label } from "./ui";
 
 // Services grouped into four categories (by title, so the copy in
 // content/site.ts stays as written).
@@ -22,16 +22,11 @@ export default function Services() {
   return (
     <section id="services" className="scroll-mt-20 bg-tint">
       <div className="mx-auto max-w-[1400px] px-5 py-24 sm:px-8 sm:py-32">
-        <div className="mb-10 grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <Label className="mb-6">{services.tag}</Label>
-            <h2 data-reveal="lines" className="heading text-[clamp(2.2rem,4.4vw,4rem)]">
-              {services.titleLead} <span className="text-accent">{services.titleAccent}</span>
-            </h2>
-          </div>
-          <p data-reveal="fade" className="max-w-sm self-end text-base text-ink/60">
-            {services.intro}
-          </p>
+        <div className="mb-10">
+          <Label className="mb-6">{services.tag}</Label>
+          <h2 data-reveal="lines" className="heading text-[clamp(2.2rem,4.4vw,4rem)]">
+            {services.titleLead} <span className="text-accent">{services.titleAccent}</span>
+          </h2>
         </div>
 
         {/* Tabs (scroll sideways on small screens) */}
@@ -82,12 +77,10 @@ export default function Services() {
           ))}
         </ul>
 
-        {/* Closing call to action */}
-        <div className="mt-6 flex flex-col items-start justify-between gap-5 rounded-xl bg-accent px-6 py-6 text-card sm:flex-row sm:items-center sm:px-8">
-          <p className="heading max-w-2xl text-xl">{footer.blurb}</p>
-          <Button href="#contact" variant="light" className="shrink-0">
-            {footer.cta}
-          </Button>
+        {/* Closing tagline, centred at the bottom */}
+        <div data-reveal="fade" className="mx-auto mt-16 max-w-2xl text-center">
+          <p className="text-base text-ink/60">{services.intro}</p>
+          <p className="heading mt-3 text-[clamp(1.4rem,2.4vw,2rem)] text-accent">{services.tagline}</p>
         </div>
       </div>
       <div aria-hidden className="h-px bg-ink/10" />

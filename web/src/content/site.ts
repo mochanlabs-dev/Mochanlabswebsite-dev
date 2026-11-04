@@ -30,23 +30,11 @@ export const hero = {
 
 export const about = {
   tag: "About Us",
-  titleLead: "Your Trusted Technology",
+  titleLead: "More than Technology, a",
   titleAccent: "Partner",
-  paragraphs: [
-    "Mochan Labs is a leading IT solutions company committed to delivering innovative technology services that drive business growth. Founded with a passion for technology, we combine expertise with the creativity to build customised solutions around each client's business.",
-    "Mochan Labs helps businesses turn everyday operational challenges into opportunities for improvement through AI, automation, and technology. We work closely with our clients to understand their unique business processes and build practical solutions that make work simpler and more efficient.",
-  ],
-  blocks: [
-    {
-      title: "What We Do",
-      body: "From automating manual workflows to developing custom software and digital solutions, we help businesses reduce repetitive work, improve productivity, and scale with confidence.",
-    },
-    {
-      title: "What We Believe",
-      body: "We believe technology should solve real problems, not add complexity. Our approach is built on understanding your business, collaborating closely, and creating solutions that deliver lasting value.",
-    },
-  ],
-  closing: "We don't just build technology. We help businesses work smarter and grow better.",
+  titleTrail: "in your Business Transformation.",
+  lead: "Mochan Labs delivers innovative IT solutions that help businesses grow through technology, AI, and automation. We combine technical expertise with a personalised approach to simplify processes, improve efficiency, and build solutions tailored to each business.",
+  closing: "We don't just build technology, we help businesses work smarter and grow better.",
   features: [
     "Client-First Approach",
     "Agile Development",
@@ -56,14 +44,12 @@ export const about = {
   cta: "Work With Us",
 };
 
-// The line that darkens word by word between the hero and About.
-export const statement = "More Than Technology. A Partner in Your Business Transformation.";
-
 export const services = {
   tag: "Our Services",
   titleLead: "Comprehensive IT",
   titleAccent: "Solutions",
   intro: "We offer a full spectrum of IT services to help your business thrive in the digital age.",
+  tagline: "We are invested in your growth",
   items: [
     {
       title: "Web Development",
@@ -138,62 +124,36 @@ export const services = {
   ],
 };
 
-// Case studies. Facts come from the products' own documentation; screenshots
-// use demo data. Steps are shown as sticky steps with a screenshot each.
+// The Work page: a short list of products, each with a demo video.
 export const work = {
   tag: "Our Work",
-  titleLead: "Software that runs",
-  titleAccent: "real operations",
-  intro: "Two products we designed, built and support end to end.",
-  weighbridge: {
-    name: "Weighbridge",
-    kicker: "Weighbridge management software",
-    summary:
-      "Weigh vehicles, bill sales and purchases, print receipts, and keep Tally and the government portal in step - from one app on the weighbridge computer.",
-    tags: ["Windows desktop app", "SQL Server", "Tally integration", "MDTSS govt portal", "RFID & IP cameras", "Multi-computer"],
-    docsUrl: "https://mochanlabs-dev.github.io/app-docs/weighbridge/",
-    steps: [
-      {
-        title: "Weigh",
-        body: "Live weight straight from the scale. Vehicles are recognised by RFID and photographed by IP cameras - first weight on entry, second on exit.",
-        image: "/projects/weighbridge/token-entry.webp",
-        alt: "Weighbridge token page recording a vehicle's first weight",
-      },
-      {
-        title: "Bill",
-        body: "The weights decide whether it's a sale or a purchase. Party rates, GST, freight and round-off fill in by themselves.",
-        image: "/projects/weighbridge/sale-billing.webp",
-        alt: "Completing a sale with line items, GST and charges",
-      },
-      {
-        title: "Print",
-        body: "Weight slips, inward tokens and GST tax invoices - on A4 or straight to a thermal receipt printer.",
-        image: "/projects/weighbridge/slip-sale.webp",
-        alt: "Weight slip with two copies on one sheet",
-      },
-      {
-        title: "Sync",
-        body: "Every sale and purchase posts to Tally, and every weighment is reported to the Uttarakhand MDTSS portal - retried automatically if either is offline.",
-        image: "/projects/weighbridge/tally.webp",
-        alt: "Tally connection setup",
-      },
-    ],
-  },
-  odts: {
-    name: "ODTS",
-    fullName: "Order Dispatch & Tracking System",
-    kicker: "Dealer order and dispatch platform",
-    summary:
-      "Dealers place orders, dispatchers accept and dispatch them, and the office sees every order's status as it changes - one web app for the whole dealer network.",
-    roles: ["Dealer", "Dispatcher", "Office", "Admin", "Sales Officer"],
-    features: [
-      "Orders checked against each dealer's credit limit, with alerts as limits run low",
-      "Dispatch with vehicle, driver contact, bilty number and receipt upload",
-      "Orders put on hold with a reason that every role can see",
-      "Role-based access, live status updates and Excel exports",
-    ],
-    tags: ["React", "Node.js", "PostgreSQL", "Supabase"],
-  },
+  titleLead: "Some of our",
+  titleAccent: "products",
+  items: [
+    {
+      slug: "weighbridge",
+      kicker: "Weighbridge management software",
+      name: "Weighbridge",
+      summary: "Weigh vehicles, bill sales and purchases, print slips, and keep Tally and the government portal in step, all from one app.",
+      points: ["Live weight straight from the scale", "Billed before the truck leaves", "Tally and MDTSS portal sync built in"],
+      tags: ["Windows desktop app", "Tally", "MDTSS portal", "RFID & cameras"],
+      video: "/video/products/weighbridge.mp4",
+      poster: "/video/products/weighbridge-poster.jpg",
+      length: "1:46",
+      docsUrl: "https://mochanlabs-dev.github.io/app-docs/weighbridge/",
+    },
+    {
+      slug: "odts",
+      kicker: "Dealer order & dispatch platform",
+      name: "ODTS",
+      summary: "Dealers place orders, dispatchers ship them, and the office sees every order's status live, in one web app.",
+      points: ["Orders checked against each dealer's credit limit", "Dispatch with vehicle, driver and a receipt photo", "A dashboard for every role"],
+      tags: ["Web app", "Role-based access", "Excel exports", "Daily backups"],
+      video: "/video/products/odts.mp4",
+      poster: "/video/products/odts-poster.jpg",
+      length: "0:30",
+    },
+  ],
 };
 
 export const whyUs = {
