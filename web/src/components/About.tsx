@@ -13,7 +13,7 @@ export default function About() {
         </div>
 
         <div className="lg:col-span-2 lg:border-l lg:border-ink/10 lg:pl-12">
-          <p data-reveal="fade" className="max-w-3xl text-[clamp(1.15rem,1.7vw,1.45rem)] leading-snug [text-wrap:pretty]">
+          <p data-reveal="fade" className="max-w-3xl text-[clamp(1.02rem,1.7vw,1.45rem)] leading-snug text-justify hyphens-auto">
             {about.lead}
           </p>
 
