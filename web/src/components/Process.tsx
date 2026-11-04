@@ -7,16 +7,11 @@ export default function Process() {
   return (
     <section id="process" className="scroll-mt-20">
       <div className="mx-auto max-w-[1400px] px-5 py-24 sm:px-8 sm:py-32">
-        <div className="mb-14 grid gap-6 lg:grid-cols-3">
-          <div>
-            <Label className="mb-6">{process.tag}</Label>
-            <h2 data-reveal="lines" className="heading text-[clamp(2.2rem,4.4vw,4rem)]">
-              {process.titleLead} <span className="text-accent">{process.titleAccent}</span>
-            </h2>
-          </div>
-          <p data-reveal="fade" className="max-w-md self-end text-base text-ink/60 lg:col-span-2 lg:pl-12">
-            {process.intro}
-          </p>
+        <div className="mb-14">
+          <Label className="mb-6">{process.tag}</Label>
+          <h2 data-reveal="lines" className="heading text-[clamp(2.2rem,4.4vw,4rem)]">
+            {process.titleLead} <span className="text-accent">{process.titleAccent}</span>
+          </h2>
         </div>
 
         {/* The marker sits outside the list so :first/:even target the steps. */}
@@ -40,6 +35,11 @@ export default function Process() {
             ))}
           </ol>
         </div>
+
+        {/* Tagline, centred at the bottom */}
+        <p data-reveal="fade" className="mx-auto mt-16 max-w-xl text-center text-base text-ink/60">
+          {process.intro}
+        </p>
       </div>
       <div aria-hidden className="h-px bg-ink/10" />
     </section>

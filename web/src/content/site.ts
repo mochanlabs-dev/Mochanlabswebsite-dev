@@ -30,23 +30,21 @@ export const hero = {
 
 export const about = {
   tag: "About Us",
-  titleLead: "Your Trusted Technology",
+  titleLead: "More than Technology, a",
   titleAccent: "Partner",
-  paragraphs: [
-    "Mochan Labs is a leading IT solutions company committed to delivering innovative technology services that drive business growth. Founded with a passion for technology, we combine expertise with the creativity to build customised solutions around each client's business.",
-    "Mochan Labs helps businesses turn everyday operational challenges into opportunities for improvement through AI, automation, and technology. We work closely with our clients to understand their unique business processes and build practical solutions that make work simpler and more efficient.",
-  ],
+  titleTrail: "in your Business Transformation.",
+  lead: "Mochan Labs delivers innovative IT solutions that help businesses grow through technology, AI, and automation. We combine technical expertise with a personalised approach to simplify processes, improve efficiency, and build solutions tailored to each business.",
   blocks: [
     {
-      title: "What We Do",
+      title: "What we do",
       body: "From automating manual workflows to developing custom software and digital solutions, we help businesses reduce repetitive work, improve productivity, and scale with confidence.",
     },
     {
-      title: "What We Believe",
+      title: "What we believe",
       body: "We believe technology should solve real problems, not add complexity. Our approach is built on understanding your business, collaborating closely, and creating solutions that deliver lasting value.",
     },
   ],
-  closing: "We don't just build technology. We help businesses work smarter and grow better.",
+  closing: "We don't just build technology, we help businesses work smarter and grow better.",
   features: [
     "Client-First Approach",
     "Agile Development",
@@ -56,14 +54,12 @@ export const about = {
   cta: "Work With Us",
 };
 
-// The line that darkens word by word between the hero and About.
-export const statement = "More Than Technology. A Partner in Your Business Transformation.";
-
 export const services = {
   tag: "Our Services",
   titleLead: "Comprehensive IT",
   titleAccent: "Solutions",
   intro: "We offer a full spectrum of IT services to help your business thrive in the digital age.",
+  tagline: "We are invested in your growth",
   items: [
     {
       title: "Web Development",
