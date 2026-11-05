@@ -20,11 +20,11 @@ export default function Services() {
   const group = groups[active];
 
   return (
-    <section id="services" className="scroll-mt-20 bg-tint">
-      <div className="mx-auto max-w-[1400px] px-5 py-24 sm:px-8 sm:py-32">
-        <div className="mb-10">
-          <Label className="mb-6">{services.tag}</Label>
-          <h2 data-reveal="lines" className="heading text-[clamp(2.2rem,4.4vw,4rem)]">
+    <section id="services" className="scroll-mt-[4.5rem] bg-tint">
+      <div className="mx-auto max-w-[1400px] px-5 pt-14 pb-16 sm:px-8 sm:pt-16 sm:pb-20">
+        <div className="mb-8">
+          <Label className="mb-4">{services.tag}</Label>
+          <h2 data-reveal="lines" className="heading text-[clamp(2.1rem,3.6vw,3.2rem)]">
             {services.titleLead} <span className="text-accent">{services.titleAccent}</span>
           </h2>
         </div>
@@ -78,7 +78,7 @@ export default function Services() {
         </ul>
 
         {/* Closing tagline, centred at the bottom */}
-        <div data-reveal="fade" className="mx-auto mt-16 max-w-2xl text-center">
+        <div data-reveal="fade" className="mx-auto mt-10 max-w-2xl text-center">
           <p className="text-base text-ink/60">{services.intro}</p>
           <p className="heading mt-3 text-[clamp(1.4rem,2.4vw,2rem)] text-accent">{services.tagline}</p>
         </div>

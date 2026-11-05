@@ -5,9 +5,9 @@ import { Label, Plus } from "./ui";
 // case study, so this stays quiet.)
 export default function Process() {
   return (
-    <section id="process" className="scroll-mt-20">
-      <div className="mx-auto max-w-[1400px] px-5 py-24 sm:px-8 sm:py-32">
-        <div className="mb-14">
+    <section id="process" className="scroll-mt-[4.5rem]">
+      <div className="mx-auto max-w-[1400px] px-5 pt-14 pb-16 sm:px-8 sm:pt-16 sm:pb-20">
+        <div className="mb-10">
           <Label className="mb-6">{process.tag}</Label>
           <h2 data-reveal="lines" className="heading text-[clamp(2.2rem,4.4vw,4rem)]">
             {process.titleLead} <span className="text-accent">{process.titleAccent}</span>
@@ -37,7 +37,7 @@ export default function Process() {
         </div>
 
         {/* Tagline, centred at the bottom */}
-        <p data-reveal="fade" className="mx-auto mt-16 max-w-xl text-center text-base text-ink/60">
+        <p data-reveal="fade" className="mx-auto mt-12 max-w-xl text-center text-base text-ink/60">
           {process.intro}
         </p>
       </div>

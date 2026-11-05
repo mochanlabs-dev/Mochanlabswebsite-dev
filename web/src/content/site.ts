@@ -34,6 +34,16 @@ export const about = {
   titleAccent: "Partner",
   titleTrail: "in your Business Transformation.",
   lead: "Mochan Labs delivers innovative IT solutions that help businesses grow through technology, AI, and automation. We combine technical expertise with a personalised approach to simplify processes, improve efficiency, and build solutions tailored to each business.",
+  blocks: [
+    {
+      title: "What we do",
+      body: "From automating manual workflows to developing custom software and digital solutions, we help businesses reduce repetitive work, improve productivity, and scale with confidence.",
+    },
+    {
+      title: "What we believe",
+      body: "We believe technology should solve real problems, not add complexity. Our approach is built on understanding your business, collaborating closely, and creating solutions that deliver lasting value.",
+    },
+  ],
   closing: "We don't just build technology, we help businesses work smarter and grow better.",
   features: [
     "Client-First Approach",
@@ -127,7 +137,7 @@ export const services = {
 // The Work page: a short list of products, each with a demo video.
 export const work = {
   tag: "Our Work",
-  titleLead: "Some of our",
+  titleLead: "Our",
   titleAccent: "products",
   items: [
     {
@@ -169,7 +179,6 @@ export const whyUs = {
   titleLead: "What Makes",
   titleAccent: "Mochan Labs",
   titleTrail: "Different",
-  intro: "We don't just build technology - we build partnerships that drive long-term success.",
   items: [
     { title: "Expert Team", body: "Our certified professionals bring years of experience across multiple domains and the latest technologies." },
     { title: "Cost Effective", body: "Premium quality solutions at competitive prices. Maximum ROI for your technology investment." },
@@ -198,7 +207,7 @@ export const contactSection = {
   titleLead: "Let's Build Something",
   titleAccent: "Amazing",
   intro: "Ready to transform your business? Reach out to us through any channel below.",
-  formTitle: "Send Us a Message",
+  formTitle: "Send us a message:",
   serviceOptions: [
     "Web Development",
     "Mobile App Development",
@@ -222,7 +231,6 @@ export const footer = {
   ],
   cta: "Start a Project",
   copyright: "© 2026 Mochan Labs. All rights reserved.",
-  madeWith: "Built with ♥ for Innovation",
 };
 
 // EmailJS IDs (public by design - the same ones the previous site used).

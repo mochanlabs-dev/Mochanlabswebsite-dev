@@ -16,7 +16,7 @@ export default function Footer() {
               <Image src="/brand/mark.png" alt="" width={292} height={321} className="h-9 w-auto" />
               <span className="text-lg font-medium tracking-tight">Mochan Labs</span>
             </Link>
-            <p className="heading mt-8 max-w-sm text-2xl">{footer.blurb}</p>
+            <p className="heading mt-8 text-2xl [text-wrap:wrap]! sm:max-w-md">{footer.blurb}</p>
             <FooterLink
               href="#contact"
               className="group mt-8 inline-flex items-center gap-2 rounded-[4px] bg-accent px-4 py-2.5 text-sm font-medium text-card transition-colors duration-300 hover:bg-accent-deep"
@@ -96,19 +96,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-wrap gap-6 border-t border-ink/10 pt-8">
-          {[
-            { src: "/brand/qr-whatsapp.png", label: "Scan to WhatsApp" },
-            { src: "/brand/qr-instagram.png", label: "Follow on Instagram" },
-          ].map((q) => (
-            <figure key={q.src} className="flex items-center gap-3">
-              <Image src={q.src} alt={`${q.label} QR code`} width={64} height={64} className="rounded-[4px] border border-ink/10 bg-card p-1" />
-              <figcaption className="text-xs text-ink/55">{q.label}</figcaption>
-            </figure>
-          ))}
-        </div>
-
-        <div className="mt-8 flex flex-col gap-2 border-t border-ink/10 pt-6 text-xs text-ink/45 sm:flex-row sm:justify-between">
+        <div className="mt-14 flex flex-col gap-2 border-t border-ink/10 pt-6 text-xs text-ink/45 sm:flex-row sm:justify-between">
           <span>{footer.copyright}</span>
           <nav aria-label="Footer" className="flex flex-wrap gap-4">
             {nav.slice(1).map((n) => (
@@ -117,7 +105,6 @@ export default function Footer() {
               </FooterLink>
             ))}
           </nav>
-          <span>{footer.madeWith}</span>
         </div>
       </div>
     </footer>

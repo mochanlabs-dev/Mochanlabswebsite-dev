@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   description:
     "Mochan Labs - Premier IT Solutions & Services. Web Development, Mobile Apps, Cloud, Cybersecurity and more.",
   // Test sites (dev and branch previews) must never show up in search results.
-  ...(process.env.VERCEL_ENV === "preview" ? { robots: { index: false, follow: false } } : {}),
+  ...(process.env.VERCEL_ENV === "preview" || process.env.DEV_SITE === "1" ? { robots: { index: false, follow: false } } : {}),
 };
 
 export const viewport: Viewport = {

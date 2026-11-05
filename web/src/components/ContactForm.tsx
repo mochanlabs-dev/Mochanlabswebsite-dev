@@ -12,7 +12,7 @@ const DEFAULT_SUBJECT = "New enquiry from the website";
 const DEFAULT_MESSAGE = "No message was written. Please get in touch with this person.";
 
 const field =
-  "w-full rounded-[4px] border border-ink/12 bg-paper/60 px-3.5 py-3 text-base text-ink outline-none transition-colors placeholder:text-ink/35 focus:border-accent focus:bg-card";
+  "w-full rounded-[4px] border border-ink/12 bg-paper/60 px-3.5 py-2.5 text-base text-ink outline-none transition-colors placeholder:text-ink/35 focus:border-accent focus:bg-card";
 const label = "mb-1.5 block text-sm font-medium";
 
 // Contact form sent via EmailJS (same service and templates as before):
@@ -76,9 +76,9 @@ export default function ContactForm() {
   const errorRing = (name: string) => (invalid.includes(name) ? "!border-accent" : "");
 
   return (
-    <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5" aria-describedby="form-status">
+    <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4" aria-describedby="form-status">
       <h3 className="heading text-2xl">{contactSection.formTitle}</h3>
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="name" className={label}>
             Full Name *
@@ -129,7 +129,7 @@ export default function ContactForm() {
         <textarea
           id="message"
           name="message"
-          rows={4}
+          rows={3}
           className={`${field} resize-none`}
         />
       </div>
