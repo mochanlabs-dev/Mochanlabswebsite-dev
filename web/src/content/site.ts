@@ -231,7 +231,6 @@ export const footer = {
   ],
   cta: "Start a Project",
   copyright: "© 2026 Mochan Labs. All rights reserved.",
-  madeWith: "Built with ♥ for Innovation",
 };
 
 // EmailJS IDs (public by design - the same ones the previous site used).
