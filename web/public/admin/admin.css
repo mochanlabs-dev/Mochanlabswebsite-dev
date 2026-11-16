@@ -509,3 +509,8 @@ tr:hover td { background: var(--surface) !important; }
   .pj-cols { grid-template-columns: 1fr; }
   .pj-bigkey span { font-size: 1.15rem; }
 }
+
+/* Mobile app box on the license page */
+.pj-check { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+.pj-mobile-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.pj-mono { font-family: ui-monospace, Consolas, monospace; font-size: 16px; font-weight: 600; letter-spacing: .04em; user-select: all; }

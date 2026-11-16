@@ -103,6 +103,8 @@
     'license-created': 'License created', 'license-extended': 'Expiry changed', 'license-revoked': 'License revoked',
     'license-reinstated': 'License reinstated', 'license-updated': 'Details edited', 'machine-deactivated': 'Computer removed',
     activated: 'Computer activated', reactivated: 'Computer re-activated', 'machine-limit': 'Activation refused (computer limit)',
+    'features-updated': 'Features changed', 'mobile-account-created': 'Mobile login created', 'mobile-password-reset': 'Mobile password reset',
+    'mobile-account-disabled': 'Mobile login disabled', 'mobile-account-enabled': 'Mobile login enabled', 'mobile-account-removed': 'Mobile login deleted',
   };
 
   // Readable label for an activity entry, including ones this page has no wording for.
@@ -390,6 +392,28 @@
           '<small>' + esc(a.detail || '') + (a.detail ? ' · ' : '') + fmtDateTime(a.at) + ' · ' + esc(a.actor) + '</small></div></div>';
       }).join('') : '<p class="pj-muted pj-pad">No activity yet.</p>';
 
+      var mobileOn = (l.features || []).indexOf('mobile') !== -1;
+      var mob = d.mobile;
+      var mobileBody;
+      if (!mobileOn) {
+        mobileBody = '<p class="pj-muted pj-pad">The owner\'s phone app is a premium feature. Turn it on to give this customer a mobile login.</p>';
+      } else if (!mob) {
+        mobileBody = '<p class="pj-text pj-pad">The feature is on, but there is no login yet. Each license gets one mobile login, shared by the owner.</p>' +
+          '<div class="pj-pad"><button type="button" class="btn" id="mobileCreate"><i class="fas fa-user-plus"></i> Create mobile login</button></div>';
+      } else {
+        mobileBody = '<dl class="pj-facts">' +
+          '<div><dt>Username</dt><dd>' + esc(mob.username) + '</dd></div>' +
+          '<div><dt>Status</dt><dd>' + (mob.disabled_at ? 'Disabled ' + ago(mob.disabled_at) : 'Active') + '</dd></div>' +
+          '<div><dt>Created</dt><dd>' + fmtDate(mob.created_at) + '</dd></div>' +
+          '<div><dt>Last signed in</dt><dd>' + (mob.last_login_at ? ago(mob.last_login_at) : 'Never') + '</dd></div>' +
+          '</dl><div class="pj-pad pj-mobile-actions">' +
+          '<button type="button" class="btn btn-secondary" id="mobileReset"><i class="fas fa-key"></i> Reset password</button>' +
+          '<button type="button" class="btn btn-secondary" id="mobileToggle">' + (mob.disabled_at ? 'Enable login' : 'Disable login') + '</button>' +
+          '<button type="button" class="btn btn-danger" id="mobileDelete"><i class="fas fa-trash"></i> Delete login</button></div>';
+      }
+      var mobileCard = '<section class="pj-card" id="mobileCard"><div class="pj-card-head"><h3>Mobile app</h3>' +
+        '<label class="pj-check"><input type="checkbox" id="mobileOn"' + (mobileOn ? ' checked' : '') + '> Turned on for this license</label></div>' + mobileBody + '</section>';
+
       workspace(app, 'licenses',
         (justCreated
           ? '<div class="pj-banner good"><i class="fas fa-circle-check"></i><span>License created. Give this key to the customer. It works on ' + l.max_machines + ' computer' + (l.max_machines > 1 ? 's' : '') + '.</span></div>'
@@ -413,6 +437,7 @@
           '</dl>' +
           (l.notes ? '<p class="pj-notes"><b>Notes</b> ' + esc(l.notes) + '</p>' : '') +
         '</section>' +
+        mobileCard +
         '<section class="pj-card"><div class="pj-card-head"><h3>Computers</h3></div><div class="pj-table-wrap"><table class="pj-table"><thead><tr>' +
           '<th>Computer</th><th>App version</th><th>Address</th><th>Activated</th><th>Last opened</th><th></th></tr></thead><tbody id="machines">' + machines + '</tbody></table></div></section>' +
         '<section class="pj-card"><div class="pj-card-head"><h3>Activity</h3></div><div class="pj-feed">' + log + '</div></section>',
@@ -422,6 +447,59 @@
       document.getElementById('copyKey').addEventListener('click', function (e) { copy(l.key, e.currentTarget); });
       document.getElementById('extend').addEventListener('click', function () { extendForm(code, l, again); });
       document.getElementById('edit').addEventListener('click', function () { licenseForm(code, l, again); });
+
+      // ---- Mobile app box
+      var base = '/' + code + '/licenses/' + id;
+      var mobSwitch = document.getElementById('mobileOn');
+      mobSwitch.addEventListener('change', function () {
+        var on = mobSwitch.checked;
+        api(base + '/features', { method: 'POST', body: { mobile: on } })
+          .then(function () { toast(on ? 'Mobile app turned on.' : 'Mobile app turned off. The phone loses access within minutes.'); again(); })
+          .catch(function (err) { mobSwitch.checked = !on; toast(err.message, 'error'); });
+      });
+
+      // Shows the freshly generated login once, inside the same dialog.
+      function showCredentials(overlay, c) {
+        overlay.querySelector('.pj-modal-body').innerHTML =
+          '<p class="pj-text"><b>' + (c.created ? 'Mobile login created.' : 'Password reset.') + '</b> Give these to the customer now. The password is shown only this once.</p>' +
+          '<dl class="pj-facts">' +
+            '<div><dt>Username</dt><dd><span class="pj-mono">' + esc(c.username) + '</span> <button type="button" class="btn btn-secondary pj-sm" data-copy="' + esc(c.username) + '"><i class="fas fa-copy"></i> Copy</button></dd></div>' +
+            '<div><dt>Password</dt><dd><span class="pj-mono">' + esc(c.password) + '</span> <button type="button" class="btn btn-secondary pj-sm" data-copy="' + esc(c.password) + '"><i class="fas fa-copy"></i> Copy</button></dd></div>' +
+          '</dl>';
+        overlay.querySelector('[type="submit"]').style.display = 'none';
+        overlay.querySelector('[data-close]').textContent = 'Done';
+        overlay.querySelectorAll('[data-copy]').forEach(function (b) { b.addEventListener('click', function () { copy(b.getAttribute('data-copy'), b); }); });
+      }
+      function issueLogin(isReset) {
+        modal({
+          title: isReset ? 'Reset the password?' : 'Create the mobile login?',
+          body: '<p class="pj-text">' + (isReset
+            ? 'The old password stops working immediately and the owner must be given the new one.'
+            : 'This creates the one mobile login for this license. You will see the password once.') + '</p>',
+          submit: isReset ? 'Reset password' : 'Create login', danger: isReset,
+          onSubmit: function (form, overlay) {
+            return api(base + '/mobile/credentials', { method: 'POST' }).then(function (c) { showCredentials(overlay, c); again(); return true; });
+          },
+        });
+      }
+      var mc = document.getElementById('mobileCreate'); if (mc) mc.addEventListener('click', function () { issueLogin(false); });
+      var mr = document.getElementById('mobileReset'); if (mr) mr.addEventListener('click', function () { issueLogin(true); });
+      var mt = document.getElementById('mobileToggle');
+      if (mt) mt.addEventListener('click', function () {
+        var disable = !mob.disabled_at;
+        api(base + '/mobile/disabled', { method: 'POST', body: { disabled: disable } })
+          .then(function () { toast(disable ? 'Mobile login disabled.' : 'Mobile login enabled.'); again(); })
+          .catch(function (err) { toast(err.message, 'error'); });
+      });
+      var md = document.getElementById('mobileDelete');
+      if (md) md.addEventListener('click', function () {
+        modal({
+          title: 'Delete the mobile login?',
+          body: '<p class="pj-text">The owner is signed out of the phone app within minutes. You can create a new login later.</p>',
+          submit: 'Delete login', danger: true,
+          onSubmit: function () { return api(base + '/mobile', { method: 'DELETE' }).then(function () { toast('Mobile login deleted.'); again(); }); },
+        });
+      });
 
       var rv = document.getElementById('revoke');
       if (rv) rv.addEventListener('click', function () {
