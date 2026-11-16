@@ -329,7 +329,7 @@
         }).join('') + '</div>' +
         '<div class="pj-search"><i class="fas fa-magnifying-glass"></i><input id="q" type="search" placeholder="Search customer or key" value="' + esc(listState.q) + '"></div></div>' +
         '<div class="pj-card pj-table-wrap"><table class="pj-table"><thead><tr>' +
-          '<th>Customer</th><th>License key</th><th>Status</th><th>Expires</th><th>Computers</th><th>Last opened</th>' +
+          '<th>Customer</th><th>License key</th><th>Status</th><th>Expires</th><th>Computers</th><th>Mobile app</th><th>Last opened</th>' +
         '</tr></thead><tbody id="rows"></tbody></table></div>');
 
       function paint() {
@@ -340,7 +340,7 @@
         });
         var body = document.getElementById('rows');
         if (!visible.length) {
-          body.innerHTML = '<tr><td colspan="6" class="pj-none">' + (rows.length ? 'No licenses match.' : 'No licenses yet. Create the first one with "New license".') + '</td></tr>';
+          body.innerHTML = '<tr><td colspan="7" class="pj-none">' + (rows.length ? 'No licenses match.' : 'No licenses yet. Create the first one with "New license".') + '</td></tr>';
           return;
         }
         body.innerHTML = visible.map(function (r) {
@@ -348,6 +348,7 @@
             '<td><span class="pj-key">' + esc(r.key) + '</span> <button type="button" class="pj-copy" data-key="' + esc(r.key) + '" aria-label="Copy key"><i class="fas fa-copy"></i></button></td>' +
             '<td>' + chip(r.status) + '</td><td>' + fmtDate(r.expires_at) + '</td>' +
             '<td>' + r.active_count + ' of ' + r.max_machines + '</td>' +
+            '<td>' + ((r.features || []).indexOf('mobile') !== -1 ? '<span class="pj-chip pj-active">On</span>' : '<span class="pj-muted">Off</span>') + '</td>' +
             '<td>' + (r.last_seen ? ago(r.last_seen) : '<span class="pj-muted">Not activated yet</span>') + '</td></tr>';
         }).join('');
       }
