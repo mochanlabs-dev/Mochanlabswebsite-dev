@@ -46,4 +46,9 @@ async function withTransaction(fn) {
   }
 }
 
-module.exports = { query, queryOne, withTransaction };
+/** Closes the pool (used by tests so the process can exit cleanly). */
+async function end() {
+  if (pool) { const p = pool; pool = null; await p.end(); }
+}
+
+module.exports = { query, queryOne, withTransaction, end };

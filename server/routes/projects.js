@@ -5,6 +5,7 @@ const logger = require('../services/logger');
 const authMiddleware = require('../middleware/authMiddleware');
 const { query, queryOne, withTransaction } = require('../services/licenseDb');
 const L = require('../services/licensing');
+const M = require('../services/mobileLicense');
 
 const router = express.Router();
 router.use(authMiddleware);
@@ -153,7 +154,9 @@ router.get('/weighbridge/licenses/:id', wrap(async (req, res) => {
     'select * from weighbridge.activations where license_id = $1 order by (deactivated_at is not null), last_seen_at desc', [license.id]);
   const log = await query(
     'select * from weighbridge.activity_log where license_id = $1 order by at desc limit 40', [license.id]);
-  res.json({ success: true, data: { license: { ...license, status: L.licenseStatus(license) }, machines, log } });
+  const mobile = await queryOne(
+    'select username, created_at, last_login_at, disabled_at from weighbridge.mobile_accounts where license_id = $1', [license.id]);
+  res.json({ success: true, data: { license: { ...license, status: L.licenseStatus(license) }, machines, log, mobile } });
 }));
 
 router.put('/weighbridge/licenses/:id', wrap(async (req, res) => {
@@ -207,6 +210,81 @@ router.post('/weighbridge/licenses/:id/machines/:aid/deactivate', wrap(async (re
     [req.params.aid, req.params.id],
   );
   if (row) await L.logActivity(req.adminUser, 'machine-deactivated', req.params.id, row.machine_name || 'unknown computer', clientIp(req));
+  res.json({ success: true });
+}));
+
+// ---- Mobile app (premium): the feature switch and the licence's one phone login -----------------------------
+// The mobile cloud checks both on every request (see routes/mobileApp.js), so a change here reaches the phone within minutes.
+
+const findLicense = (id) => queryOne('select * from weighbridge.licenses where id = $1', [id]);
+
+router.post('/weighbridge/licenses/:id/features', wrap(async (req, res) => {
+  if (!UUID.test(req.params.id)) return fail(res, 404, 'License not found.');
+  const license = await findLicense(req.params.id);
+  if (!license) return fail(res, 404, 'License not found.');
+  const on = (req.body || {}).mobile === true;
+  const others = (license.features || []).filter((f) => f !== M.MOBILE_FEATURE);
+  const features = on ? [...others, M.MOBILE_FEATURE] : others;
+  await query('update weighbridge.licenses set features = $2 where id = $1', [license.id, features]);
+  await L.logActivity(req.adminUser, 'features-updated', license.id, `Mobile app ${on ? 'turned on' : 'turned off'}`, clientIp(req));
+  res.json({ success: true, data: { features } });
+}));
+
+// Creates the licence's one mobile login or, if it exists, gives it a new password. The password is returned ONCE;
+// only its bcrypt hash is kept.
+router.post('/weighbridge/licenses/:id/mobile/credentials', wrap(async (req, res) => {
+  if (!UUID.test(req.params.id)) return fail(res, 404, 'License not found.');
+  const license = await findLicense(req.params.id);
+  if (!license) return fail(res, 404, 'License not found.');
+  if (!(license.features || []).includes(M.MOBILE_FEATURE)) return fail(res, 400, 'Turn the Mobile app feature on for this license first.');
+
+  const password = M.generatePassword();
+  const hash = await M.hashPassword(password);
+  const ip = clientIp(req);
+  res.set('Cache-Control', 'no-store');
+  const reset = async (username) => {
+    await query('update weighbridge.mobile_accounts set password_hash = $2 where license_id = $1', [license.id, hash]);
+    await L.logActivity(req.adminUser, 'mobile-password-reset', license.id, username, ip);
+    return res.json({ success: true, data: { username, password, created: false } });
+  };
+
+  const existing = await queryOne('select username from weighbridge.mobile_accounts where license_id = $1', [license.id]);
+  if (existing) return reset(existing.username);
+
+  // A random 6-character suffix collides rarely; retry a few times rather than fail on the unique index.
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const username = M.generateUsername();
+    try {
+      await query('insert into weighbridge.mobile_accounts (license_id, username, password_hash) values ($1, $2, $3)', [license.id, username, hash]);
+      await L.logActivity(req.adminUser, 'mobile-account-created', license.id, username, ip);
+      return res.status(201).json({ success: true, data: { username, password, created: true } });
+    } catch (err) {
+      if (err.code !== '23505') throw err;
+      // Someone created this licence's login at the same moment: treat it as existing and reset instead.
+      const raced = await queryOne('select username from weighbridge.mobile_accounts where license_id = $1', [license.id]);
+      if (raced) return reset(raced.username);
+    }
+  }
+  return fail(res, 500, 'Could not create a unique username. Try again.');
+}));
+
+router.post('/weighbridge/licenses/:id/mobile/disabled', wrap(async (req, res) => {
+  if (!UUID.test(req.params.id)) return fail(res, 404, 'License not found.');
+  const disabled = (req.body || {}).disabled === true;
+  const row = await queryOne(
+    `update weighbridge.mobile_accounts set disabled_at = case when $2 then coalesce(disabled_at, now()) else null end
+      where license_id = $1 returning username`,
+    [req.params.id, disabled],
+  );
+  if (!row) return fail(res, 404, 'This license has no mobile login.');
+  await L.logActivity(req.adminUser, disabled ? 'mobile-account-disabled' : 'mobile-account-enabled', req.params.id, row.username, clientIp(req));
+  res.json({ success: true });
+}));
+
+router.delete('/weighbridge/licenses/:id/mobile', wrap(async (req, res) => {
+  if (!UUID.test(req.params.id)) return fail(res, 404, 'License not found.');
+  const row = await queryOne('delete from weighbridge.mobile_accounts where license_id = $1 returning username', [req.params.id]);
+  if (row) await L.logActivity(req.adminUser, 'mobile-account-removed', req.params.id, row.username, clientIp(req));
   res.json({ success: true });
 }));
 

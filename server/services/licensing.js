@@ -129,7 +129,7 @@ async function processRequest(kind, body, ip) {
   const license = await queryOne('select * from weighbridge.licenses where key = $1', [key]);
   if (!license) {
     await logActivity('app', 'invalid-key', null, `Unknown key starting ${key.slice(0, 7)}`, ip);
-    return { ...base, valid: false, reason: 'invalid-key', licenseId: null, customerName: null, expiresAt: null, graceDays: 0 };
+    return { ...base, valid: false, reason: 'invalid-key', licenseId: null, customerName: null, expiresAt: null, graceDays: 0, features: [] };
   }
 
   const answer = (valid, reason) => ({
@@ -138,6 +138,8 @@ async function processRequest(kind, body, ip) {
     customerName: license.customer_name,
     expiresAt: license.expires_at.toISOString(),
     graceDays: license.grace_days,
+    // Premium switches (e.g. "mobile"): the app only uses them to show or hide menus. [] when the column is not there yet.
+    features: license.features || [],
   });
 
   const blocked = license.revoked_at ? 'revoked' : license.expires_at.getTime() <= Date.now() ? 'expired' : null;
